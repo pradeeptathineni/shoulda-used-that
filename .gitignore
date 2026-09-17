@@ -6,6 +6,7 @@
 .ruff_cache/
 .package-smoke/
 .release-smoke/
+.tmp/
 .venv/
 build/
 dist/

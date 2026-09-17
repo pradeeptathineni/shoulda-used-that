@@ -14,6 +14,8 @@ nav = [
   { "Home" = "index.md" },
   { "Catalog" = [
     { "Overview" = "curation/index.md" },
+    { "Personal OSS interest selection" = "curation/selection.md" },
+    { "ShouldaUsedThat uses itself" = "curation/dogfood.md" },
     { "What ShouldaUsedThat uses" = "curation/in-use.md" },
     { "Considered choices" = "curation/considered.md" },
     { "Freshness and reconsideration" = "curation/freshness.md" },
@@ -30,6 +32,7 @@ nav = [
   { "Decision receipts" = "decisions/README.md" },
   { "Operations" = [
     { "GitHub curation runbook" = "operations/github-curation.md" },
+    { "Live projection evidence" = "operations/live-projection.md" },
     { "Read-only upkeep and scheduling" = "operations/scheduling.md" },
   ] },
   { "Development evidence" = [

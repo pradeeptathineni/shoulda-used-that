@@ -3,7 +3,7 @@ title: "amintacccp/githubstarsmanager"
 description: "Desktop application for browsing, searching, and organizing GitHub stars."
 tags:
   - "Reference"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # amintacccp/githubstarsmanager
 
@@ -22,7 +22,7 @@ tags:
 **Role:** star\-manager UX prior art<br>
 **Need:** Learn from mature star search and organization without inheriting its runtime boundary\.<br>
 **Why:** The interface is useful prior art; credential, provider, plugin, and release\-provenance concerns keep it out of the runtime\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

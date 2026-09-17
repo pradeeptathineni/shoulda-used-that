@@ -9,7 +9,13 @@ from pathlib import Path
 from shoulda_used_that import __version__
 from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.curation import CurationSnapshot, compile_profile, load_profile
-from shoulda_used_that.errors import GitHubError, ShouldaError, SourceError, StateError
+from shoulda_used_that.errors import (
+    GitHubError,
+    GitHubSchemaError,
+    ShouldaError,
+    SourceError,
+    StateError,
+)
 from shoulda_used_that.filters import evaluate_candidates, normalized_predicate_tree
 from shoulda_used_that.github import GhClient
 from shoulda_used_that.github_apply import (
@@ -34,6 +40,7 @@ from shoulda_used_that.github_apply import (
 from shoulda_used_that.github_lists import (
     GitHubCapabilityState,
     GitHubCurationState,
+    GitHubListMember,
     GitHubReadClient,
     probe_capabilities,
     read_curation_state,
@@ -378,19 +385,13 @@ def applied(
                 failure_code=result.error_code or "github_mutation_failed",
                 clock=clock,
             )
-        readback = _readback_or_partial(
-            store,
-            plan,
-            baseline=baseline,
-            client=client,
-            session_started_at=session_started_at,
-            operations=tuple(operation_receipts),
-            fallback_cursor=operation.operation_id,
-            clock=clock,
+        current = _materialize_membership_response(
+            current,
+            operation,
+            requested_list_ids=result.requested_list_ids,
+            observed_at=clock(),
         )
-        if isinstance(readback, ApplyReceipt):
-            return readback
-        current = readback
+        store.write_github_state(current)
         if not operation_satisfied(operation, plan, current):
             return _write_apply_progress(
                 store,
@@ -404,6 +405,19 @@ def applied(
                 completed_at=clock(),
             )
 
+    final_readback = _readback_or_partial(
+        store,
+        plan,
+        baseline=baseline,
+        client=client,
+        session_started_at=session_started_at,
+        operations=tuple(operation_receipts),
+        fallback_cursor=_first_pending_id(plan, current),
+        clock=clock,
+    )
+    if isinstance(final_readback, ApplyReceipt):
+        return final_readback
+    current = final_readback
     remaining = pending_operations(plan, current)
     if remaining:
         return _write_apply_progress(
@@ -644,11 +658,23 @@ def _attempt_operation(
                     message="Membership operation omitted its repository node ID.",
                 )
             requested_list_ids = requested_membership_union(operation, plan, state)
-            client.update_user_lists_for_item(
+            result = client.update_user_lists_for_item(
                 repository_node_id=operation.repository_node_id,
                 list_ids=requested_list_ids,
                 client_mutation_id=client_mutation_id(plan, operation.operation_id),
             )
+            if (
+                result.repository_node_id != operation.repository_node_id
+                or result.repository != operation.repository
+                or result.list_ids != requested_list_ids
+            ):
+                raise GitHubSchemaError(
+                    code="github_mutation_postcondition_mismatch",
+                    message=(
+                        "GitHub membership response did not match the sealed repository "
+                        "identity and complete requested List union."
+                    ),
+                )
     except GitHubError as exc:
         outcome = (
             ApplyOperationOutcome.INDETERMINATE
@@ -747,13 +773,13 @@ def _readback_or_partial(
     clock: Callable[[], datetime],
 ) -> GitHubCurationState | ApplyReceipt:
     try:
-        current = read_curation_state(
+        observed = read_curation_state(
             client,
             account=plan.target_account,
             desired_repositories=tuple(item.repository for item in plan.projected_repositories),
             observed_at=clock(),
         )
-        assert_allowed_progress(plan, baseline, current)
+        assert_allowed_progress(plan, baseline, observed)
     except ShouldaError as exc:
         return _write_apply_progress(
             store,
@@ -766,8 +792,96 @@ def _readback_or_partial(
             readback=None,
             completed_at=clock(),
         )
-    store.write_github_state(current)
-    return current
+    store.write_github_state(observed)
+    return observed
+
+
+def _materialize_membership_response(
+    state: GitHubCurationState,
+    operation: GitHubProjectionOperation,
+    *,
+    requested_list_ids: tuple[str, ...],
+    observed_at: datetime,
+) -> GitHubCurationState:
+    """Advance local state from a strictly validated membership mutation response.
+
+    GitHub's mutation returns the complete resulting List-ID set and the adapter
+    rejects any response that differs from the requested union. Materializing
+    that exact response avoids treating the eventually consistent Lists query as
+    an immediate write acknowledgement. A complete remote Star-and-List replay
+    still gates the final apply receipt and the independent verify receipt.
+    """
+
+    if not operation.repository or not operation.repository_node_id:
+        raise StateError(
+            code="github_plan_operation_invalid",
+            message="Membership operation omitted repository identity.",
+        )
+    requested = set(requested_list_ids)
+    known = {item.node_id for item in state.lists}
+    if not requested or not requested <= known:
+        raise StateError(
+            code="github_membership_response_invalid",
+            message="Membership mutation returned an unknown or empty List union.",
+        )
+    repository = next(
+        (
+            item
+            for item in state.relevant_repositories
+            if item.node_id == operation.repository_node_id
+            and item.repository == operation.repository
+        ),
+        None,
+    )
+    if repository is None:
+        raise StateError(
+            code="github_membership_response_invalid",
+            message="Membership mutation repository was absent from current state.",
+        )
+    member = GitHubListMember(
+        node_id=repository.node_id,
+        repository=repository.repository,
+        is_private=repository.is_private,
+        is_archived=repository.is_archived,
+        url=repository.url,
+    )
+    current_ids = {
+        github_list.node_id
+        for github_list in state.lists
+        if repository.node_id in {item.node_id for item in github_list.members}
+    }
+    if not current_ids <= requested:
+        raise StateError(
+            code="github_membership_response_invalid",
+            message="Membership mutation response would remove an observed List membership.",
+        )
+    lists = []
+    for github_list in state.lists:
+        members = {item.repository: item for item in github_list.members}
+        if github_list.node_id in requested:
+            members[member.repository] = member
+        lists.append(
+            github_list.model_copy(
+                update={"members": tuple(members[key] for key in sorted(members))}
+            )
+        )
+    semantic = {
+        "account": state.account,
+        "account_node_id": state.account_node_id,
+        "relevant_repositories": [
+            item.model_dump(mode="json") for item in state.relevant_repositories
+        ],
+        "lists": [item.model_dump(mode="json") for item in lists],
+    }
+    return GitHubCurationState(
+        account=state.account,
+        account_node_id=state.account_node_id,
+        observed_at=observed_at,
+        total_starred_count=state.total_starred_count,
+        relevant_repositories=state.relevant_repositories,
+        lists=tuple(lists),
+        state_fingerprint=digest(semantic, prefix="github"),
+    )
 
 
 def _write_apply_progress(

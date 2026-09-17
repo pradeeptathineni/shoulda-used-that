@@ -4,6 +4,30 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- A 221-record personal-interest catalog spanning 12 intentionally separated OSS domains, with
+  cross-source discovery evidence, live metadata gates, bounded exceptions, and meaningful
+  multi-List membership.
+- A generated self-use page and sanitized live-projection evidence linking the authoritative
+  catalog to every public GitHub List.
+- A deterministic read-only refresh command that enriches human-authored selections from exact
+  GitHub repository metadata and reseals the profile.
+
+### Changed
+
+- Membership apply now advances from GitHub's strictly validated mutation result and requires a
+  full remote replay before completion, avoiding redundant eventually consistent account reads
+  while retaining one immutable receipt per sealed operation.
+
+### Verified
+
+- The live `pradeeptathineni` projection completed 438 additive operations and independently
+  verified all 488 initial postconditions with zero mismatches. After refreshing the repository's
+  own release evidence, a newly sealed semantic no-op independently verified all 730 current
+  identity, capability, state-integrity, List, star, membership, and preserved-membership
+  postconditions with zero mismatches.
+
 ## [0.2.0] - 2026-09-17
 
 ### Added

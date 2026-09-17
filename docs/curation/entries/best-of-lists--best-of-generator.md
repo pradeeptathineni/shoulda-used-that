@@ -3,7 +3,7 @@ title: "best-of-lists/best-of-generator"
 description: "Generator and updater used by best-of list projects."
 tags:
   - "Rejected / deferred"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # best\-of\-lists/best\-of\-generator
 
@@ -22,7 +22,7 @@ tags:
 **Role:** catalog generator runtime<br>
 **Need:** Avoid a generator that can turn enrichment failure into candidate disappearance\.<br>
 **Why:** GPL and content boundaries plus observed last\-known\-good failures make embedding unjustified\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

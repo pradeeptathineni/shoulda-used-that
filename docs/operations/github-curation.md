@@ -66,8 +66,10 @@ uv run shoulda --profile personal --format json \
 
 The command rechecks the fingerprint, expiry, caps, TTY/CI boundary, authenticated identity,
 GitHub capability, complete relevant state, and material drift before its first write. It records
-each attempt and reads state back between operation classes. A nonzero exit or partial receipt is
-not permission to start over.
+each attempt. List-create and star classes receive complete remote readbacks; membership writes
+advance only when GitHub returns the exact requested List union and repository identity. A final
+complete remote Star-and-List replay is mandatory before the apply can be marked complete. A
+nonzero exit or partial receipt is not permission to start over.
 
 ## 4. Verify independently
 

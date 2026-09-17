@@ -3,7 +3,7 @@ title: "trailofbits/rfc8785.py"
 description: "Python implementation of the RFC 8785 JSON Canonicalization Scheme."
 tags:
   - "Used here"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Python Engineering"
 ---
 # trailofbits/rfc8785\.py
@@ -23,7 +23,7 @@ tags:
 **Role:** runtime canonical JSON<br>
 **Need:** Interoperable content identity for immutable receipts\.<br>
 **Why:** A standards implementation avoids incomplete sorted\-JSON identity rules\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
 ## Observed facts
 

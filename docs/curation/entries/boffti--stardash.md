@@ -3,7 +3,7 @@ title: "boffti/stardash"
 description: "Dashboard for exploring and organizing GitHub stars."
 tags:
   - "Rejected / deferred"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # boffti/stardash
 
@@ -22,7 +22,7 @@ tags:
 **Role:** hosted star dashboard runtime<br>
 **Need:** Keep the local\-first curation core free of a hosted backend and analytics surface\.<br>
 **Why:** Supabase, provider, telemetry, and direct mutation surfaces are disproportionate to this release\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

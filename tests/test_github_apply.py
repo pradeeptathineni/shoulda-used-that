@@ -8,7 +8,6 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from shoulda_used_that.curation import compile_profile
 from shoulda_used_that.errors import GitHubError, GitHubRateLimitError, StateError
 from shoulda_used_that.github import GhAuthStatus, GhResult
 from shoulda_used_that.github_apply import (
@@ -36,10 +35,10 @@ from shoulda_used_that.services import applied, verified
 from shoulda_used_that.state import StateStore
 from tests.test_projection import (
     NOW,
-    PUBLIC_PROFILE,
     _capability,
     _github_state,
     _node,
+    _projection_snapshot,
 )
 
 
@@ -69,6 +68,8 @@ class FixtureApplyClient:
         )
         self.effect_before_failure = False
         self.suppress_effect_at: int | None = None
+        self.membership_response_repository: str | None = None
+        self.membership_response_list_ids: tuple[str, ...] | None = None
 
     def auth_status(self) -> GhAuthStatus:
         self.calls.append(("auth-status", None))
@@ -247,8 +248,8 @@ class FixtureApplyClient:
         )
         return MembershipMutationResult(
             repository_node_id=repository_node_id,
-            repository=repository.repository,
-            list_ids=tuple(sorted(list_ids)),
+            repository=self.membership_response_repository or repository.repository,
+            list_ids=self.membership_response_list_ids or tuple(sorted(list_ids)),
             client_mutation_id=client_mutation_id,
         )
 
@@ -311,7 +312,7 @@ def _sealed_store(
     capability_state: GitHubCapabilityState = GitHubCapabilityState.AVAILABLE,
 ) -> tuple[StateStore, Any, GitHubCurationState]:
     source_state = baseline or _github_state()
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     plan = build_projection_plan(
         snapshot,
         source_state,
@@ -348,10 +349,8 @@ def test_apply_then_verify_full_readback_and_idempotent_replay(tmp_path: Path) -
     )
 
     assert receipt.status is ApplyStatus.COMPLETE
-    assert len(receipt.operation_receipts) == 14
-    assert _mutation_kinds(client) == (
-        ["create-list"] * 2 + ["star-repository"] * 6 + ["add-membership"] * 6
-    )
+    assert len(receipt.operation_receipts) == plan.operation_counts.total
+    assert _mutation_kinds(client) == [item.kind for item in plan.operations]
     assert all(
         item.outcome is ApplyOperationOutcome.SUCCEEDED for item in receipt.operation_receipts
     )
@@ -369,6 +368,8 @@ def test_apply_then_verify_full_readback_and_idempotent_replay(tmp_path: Path) -
     assert verification.observed_account_node_id == "U_owner"
     assert all(item.state.value == "verified" for item in verification.postconditions)
     assert store.read_verify(verification.verify_receipt_id) == verification
+    assert sum(kind == "read-stars" for kind, _ in client.calls) == 5
+    assert sum(kind == "read-lists" for kind, _ in client.calls) == 5
 
     for output_format in (OutputFormat.TABLE, OutputFormat.MARKDOWN):
         apply_output = render(receipt, output_format)
@@ -543,8 +544,10 @@ def test_partial_failures_resume_without_duplicate_effects(tmp_path: Path, failu
     )
     assert complete.status is ApplyStatus.COMPLETE
     if failure_at == 2:
-        assert _mutation_kinds(client).count("create-list") == 3
-    assert len(client.lists) == 2
+        assert _mutation_kinds(client).count("create-list") == (
+            plan.operation_counts.create_lists + 1
+        )
+    assert len(client.lists) == len(plan.projected_lists)
     assert all(item.starred for item in client.repositories.values())
     assert len(_mutation_kinds(client)) > len(before_resume)
 
@@ -579,7 +582,7 @@ def test_timeout_after_effect_reconciles_and_timeout_without_effect_blocks_retry
         clock=TickClock(NOW + timedelta(minutes=20)),
     )
     assert complete.status is ApplyStatus.COMPLETE
-    assert len(client.lists) == 2
+    assert len(client.lists) == len(plan.projected_lists)
 
     blocked_store, blocked_plan, blocked_baseline = _sealed_store(tmp_path / "blocked")
     blocked = FixtureApplyClient(blocked_baseline)
@@ -634,6 +637,33 @@ def test_ambiguous_post_write_responses_are_indeterminate(tmp_path: Path, error_
     )
 
     assert receipt.status is ApplyStatus.PARTIAL
+    assert receipt.operation_receipts[-1].outcome is ApplyOperationOutcome.INDETERMINATE
+
+
+@pytest.mark.parametrize("response_drift", ["repository", "list-union"])
+def test_membership_response_identity_and_union_are_revalidated(
+    tmp_path: Path, response_drift: str
+) -> None:
+    store, plan, baseline = _sealed_store(tmp_path)
+    client = FixtureApplyClient(baseline)
+    if response_drift == "repository":
+        client.membership_response_repository = "different/repository"
+    else:
+        client.membership_response_list_ids = ("L_unknown",)
+
+    receipt = applied(
+        store,
+        plan_id=plan.plan_id,
+        fingerprint=plan.canonical_plan_fingerprint,
+        github=client,
+        environment={},
+        stdin_isatty=True,
+        clock=TickClock(),
+    )
+
+    assert receipt.status is ApplyStatus.PARTIAL
+    assert receipt.failure_code == "github_mutation_postcondition_mismatch"
+    assert receipt.operation_receipts[-1].request_kind == "add-membership"
     assert receipt.operation_receipts[-1].outcome is ApplyOperationOutcome.INDETERMINATE
 
 
