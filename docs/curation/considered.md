@@ -10,6 +10,8 @@ tags:
 ---
 # Considered choices
 
+Not every useful discovery becomes a dependency. Browse **Trialing** for active evaluations, **Reference** or **Learn** for ideas, **Watch** for deferred choices, and **Rejected / deferred** for options considered but not selected here.
+
 This catalog records evidence\-bound decisions for named needs and does not claim a universal best\-OSS ranking or automatic adoption recommendation\.
 
 ## Trialing

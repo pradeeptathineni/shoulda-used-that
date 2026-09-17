@@ -9,7 +9,7 @@
     {
       "kind": "public-json",
       "locator": "curation/entries/shoulda-used-that.json",
-      "content_sha256": "dea05ae0e98dd16401626c0cb1dff56d2bc09f45c188a2f9e99cd16c91ce775d",
+      "content_sha256": "13039bd53a84d27856aa1c80041fce2796690b951471d2134513d8de07820e65",
       "license": "Apache-2.0",
       "attribution": "Repository-authored review records; individual entries retain any listed upstream attribution obligations."
     },
@@ -341,5 +341,5 @@
       "add_memberships": 600
     }
   },
-  "canonical_fingerprint": "profile_b0290c717cec55e9fc84f3ad295eb22946da8675fc8af8908a314a1f1be31c42"
+  "canonical_fingerprint": "profile_f2fa44daef8ee6ef85474f4d58aead502ddadee6f4d584a51fe064cf3a52f2a9"
 }

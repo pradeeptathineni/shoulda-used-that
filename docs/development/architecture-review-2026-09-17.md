@@ -5,6 +5,11 @@ description: End-to-end review of product intent, reuse, safety boundaries, main
 
 # Architecture and public-writing review — 2026-09-17
 
+!!! note "Review snapshot"
+    This page records the pre-`v0.3.0` architecture and writing baseline. The
+    [v0.3.0 public-surface review](public-surface-review-v0.3.0.md) covers the later First Reader
+    and ZeroSlop passes and the resulting reader-first changes.
+
 ## Outcome
 
 The architecture fits the product's intent: ShouldaUsedThat keeps the small deterministic residual

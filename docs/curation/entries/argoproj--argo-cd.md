@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/argoproj/argo-cd){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** platform engineering and software\-delivery prior art<br>
 **Need:** Compare established build, workflow, GitOps, runtime, observability, and developer\-platform components before creating delivery machinery\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 24,176 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** platform engineering and software\-delivery prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+
+## Reconsider when
+
+The project loses active maintenance, changes its operational boundary, or a native platform capability removes the need\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 
 - <a href="https://api.github.com/repos/argoproj/argo-cd">https://api.github.com/repos/argoproj/argo-cd</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project loses active maintenance, changes its operational boundary, or a native platform capability removes the need\.
 
 ## Attribution
 

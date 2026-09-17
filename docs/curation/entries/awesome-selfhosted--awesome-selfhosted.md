@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/awesome-selfhosted/awesome-selfhosted){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** homelab and self\-hosted operations prior art<br>
 **Need:** Compare widely used self\-hosted services, networking, storage, monitoring, and deployment tools before operating a home service\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 319,833 stars, a recent default\-branch push, and CC\-BY\-SA\-3\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** homelab and self\-hosted operations prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/homelab-self-hosting.md">Homelab &amp; Self-Hosting</a>, <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+The project becomes inactive, materially changes its self\-hosted or license terms, or no longer has a maintainable deployment path\.
 
 ## Observed facts
 
@@ -43,10 +47,6 @@ tags:
 - <a href="https://api.github.com/repos/awesome-selfhosted/awesome-selfhosted">https://api.github.com/repos/awesome-selfhosted/awesome-selfhosted</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="https://github.com/awesome-selfhosted/awesome-selfhosted/blob/master/LICENSE">https://github.com/awesome-selfhosted/awesome-selfhosted/blob/master/LICENSE</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project becomes inactive, materially changes its self\-hosted or license terms, or no longer has a maintainable deployment path\.
 
 ## Attribution
 

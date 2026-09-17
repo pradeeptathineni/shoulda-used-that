@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Generative art, animation, interactive graphics, visual explanation, and data visualization.</p>
 
-**Aliases:** creative coding, data visualization, generative art<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 120 days
-
-## Meaning
+## Use this collection when
 
 A durable collection for tools and references that turn code or data into expressive visual systems\.
 
-- **Include:** Include a reviewed repository with a concrete creative\-coding, animation, graphics, or visualization role\.
-- **Exclude:** Exclude generic UI libraries without an evidenced visual\-computing or creative role\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -159,3 +155,12 @@ A durable collection for tools and references that turn code or data into expres
   <p class="catalog-card__need"><strong>Need</strong> Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** creative coding, data visualization, generative art<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 120 days
+
+- **Include:** Include a reviewed repository with a concrete creative\-coding, animation, graphics, or visualization role\.
+- **Exclude:** Exclude generic UI libraries without an evidenced visual\-computing or creative role\.

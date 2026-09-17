@@ -12,16 +12,12 @@ tags:
 
 <p class="collection-deck">Cloud provisioning, infrastructure as code, Kubernetes, policy, cost, and local emulation.</p>
 
-**Aliases:** AWS, Terraform, cloud engineering, infrastructure as code<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 A durable domain collection for declaring, provisioning, testing, and governing cloud infrastructure\.
 
-- **Include:** Include a reviewed repository with a concrete cloud, provisioning, policy, cost, cluster, or infrastructure role\.
-- **Exclude:** Exclude generic delivery tools without a reviewed infrastructure responsibility\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -139,3 +135,12 @@ A durable domain collection for declaring, provisioning, testing, and governing 
   <p class="catalog-card__need"><strong>Need</strong> Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** AWS, Terraform, cloud engineering, infrastructure as code<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository with a concrete cloud, provisioning, policy, cost, cluster, or infrastructure role\.
+- **Exclude:** Exclude generic delivery tools without a reviewed infrastructure responsibility\.

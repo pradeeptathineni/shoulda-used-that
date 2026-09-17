@@ -11,7 +11,7 @@ tags:
 ## Bound source snapshots
 
 <ul>
-<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>dea05ae0e98dd16401626c0cb1dff56d2bc09f45c188a2f9e99cd16c91ce775d</code>; 16 entries</li>
+<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>13039bd53a84d27856aa1c80041fce2796690b951471d2134513d8de07820e65</code>; 16 entries</li>
 <li><code>curation/entries/personal-interests.json</code> — SHA-256 <code>fc43e4cecf45ebf939d801ea3eeda56acb8197c9b8956cdb2ad7f85009036c0f</code>; 206 entries</li>
 </ul>
 

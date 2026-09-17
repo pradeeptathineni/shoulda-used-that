@@ -301,7 +301,7 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
     )
     assert human.exit_code == 0, human.output
     assert "pradeeptathineni/shoulda-used-that" in human.stdout
-    assert "entries=222 excluded=1 inbox=0 stale=0" in human.stdout
+    assert "Entries: 222 · Excluded: 1 · Inbox: 0 · Stale: 0" in human.stdout
     assert "canonical_fingerprint" not in human.stdout
 
     markdown = render(compile_profile(PUBLIC_PROFILE), OutputFormat.MARKDOWN)

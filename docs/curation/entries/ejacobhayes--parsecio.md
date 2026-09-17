@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/ejacobhayes/parsecio){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Not selected; a concrete future trigger can reopen the decision\.<br>
-**Role:** static zero\-dependency catalog prior art<br>
 **Need:** Watch a lightweight public catalog approach without adopting an immature contract\.<br>
 **Why:** The static approach is relevant, but stable releases and an auditable export contract are not yet established\.<br>
+**Role:** static zero\-dependency catalog prior art<br>
+**Status meaning:** Not selected; a concrete future trigger can reopen the decision\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+A stable release and documented deterministic export contract exist\.
 
 ## Observed facts
 
@@ -40,10 +44,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-A stable release and documented deterministic export contract exist\.
 
 ## Attribution
 

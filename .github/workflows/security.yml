@@ -92,7 +92,7 @@ jobs:
         with:
           version: 3.21.0
           files: >-
-            ["README.md","docs/index.md","docs/curation/index.md","docs/curation/dogfood.md","docs/curation/in-use.md","docs/architecture/public-writing.md"]
+            ["AGENTS.md","CHANGELOG.md","CONTRIBUTING.md","README.md","SECURITY.md","schemas/README.md","docs/index.md","docs/getting-started.md","docs/architecture/curation-v0.2.md","docs/architecture/dogfood-reuse-audit.md","docs/architecture/implementation-brief.md","docs/architecture/public-writing.md","docs/decisions/README.md","docs/development/architecture-review-2026-09-17.md","docs/development/catalog-scale-validation.md","docs/development/context-receipt.md","docs/development/public-surface-review-v0.3.0.md","docs/development/review-v0.1.0.md","docs/development/review-v0.2.0.md","docs/development/sbom-comparison.md","docs/operations/github-curation.md","docs/operations/live-projection.md","docs/operations/scheduling.md","docs/releases/v0.1.0.md","docs/releases/v0.2.0.md","docs/releases/v0.3.0.md","docs/curation/index.md","docs/curation/selection.md","docs/curation/dogfood.md","docs/curation/in-use.md","docs/curation/freshness.md","docs/curation/sources.md","docs/curation/collections/index.md","docs/curation/tags.md"]
           sync: false
           filter_mode: nofilter
           fail_level: warning

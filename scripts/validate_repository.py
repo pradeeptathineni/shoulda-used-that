@@ -13,8 +13,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_DESCRIPTION = (
-    "Find, vet, and remember existing open source before building from scratch, then organize "
-    "the choices in GitHub Stars and Lists."
+    "Find existing open source before building from scratch, record why it fits, and revisit "
+    "the choice when evidence changes."
 )
 EXPECTED_TAGLINE = (
     "Before you build another tool, check what open source already exists "
@@ -137,8 +137,8 @@ def validate() -> list[str]:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     if project["name"] != "shoulda-used-that":
         problems.append("project distribution name is not shoulda-used-that")
-    if project["version"] != "0.2.0":
-        problems.append("project version is not 0.2.0")
+    if project["version"] != "0.3.0":
+        problems.append("project version is not 0.3.0")
     if project["description"] != EXPECTED_DESCRIPTION:
         problems.append("project description differs from the public contract")
 

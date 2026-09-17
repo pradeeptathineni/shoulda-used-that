@@ -12,16 +12,12 @@ tags:
 
 <p class="collection-deck">CI/CD, infrastructure as code, developer platforms, release engineering, observability, and operations.</p>
 
-**Aliases:** DevOps, GitOps, SRE, cloud native<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 A durable domain collection for building, securing, releasing, and operating software platforms\.
 
-- **Include:** Include a reviewed repository when it has an evidenced delivery, platform, release, workflow, or operations role\.
-- **Exclude:** Exclude generic libraries without a reviewed platform or delivery role\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -209,3 +205,12 @@ A durable domain collection for building, securing, releasing, and operating sof
   <p class="catalog-card__need"><strong>Need</strong> Responsive Markdown rendering, tags, and private client-side search without a custom frontend.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** DevOps, GitOps, SRE, cloud native<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository when it has an evidenced delivery, platform, release, workflow, or operations role\.
+- **Exclude:** Exclude generic libraries without a reviewed platform or delivery role\.

@@ -8,9 +8,23 @@ tags:
 ---
 # ShouldaUsedThat uses itself
 
-This repository is both the tool and a public execution of its central claim: **look for existing OSS with relevant public signals before building another implementation, then preserve the evidence and decision boundary**.
+This repository uses its own workflow to answer a practical question: **what existing tools should
+own each job, and what small residual capability is worth building here?** The result is the public
+catalog you are reading and a set of GitHub Lists that make the same choices easier to revisit.
 
-## The executed shape
+## What you can inspect
+
+- **The choices:** [222 reviewed repositories](index.md) with needs, rationale, dates,
+  and reconsideration triggers.
+- **The public navigation:** 12 GitHub Lists containing
+  219 projectable repositories and 249 intentional memberships.
+- **The readback:** [sanitized live evidence](../operations/live-projection.md) for what was
+  actually applied and independently verified.
+
+GitHub is a convenient view, not the ledger. Lists cannot carry the full rationale, provenance,
+freshness, rejection, or reconsideration evidence preserved by the catalog.
+
+## How the result is produced
 
 1. A human-readable [interest selection](selection.md) exposes the domains and exact repositories compiled from `curation/selections/personal-interests.json`.
 2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
@@ -20,11 +34,11 @@ This repository is both the tool and a public execution of its central claim: **
 6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
 7. `exported` builds this allowlisted catalog and its deterministic manifest.
 
-The current public snapshot contains **222 reviewed repositories**, **12 projected Lists**, **219 projectable repositories**, and **249 intentional repository-to-List memberships**. Its canonical curation fingerprint is `curation_f7b3c8b2273880016511e50578c0656d3ced8a6b27dda7dfe80cd775b0dde662`.
+The snapshot's canonical curation fingerprint is `curation_76126b448e0ffbb2028f47ff4c6947a9049c131de564312a4f16e472aa5d1249`.
 
 ## Native GitHub projection
 
-The GitHub views are deliberately lossy navigation surfaces. The catalog remains authoritative for rationale, provenance, freshness, rejection, and reconsideration.
+Use the Lists for browsing; use the catalog when the reason or evidence matters.
 
 <div class="table-scroll" role="region" aria-label="Projected GitHub Lists" tabindex="0">
 <table>
@@ -47,7 +61,8 @@ The GitHub views are deliberately lossy navigation surfaces. The catalog remains
 </table>
 </div>
 
-See the [sanitized live projection evidence](../operations/live-projection.md) for the last applied and independently verified public result. Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside the repository.
+Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside
+the repository.
 
 ## What this proves—and what it does not
 

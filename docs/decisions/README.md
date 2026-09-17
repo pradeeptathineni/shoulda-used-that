@@ -20,6 +20,7 @@ These receipts dogfood the product's decision vocabulary before or alongside imp
 | [`pages-workflow.json`](pages-workflow.json) | Verify public inputs on pull requests and schedules, then deploy only a verified main-branch artifact with official pinned Pages actions |
 | [`personal-oss-curation.json`](personal-oss-curation.json) | Use cross-source discovery, explicit quality gates, and human-authored interest boundaries to furnish the public catalog and native GitHub Lists |
 | [`membership-apply-scaling.json`](membership-apply-scaling.json) | Use the exact validated membership-mutation result for immediate progress, while retaining operation receipts, final full replay, and independent verification |
-| [`public-writing.json`](public-writing.json) | Use Vale for narrow deterministic prose checks, plus a context-free first-reader skim; keep AI-pattern tools diagnostic and non-authoritative |
+| [`public-writing.json`](public-writing.json) | Establish Vale, context-free first reading, and non-authoritative AI-pattern diagnostics |
+| [`public-writing-v0.3.json`](public-writing-v0.3.json) | Supersede the narrow entrypoint trial with First Reader and local ZeroSlop review routes across every public surface |
 
 Claims are distinct from behavior inspected locally or executed in CI. Dated popularity appears only as discovery evidence and never controls a disposition.

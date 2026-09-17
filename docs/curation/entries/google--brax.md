@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/google/brax){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** nature, physics, and simulation prior art<br>
 **Need:** Compare simulation engines and learning references before implementing physical, agent\-based, emergent, or reinforcement\-learning environments\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 3,235 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** nature, physics, and simulation prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/nature-physics-simulation.md">Nature, Physics &amp; Simulation</a>
+
+## Reconsider when
+
+The engine or reference becomes inactive, incompatible, archived, or no longer fits the intended simulation scale\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 
 - <a href="https://api.github.com/repos/google/brax">https://api.github.com/repos/google/brax</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The engine or reference becomes inactive, incompatible, archived, or no longer fits the intended simulation scale\.
 
 ## Attribution
 

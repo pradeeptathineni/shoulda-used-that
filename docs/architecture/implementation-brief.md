@@ -30,6 +30,14 @@ evidence ledger, and generated Markdown/JSON plus the static site remain replace
 No model, crawler, database, hosted backend, analytics service, or package-registry publication is
 introduced.
 
+## `v0.3.0` reader-surface release
+
+Version `0.3.0` keeps the `v0.2.0` runtime, state, and mutation boundaries. It changes how people
+enter the product: browsing, a no-authentication fixture check, and verified-wheel installation
+are explicit first steps; command help and generated catalog pages lead with the reader's question
+before showing operator evidence. First Reader and ZeroSlop are review techniques, not runtime
+dependencies or authorities.
+
 ## State and identity
 
 Runtime state lives under an OS data directory selected by `platformdirs`, or under an explicit `--state-dir`. Profiles do not share latest-check pointers, saved items, or decisions. State is JSON validated by versioned Pydantic models and hashed with RFC 8785 canonical JSON. Receipts are immutable; a later receipt may supersede an earlier one.
@@ -49,7 +57,7 @@ credentials, raw private payloads, and personal profile data. GitHub transport s
 through an argument vector to the installed `gh` CLI, uses existing keyring authentication, and
 never requests or logs a token.
 
-The `v0.2.0` mutation adapter is intentionally smaller than the read transport. It can create an
+The mutation adapter is intentionally smaller than the read transport. It can create an
 exact public List, star an exact public repository, and add that repository to the union of its
 current and approved memberships only after an exact sealed-plan fingerprint passes identity,
 capability, expiry, cap, drift, TTY, and CI checks. Independent readback is mandatory. There is no
@@ -60,5 +68,5 @@ unstar, removal, delete, rename, privacy-change, private-repository, or schedule
 No web application, hosted service, crawler, vulnerability scanner, vector index, daemon,
 scheduling framework, runtime model, generic recommendation score, package-registry publication,
 automatic code change, destructive GitHub mutation, unattended personal mutation, or target
-remediation belongs in `v0.2.0`. The static Pages catalog and deterministic OS/Actions scheduling
+remediation belongs in the current scope. The static Pages catalog and deterministic OS/Actions scheduling
 recipes do not change those boundaries.

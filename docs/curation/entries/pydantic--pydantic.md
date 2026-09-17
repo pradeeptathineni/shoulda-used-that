@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/pydantic/pydantic){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** runtime typed contracts<br>
 **Need:** Strict versioned records and generated JSON Schema\.<br>
 **Why:** Pydantic validates external records while workflow rules remain explicit services\.<br>
+**Role:** runtime typed contracts<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+
+## Reconsider when
+
+A major version breaks the strict immutable record boundary\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/dependencies.json">docs/decisions/dependencies.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-A major version breaks the strict immutable record boundary\.
 
 ## Attribution
 

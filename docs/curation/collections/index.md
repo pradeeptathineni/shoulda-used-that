@@ -6,7 +6,11 @@ tags:
 ---
 # Collections
 
-Collections organize evidence; they do not rank repositories. Aliases are searchable, and an empty collection remains visible so the catalog design does not depend on GitHub Lists.
+Choose the collection closest to the job you are trying to solve. A repository may belong to more
+than one collection when it genuinely serves more than one need.
+
+Collections organize evidence; they do not rank repositories. Aliases are searchable, and an empty
+collection stays visible as an intentional area rather than disappearing from the catalog.
 
 <div class="catalog-grid">
 <article class="catalog-card collection-card">

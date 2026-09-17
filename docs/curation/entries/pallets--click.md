@@ -18,13 +18,17 @@ tags:
 
 [Open repository](https://github.com/pallets/click){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** runtime CLI parser<br>
 **Need:** A mature direct command and option boundary without a custom parser\.<br>
 **Why:** Click owns parsing and help while typed domain validation stays in ShouldaUsedThat\.<br>
+**Role:** runtime CLI parser<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+
+## Reconsider when
+
+The selected major version becomes incompatible or an already\-used component fully owns parsing\.
 
 ## Observed facts
 
@@ -43,10 +47,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/cli-filter.json">docs/decisions/cli-filter.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-The selected major version becomes incompatible or an already\-used component fully owns parsing\.
 
 ## Attribution
 

@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Browser and server runtimes, frameworks, routing, styling, rendering, and interface systems.</p>
 
-**Aliases:** frontend engineering, full stack, web development<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 90 days
-
-## Meaning
+## Use this collection when
 
 A durable collection for building accessible, maintainable web applications and interface foundations\.
 
-- **Include:** Include a reviewed repository with a concrete browser, server, runtime, framework, routing, or styling role\.
-- **Exclude:** Exclude template\-only projects and unmaintained framework experiments\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -159,3 +155,12 @@ A durable collection for building accessible, maintainable web applications and 
   <p class="catalog-card__need"><strong>Need</strong> Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** frontend engineering, full stack, web development<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 90 days
+
+- **Include:** Include a reviewed repository with a concrete browser, server, runtime, framework, routing, or styling role\.
+- **Exclude:** Exclude template\-only projects and unmaintained framework experiments\.

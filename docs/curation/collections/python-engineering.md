@@ -10,16 +10,12 @@ tags:
 
 <p class="collection-deck">Runtime libraries, frameworks, packaging, typing, linting, testing, and developer tools.</p>
 
-**Aliases:** Python development, Python tooling<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 90 days
-
-## Meaning
+## Use this collection when
 
 A cross\-cutting collection for evidenced Python implementation and tooling roles\.
 
-- **Include:** Include a reviewed repository when it serves a concrete Python engineering or learning need\.
-- **Exclude:** Exclude language\-adjacent repositories without a concrete Python role\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -221,3 +217,12 @@ A cross\-cutting collection for evidenced Python implementation and tooling role
   <p class="catalog-card__need"><strong>Need</strong> Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** Python development, Python tooling<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 90 days
+
+- **Include:** Include a reviewed repository when it serves a concrete Python engineering or learning need\.
+- **Exclude:** Exclude language\-adjacent repositories without a concrete Python role\.

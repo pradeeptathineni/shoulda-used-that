@@ -14,9 +14,17 @@ from rich.table import Table
 
 from shoulda_used_that.curation import CurationSnapshot
 from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
-from shoulda_used_that.models import CheckReceipt
+from shoulda_used_that.models import (
+    AdoptionPlan,
+    CheckReceipt,
+    DecisionReceipt,
+    ProjectionPlan,
+    RecheckReceipt,
+    SaveReceipt,
+)
 from shoulda_used_that.project_context import ProjectSnapshot
 from shoulda_used_that.projection import GitHubProjectionPlan
+from shoulda_used_that.public_export import PublicCatalogExport
 
 
 class OutputFormat(StrEnum):
@@ -24,6 +32,16 @@ class OutputFormat(StrEnum):
     JSON = "json"
     YAML = "yaml"
     MARKDOWN = "markdown"
+
+
+LOCAL_WORKFLOW_TYPES = (
+    SaveReceipt,
+    ProjectionPlan,
+    DecisionReceipt,
+    RecheckReceipt,
+    AdoptionPlan,
+    PublicCatalogExport,
+)
 
 
 def render(value: BaseModel, output_format: OutputFormat, *, explain: bool = False) -> str:
@@ -79,10 +97,16 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             table.add_row(*row)
         console.print(table)
         console.print(
-            f"visible={value.counts.visible} excluded={value.counts.excluded} "
-            f"result={value.result_set_fingerprint}"
-            + (f" project={value.project_snapshot_id}" if value.project_snapshot_id else "")
+            f"Visible: {value.counts.visible} · Excluded: {value.counts.excluded} · "
+            f"Result fingerprint: {value.result_set_fingerprint}"
+            + (
+                f" · Project context: {value.project_snapshot_id}"
+                if value.project_snapshot_id
+                else ""
+            )
         )
+    elif isinstance(value, LOCAL_WORKFLOW_TYPES):
+        _local_workflow_table(value, console)
     elif isinstance(value, CurationSnapshot):
         table = Table(title=f"{value.curation_snapshot_id} · {value.profile_id}")
         table.add_column("Repository")
@@ -98,10 +122,10 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             )
         console.print(table)
         console.print(
-            f"entries={value.counts.entries} excluded={value.counts.excluded} "
-            f"inbox={value.counts.inbox} stale={value.counts.stale} "
-            f"result={value.canonical_fingerprint}"
+            f"Entries: {value.counts.entries} · Excluded: {value.counts.excluded} · "
+            f"Inbox: {value.counts.inbox} · Stale: {value.counts.stale}"
         )
+        console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, ProjectSnapshot):
         table = Table(title=f"{value.project_snapshot_id} · {value.target_identity}", min_width=80)
         table.add_column("Evidence")
@@ -113,10 +137,11 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         table.add_row("typed gaps", str(len(value.evidence_gaps)))
         console.print(table)
         console.print(
-            f"files={value.inspected_file_count} bytes={value.inspected_byte_count} "
-            f"sbom={value.sbom.format if value.sbom else 'unavailable'} "
-            f"result={value.canonical_fingerprint}"
+            f"Files inspected: {value.inspected_file_count} · "
+            f"Bytes inspected: {value.inspected_byte_count} · "
+            f"SBOM: {value.sbom.format if value.sbom else 'unavailable'}"
         )
+        console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, GitHubProjectionPlan):
         table = Table(title=f"{value.plan_id} · {value.target_account}")
         table.add_column("#", justify="right")
@@ -144,21 +169,21 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             table.add_row("-", "semantic-no-op", "-", "No additive changes", "all")
         console.print(table)
         console.print(
-            f"identity={value.observed_login} capability={value.capability.state.value} "
-            f"apply-ready={'yes' if value.apply_ready else 'no'} "
-            f"expires={value.expires_at.isoformat()}"
+            f"Account: {value.observed_login} · Capability: {value.capability.state.value} · "
+            f"Ready to apply: {'yes' if value.apply_ready else 'no'} · "
+            f"Expires: {value.expires_at.isoformat()}"
         )
         console.print(
-            f"creates={value.operation_counts.create_lists} "
-            f"stars={value.operation_counts.star_repositories} "
-            f"memberships={value.operation_counts.add_memberships} "
-            f"total={value.operation_counts.total}"
+            f"Create Lists: {value.operation_counts.create_lists} · "
+            f"Star repositories: {value.operation_counts.star_repositories} · "
+            f"Add memberships: {value.operation_counts.add_memberships} · "
+            f"Total operations: {value.operation_counts.total}"
         )
-        console.print(f"source-state={value.github_state_fingerprint}")
-        console.print(f"plan={value.canonical_plan_fingerprint}")
-        console.print(f"forbidden={', '.join(value.forbidden_operation_classes)}")
+        console.print(f"Source-state fingerprint: {value.github_state_fingerprint}")
+        console.print(f"Plan fingerprint: {value.canonical_plan_fingerprint}")
+        console.print(f"Forbidden operations: {', '.join(value.forbidden_operation_classes)}")
         if value.capability.operator_command:
-            console.print(f"operator-action={value.capability.operator_command}")
+            console.print(f"Operator action required: {value.capability.operator_command}")
     elif isinstance(value, ApplyReceipt):
         table = Table(title=f"{value.apply_receipt_id} · {value.status.value}")
         table.add_column("Attempt")
@@ -182,10 +207,10 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             )
         console.print(table)
         console.print(
-            f"plan={value.plan_id} resume={value.resume_cursor or 'none'} "
-            f"failure={value.failure_code or 'none'}"
+            f"Plan: {value.plan_id} · Resume from: {value.resume_cursor or 'none'} · "
+            f"Failure: {value.failure_code or 'none'}"
         )
-        console.print(f"result={value.canonical_fingerprint}")
+        console.print(f"Receipt fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, VerifyReceipt):
         table = Table(title=f"{value.verify_receipt_id} · {value.status.value}")
         table.add_column("Postcondition")
@@ -202,11 +227,8 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
                 condition.state.value,
             )
         console.print(table)
-        console.print(
-            f"identity={value.observed_login or 'unavailable'}:"
-            f"{value.observed_account_node_id or 'unavailable'}"
-        )
-        console.print(f"result={value.canonical_fingerprint}")
+        console.print(f"Observed login: {value.observed_login or 'unavailable'}")
+        console.print(f"Receipt fingerprint: {value.canonical_fingerprint}")
     else:
         table = Table(title=value.__class__.__name__)
         table.add_column("Field")
@@ -219,6 +241,115 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             table.add_row(key, rendered)
         console.print(table)
     return console.export_text(styles=False)
+
+
+def _local_workflow_table(value: BaseModel, console: Console) -> None:
+    """Render the smaller local workflow records without exposing model field dumps."""
+
+    if isinstance(value, SaveReceipt):
+        table = Table(title=f"{value.save_id} · findings kept locally")
+        table.add_column("Repository")
+        table.add_column("Save result")
+        table.add_column("Decision status")
+        created = set(value.created)
+        for repository in value.repositories:
+            table.add_row(
+                repository,
+                "saved" if repository in created else "already saved",
+                value.disposition.value if value.disposition else "not set",
+            )
+        if not value.repositories:
+            table.add_row("none", "nothing requested", "not set")
+        console.print(table)
+        console.print(
+            f"Source check: {value.source_check_id or 'not supplied'} · "
+            f"GitHub changed: no · List plan: {value.projection_plan_id or 'none'}"
+        )
+    elif isinstance(value, ProjectionPlan):
+        table = Table(title=f"{value.plan_id} · sealed List preview")
+        table.add_column("Repository")
+        table.add_column("Current state")
+        table.add_column("Planned additive action")
+        for operation in value.operations:
+            table.add_row(
+                operation.repository,
+                operation.classification.replace("_", " "),
+                ", ".join(operation.operations) or "none",
+            )
+        console.print(table)
+        console.print(
+            f"List: {value.list_name} · GitHub changed: no · State: {value.mutation_state}"
+        )
+        console.print(f"Plan fingerprint: {value.plan_fingerprint}")
+    elif isinstance(value, DecisionReceipt):
+        table = Table(title=f"{value.decision_id} · {value.repository}")
+        table.add_column("Decision detail")
+        table.add_column("Recorded value")
+        table.add_row("Need", value.need)
+        table.add_row("Status", value.disposition.value)
+        table.add_row("Why", "; ".join(value.rationale))
+        table.add_row("Evidence", "; ".join(value.evidence_ids) or "none recorded")
+        table.add_row("Alternatives", "; ".join(value.alternatives) or "none recorded")
+        table.add_row("Unknowns", "; ".join(value.unknowns) or "none recorded")
+        table.add_row("Reconsider when", "; ".join(value.reconsider_when))
+        table.add_row("Supersedes", value.supersedes or "nothing")
+        console.print(table)
+        console.print("Stored as an immutable local decision receipt.")
+    elif isinstance(value, RecheckReceipt):
+        table = Table(title=f"{value.recheck_id} · {value.outcome.value}")
+        table.add_column("Repository")
+        table.add_column("Changed field")
+        table.add_column("Materiality")
+        table.add_column("Why it matters")
+        for difference in value.diffs:
+            table.add_row(
+                difference.repository,
+                difference.field,
+                difference.materiality.value,
+                difference.reason,
+            )
+        if not value.diffs:
+            table.add_row("none", "none", "no difference", "No typed differences found.")
+        console.print(table)
+        console.print(
+            f"Last-known-good preserved: {'yes' if value.last_known_good_preserved else 'no'} · "
+            f"Source errors: {'; '.join(value.source_errors) or 'none'}"
+        )
+    elif isinstance(value, AdoptionPlan):
+        table = Table(title=f"{value.plan_id} · planning only")
+        table.add_column("Plan detail")
+        table.add_column("Recorded value")
+        table.add_row("Repository", value.repository)
+        table.add_row("Need", value.need)
+        table.add_row("Target", value.target)
+        table.add_row("Proposed files", "; ".join(value.proposed_files) or "none recorded")
+        table.add_row("Existing tools", "; ".join(value.native_tools) or "none recorded")
+        table.add_row("Validation", "; ".join(value.tests) or "none recorded")
+        table.add_row("Success means", "; ".join(value.expected_postconditions))
+        table.add_row("Rollback", "; ".join(value.rollback))
+        table.add_row(
+            "Evidence still needed", "; ".join(value.remaining_evidence) or "none recorded"
+        )
+        console.print(table)
+        console.print("Target changed: no · This record is a plan, not an installer.")
+    elif isinstance(value, PublicCatalogExport):
+        table = Table(title=f"{value.export_id} · public catalog ready")
+        table.add_column("Public result")
+        table.add_column("Count or state")
+        table.add_row("Reviewed records", str(len(value.exported_records)))
+        table.add_row("Collections", str(len(value.collections)))
+        table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
+        table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
+        table.add_row("Reproducibility", value.reproducibility_status)
+        table.add_row("Renderer", value.renderer_version)
+        console.print(table)
+        console.print(
+            "Private field classes omitted: "
+            f"{sum(value.omitted_private_field_counts.values())} · "
+            f"Catalog fingerprint: {value.canonical_fingerprint}"
+        )
+    else:  # pragma: no cover - guarded by LOCAL_WORKFLOW_TYPES
+        raise TypeError(f"unsupported local workflow record: {type(value).__name__}")
 
 
 def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
@@ -247,6 +378,8 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                 f"{candidate.license or 'unknown'} | "
                 f"{'included' if evaluation.included else 'excluded'} |"
             )
+    elif isinstance(value, LOCAL_WORKFLOW_TYPES):
+        lines.extend(_local_workflow_markdown(value))
     elif isinstance(value, CurationSnapshot):
         lines.extend(
             [
@@ -364,3 +497,105 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
             )
             lines.append(f"- **{key}:** {rendered}")
     return "\n".join(lines) + "\n"
+
+
+def _local_workflow_markdown(value: BaseModel) -> list[str]:
+    """Return reader-facing Markdown for local workflow records."""
+
+    if isinstance(value, SaveReceipt):
+        lines = [
+            f"- Save receipt: `{value.save_id}`",
+            f"- Source check: `{value.source_check_id or 'not supplied'}`",
+            "- GitHub changed: no",
+            "",
+            "| Repository | Save result | Decision status |",
+            "|---|---|---|",
+        ]
+        created = set(value.created)
+        for repository in value.repositories:
+            lines.append(
+                f"| `{repository}` | "
+                f"{'saved' if repository in created else 'already saved'} | "
+                f"{value.disposition.value if value.disposition else 'not set'} |"
+            )
+        if not value.repositories:
+            lines.append("| none | nothing requested | not set |")
+        return lines
+    if isinstance(value, ProjectionPlan):
+        lines = [
+            f"- Sealed List preview: `{value.plan_id}`",
+            f"- List: {value.list_name}",
+            "- GitHub changed: no",
+            f"- Plan fingerprint: `{value.plan_fingerprint}`",
+            "",
+            "| Repository | Current state | Planned additive action |",
+            "|---|---|---|",
+        ]
+        lines.extend(
+            f"| `{operation.repository}` | {operation.classification.replace('_', ' ')} | "
+            f"{', '.join(operation.operations) or 'none'} |"
+            for operation in value.operations
+        )
+        return lines
+    if isinstance(value, DecisionReceipt):
+        return [
+            f"- Decision: `{value.decision_id}`",
+            f"- Repository: `{value.repository}`",
+            f"- Need: {value.need}",
+            f"- Status: {value.disposition.value}",
+            f"- Why: {'; '.join(value.rationale)}",
+            f"- Evidence: {'; '.join(value.evidence_ids) or 'none recorded'}",
+            f"- Alternatives: {'; '.join(value.alternatives) or 'none recorded'}",
+            f"- Unknowns: {'; '.join(value.unknowns) or 'none recorded'}",
+            f"- Reconsider when: {'; '.join(value.reconsider_when)}",
+            f"- Supersedes: `{value.supersedes or 'nothing'}`",
+            "",
+            "Stored as an immutable local decision receipt.",
+        ]
+    if isinstance(value, RecheckReceipt):
+        lines = [
+            f"- Recheck: `{value.recheck_id}`",
+            f"- Outcome: {value.outcome.value}",
+            f"- Last-known-good preserved: {'yes' if value.last_known_good_preserved else 'no'}",
+            f"- Source errors: {'; '.join(value.source_errors) or 'none'}",
+            "",
+            "| Repository | Changed field | Materiality | Why it matters |",
+            "|---|---|---|---|",
+        ]
+        lines.extend(
+            f"| `{difference.repository}` | {difference.field} | "
+            f"{difference.materiality.value} | {difference.reason} |"
+            for difference in value.diffs
+        )
+        if not value.diffs:
+            lines.append("| none | none | no difference | No typed differences found. |")
+        return lines
+    if isinstance(value, AdoptionPlan):
+        return [
+            f"- Adoption plan: `{value.plan_id}`",
+            f"- Repository: `{value.repository}`",
+            f"- Need: {value.need}",
+            f"- Target: `{value.target}`",
+            "- Target changed: no",
+            f"- Proposed files: {'; '.join(value.proposed_files) or 'none recorded'}",
+            f"- Existing tools: {'; '.join(value.native_tools) or 'none recorded'}",
+            f"- Validation: {'; '.join(value.tests) or 'none recorded'}",
+            f"- Success means: {'; '.join(value.expected_postconditions)}",
+            f"- Rollback: {'; '.join(value.rollback)}",
+            f"- Evidence still needed: {'; '.join(value.remaining_evidence) or 'none recorded'}",
+            "",
+            "This record is a plan, not an installer.",
+        ]
+    if isinstance(value, PublicCatalogExport):
+        return [
+            f"- Public export: `{value.export_id}`",
+            f"- Reviewed records: {len(value.exported_records)}",
+            f"- Collections: {len(value.collections)}",
+            f"- Excluded candidates: {len(value.excluded_candidates)}",
+            f"- Generated files: {len(value.generated_file_manifest) + 1}",
+            f"- Reproducibility: {value.reproducibility_status}",
+            f"- Renderer: `{value.renderer_version}`",
+            f"- Private field classes omitted: {sum(value.omitted_private_field_counts.values())}",
+            f"- Catalog fingerprint: `{value.canonical_fingerprint}`",
+        ]
+    raise TypeError(f"unsupported local workflow record: {type(value).__name__}")

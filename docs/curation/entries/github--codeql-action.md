@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/github/codeql-action){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** hosted source security analysis<br>
 **Need:** Repository\-native source analysis with SARIF evidence\.<br>
 **Why:** CodeQL supplies hosted source analysis while other tools retain separate dependency and workflow roles\.<br>
+**Role:** hosted source security analysis<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>, <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
+
+## Reconsider when
+
+GitHub changes the supported action or the selected SHA is no longer valid\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 ### Source provenance
 
 - <a href="https://github.com/pradeeptathineni/shoulda-used-that/blob/main/.github/workflows/security.yml">.github/workflows/security.yml</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-GitHub changes the supported action or the selected SHA is no longer valid\.
 
 ## Attribution
 

@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/boffti/stardash){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Considered and not selected for this context; the reason is evidence\-bound\.<br>
-**Role:** hosted star dashboard runtime<br>
 **Need:** Keep the local\-first curation core free of a hosted backend and analytics surface\.<br>
 **Why:** Supabase, provider, telemetry, and direct mutation surfaces are disproportionate to this release\.<br>
+**Role:** hosted star dashboard runtime<br>
+**Status meaning:** Considered and not selected for this context; the reason is evidence\-bound\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+A local static boundary with no direct mutation or analytics becomes the default\.
 
 ## Observed facts
 
@@ -40,10 +44,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-A local static boundary with no direct mutation or analytics becomes the default\.
 
 ## Attribution
 

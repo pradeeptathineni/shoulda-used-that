@@ -2,183 +2,116 @@
 
 **Before you build another tool, check what open source already exists and what the evidence says.**
 
-ShouldaUsedThat helps you find existing projects worth considering for a named need, record why one fits,
-and notice when the evidence changes. It turns “I should have used that” from a late discovery into
-an early, repeatable check.
+ShouldaUsedThat helps you find credible options for a specific need, record why one fits, and
+notice when the evidence changes. It turns “I should have used that” from a late discovery into an
+early, repeatable check.
 
-Use it in two ways:
+## Pick your quickest path
 
-- **Browse the [public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/)**
-  to explore reviewed options by need, role, and decision status.
-- **Run the local CLI** to check explicit sources, preserve a decision, inspect a project, or prepare
-  an additive GitHub Stars and Lists plan.
+| If you want to… | Start here | What you get |
+| --- | --- | --- |
+| Find useful OSS now | [Browse the public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/) | 222 reviewed records grouped by the needs they serve |
+| See the workflow without a GitHub login | [Run the local fixture check](#try-a-check-without-a-github-login) | A deterministic, filterable result and its receipt |
+| Use the CLI | [Install the verified release](#install-the-cli) | The signed-off `shoulda` command from GitHub Releases |
 
-The product is deterministic and local-first. AI may help an author edit public prose, but it does
-not decide facts, filters, hashes, state transitions, or mutation plans. Stars remain bookmarks,
-and a reviewed entry is not a universal ranking, security approval, or automatic adoption.
+The public catalog is the best first look. Try a collection, open an entry, and read its **need**,
+**why**, evidence date, and reconsideration trigger. “Reviewed” means the entry passed its stated
+metadata and fit checks; it is not a code audit, security approval, or universal ranking. A GitHub
+star is only a bookmark.
 
-## Status
+## Install the CLI
 
-This source tree is version `0.2.0` plus unreleased catalog and projection improvements. Verified distributions are published only through
-[GitHub Releases](https://github.com/pradeeptathineni/shoulda-used-that/releases); PyPI remains
-intentionally unused. This version adds deterministic project inspection, versioned curation
-snapshots, an allowlisted public catalog, and additive-only GitHub projection machinery. The
-current catalog contains 222 reviewed records across 12 public collections. The last applied
-GitHub projection covered the preceding snapshot and was independently verified with zero
-mismatches. Exact operation and readback counts are in the
-[live projection evidence](docs/operations/live-projection.md). The newly adopted Vale record is
-cataloged here but is not claimed by that earlier verification.
+Prerequisites are Python 3.12–3.14 and [`uv`](https://docs.astral.sh/uv/). Install the wheel from
+the immutable `v0.3.0` GitHub release:
 
-Browse the [live public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/),
-the committed [Markdown source](docs/curation/index.md), [canonical JSON](docs/curation/catalog.json),
-[freshness ledger](docs/curation/freshness.md), and
-[source/attribution inventory](docs/curation/sources.md). The site remains complete even when
-personal GitHub List projection is disabled.
+```console
+uv tool install https://github.com/pradeeptathineni/shoulda-used-that/releases/download/v0.3.0/shoulda_used_that-0.3.0-py3-none-any.whl
+shoulda --help
+```
 
-See [ShouldaUsedThat use itself](docs/curation/dogfood.md) and the
-[sanitized live projection evidence](docs/operations/live-projection.md) for the public
-catalog-to-GitHub execution chain.
+PyPI is intentionally unused. Every GitHub release includes the wheel, source archive, checksums,
+runtime SBOM, and artifact attestations.
 
-## Install for development
+## Try a check without a GitHub login
 
-Prerequisites are Python 3.12–3.14, [`uv`](https://docs.astral.sh/uv/), Git,
-[`Vale 3.21.0`](https://github.com/vale-cli/vale/releases/tag/v3.21.0), and the official
-[`gh`](https://cli.github.com/) CLI for live read-only GitHub sources.
+Clone the repository, install its locked environment, and query the public fixture:
 
 ```console
 git clone https://github.com/pradeeptathineni/shoulda-used-that.git
 cd shoulda-used-that
-uv sync --all-groups
-uv run shoulda --help
-```
+uv sync --all-groups --frozen
 
-No PyPI publication is planned. Release wheels and source archives belong only to verified GitHub
-releases.
-
-## Check before building
-
-Start with an explicit source. This fixture example works without GitHub authentication:
-
-```console
-uv run shoulda \
-  --state-dir .tmp/example-state \
-  --format json \
-  checked "canonical JSON for immutable receipts" \
+uv run shoulda --state-dir .tmp/try-shoulda checked \
+  "canonical JSON for immutable receipts" \
   --source fixture \
   --fixture fixtures/candidates.json \
   --language Python \
   --license Apache-2.0 \
   --not-archived \
-  --sort stars \
-  --sort repo \
   --explain-filter
 ```
 
-Live GitHub reads are always explicit:
+You see what stayed visible, what each filter removed, and the `chk_…` receipt ID you can use next.
+Continue with the [guided CLI journey](docs/getting-started.md), or run a live,
+read-only GitHub search when you are ready.
 
-```console
-uv run shoulda checked "canonical JSON" \
-  --source github-search \
-  --query 'canonical json language:Python archived:false' \
-  --not-archived
+## From question to revisitable decision
+
+```text
+checked  →  saved  →  remembered  →  rechecked  →  used
+ find        keep       decide         revisit       plan adoption
 ```
 
-Continue the receipt chain with explicit, named inputs:
+- `checked` finds candidates from explicit sources and records the exact visible result.
+- `saved` keeps chosen findings locally without starring or changing a GitHub List.
+- `remembered` records the decision, rationale, unknowns, and trigger to reconsider it.
+- `rechecked` repeats the bound source policy and reports meaningful differences.
+- `used` writes a planning-only adoption record; it never edits the target project.
 
-```console
-# Save the exact visible set from a named check; this is local and idempotent.
-uv run shoulda saved --all --from chk_REPLACE_WITH_ID
+For catalog maintainers, a separate `curated → exported → projected → apply → verify` path builds
+the public catalog and, only after exact interactive approval, performs additive GitHub curation.
+The [operator runbook](docs/operations/github-curation.md) owns that advanced path.
 
-# Record a revisitable decision.
-uv run shoulda remembered trailofbits/rfc8785.py \
-  --as adopt \
-  --for "RFC 8785 canonical bytes" \
-  --because "small standards-focused adapter" \
-  --reconsider-when "published vectors fail"
+## What makes it safe to revisit
 
-# Replay a stored check's bound source policy.
-uv run shoulda rechecked chk_REPLACE_WITH_ID
+ShouldaUsedThat is deterministic and local-first. JSON is authoritative for hashed state; YAML,
+Markdown, and terminal tables are validated views. Runtime state lives in the operating system's
+user-data directory unless you choose `--state-dir`.
 
-# Produce a planning-only adoption record; this never writes the target.
-uv run shoulda used trailofbits/rfc8785.py \
-  --for "RFC 8785 canonical bytes" \
-  --in another-project \
-  --postcondition "published vectors pass" \
-  --rollback "remove the dependency and adapter"
+- Unknown hard-gate facts fail closed; optional unknowns stay visible unless filtered.
+- Every result has a stable final `owner/repo` tie-breaker.
+- `saved --all` stays bound to one immutable post-filter result.
+- A source error cannot replace the last-known-good evidence.
+- Changed judgment creates a new receipt that names the receipt it supersedes.
+- Live GitHub writes are limited to an approved, unexpired, exact-fingerprint additive plan.
+  ShouldaUsedThat cannot unstar, remove membership, delete or rename a List, change List privacy,
+  run mutation in CI, or edit a target repository.
 
-# Compile the reviewed public profile, then export only its allowlisted fields.
-uv run shoulda --format json curated curation/profiles/shoulda-used-that.json
-uv run shoulda --format json exported cur_REPLACE_WITH_ID \
-  --public \
-  --output .tmp/public-catalog
+AI may help review public wording, but it never supplies facts, filters, hashes, decisions, state
+transitions, or mutation plans.
 
-# Read current GitHub state and seal a plan. This command does not mutate GitHub.
-uv run shoulda --format json projected cur_REPLACE_WITH_ID \
-  --to github-lists \
-  --account pradeeptathineni
+## The project uses its own method
 
-# Apply remains interactive, additive-only, expiry/cap checked, and exact-fingerprint bound.
-uv run shoulda apply gcp_REPLACE_WITH_ID --fingerprint plan_REPLACE_WITH_FINGERPRINT
-uv run shoulda verify app_REPLACE_WITH_ID
-```
+The repository builds its site and GitHub Lists from the same reviewed public profile. Its current
+catalog contains 222 records across 12 collections. The latest recorded live projection completed
+438 additive operations, then independently verified 488 initial postconditions with no
+mismatches; a later semantic no-op verified all 730 then-current postconditions. Read the
+[self-use story](docs/curation/dogfood.md) for the human explanation and the
+[live projection evidence](docs/operations/live-projection.md) for the exact boundary.
 
-JSON is the authoritative machine output. YAML and Markdown are validated renderings; terminal
-tables are human summaries. Runtime state defaults to the operating system's user-data location
-and can be isolated with `--state-dir` and `--profile`.
+The toolchain itself is also accounted for. See [what is used here](docs/curation/in-use.md) and
+the [facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md) for roles, alternatives,
+and removal conditions.
 
-## What ShouldaUsedThat uses
+## Go deeper
 
-| Role | Evidenced implementation |
-| --- | --- |
-| Runtime | Click, Pydantic, JMESPath, platformdirs, PyYAML, Rich, and RFC 8785 canonical JSON |
-| Development | uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale |
-| CI and security | GitHub Actions, CodeQL, dependency review, actionlint, zizmor, and Scorecard |
-| Catalog | Generated Markdown/JSON with a pinned, replaceable Zensical development trial |
-| Release | Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations |
-
-The full role, version, boundary, alternative, and removal evidence is in
-[What ShouldaUsedThat uses](docs/curation/in-use.md) and the
-[facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md).
-
-## Semantics that fail closed
-
-- Hard gates run before optional filters. Unknown hard facts are excluded; unknown soft facts stay
-  visible unless explicitly filtered.
-- Repeated values for one field are OR; different fields are AND. JMESPath runs only over the
-  documented canonical candidate view.
-- Ordering always has canonical `owner/repo` identity as its final tie-breaker.
-- `saved --all` is bound to one stored post-filter fingerprint. It never means “whatever is current
-  now.”
-- A failed recheck preserves the last-known-good baseline and reports the source failure.
-- Receipts are immutable. Changed judgment creates a new receipt that explicitly supersedes the
-  earlier one.
-- `v0.2.0` permits `apply` only for an approved, sealed, additive `github-curation` plan and uses
-  `verify` for independent readback; destructive, silent, expired, drifted, non-interactive, or CI
-  execution remains forbidden.
-
-## Public evidence
-
-- [Implementation contract](docs/architecture/implementation-brief.md)
-- [Curated OSS coordinator expansion](docs/architecture/curation-v0.2.md)
-- [Generated public catalog](docs/curation/index.md)
-- [Facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md)
+- [Getting started and command map](docs/getting-started.md)
+- [Public catalog](docs/curation/index.md) and [canonical JSON](docs/curation/catalog.json)
+- [Implementation and safety contract](docs/architecture/implementation-brief.md)
 - [Prior-art and decision receipts](docs/decisions/README.md)
-- [Context-engineering receipt](docs/development/context-receipt.md)
-- [Executed SBOM comparison](docs/development/sbom-comparison.md)
-- [Catalog scale validation](docs/development/catalog-scale-validation.md)
-- [GitHub curation operator runbook](docs/operations/github-curation.md)
-- [Verified live projection](docs/operations/live-projection.md)
-- [Read-only upkeep and scheduling](docs/operations/scheduling.md)
-- [v0.2.0 correctness and security review](docs/development/review-v0.2.0.md)
-- [v0.1.0 correctness and security review](docs/development/review-v0.1.0.md)
-- [Contributing and validation](CONTRIBUTING.md)
-- [Security policy and boundaries](SECURITY.md)
-
-The receipts distinguish discovered claims from executed evidence and include explicit
-reconsideration triggers. Repository history, hosted checks, the annotated release tag, and the
-release assets form the VCS/release-chain evidence rather than being treated as incidental
-maintenance.
-
-## License
+- [Public-writing review](docs/development/public-surface-review-v0.3.0.md)
+- [Contributing and full validation](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [v0.3.0 release notes](docs/releases/v0.3.0.md)
 
 Apache-2.0. See [LICENSE](LICENSE).

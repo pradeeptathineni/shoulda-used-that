@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Retrieval, search, vector and graph stores, indexing, RAG, and knowledge systems.</p>
 
-**Aliases:** information retrieval, knowledge systems, vector search<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 A durable collection for components that find, organize, connect, and retrieve grounded information\.
 
-- **Include:** Include a reviewed repository with a concrete retrieval, indexing, vector, graph, or knowledge\-system role\.
-- **Exclude:** Exclude generic AI frameworks without a reviewed retrieval or knowledge role\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -131,3 +127,12 @@ A durable collection for components that find, organize, connect, and retrieve g
   <p class="catalog-card__need"><strong>Need</strong> Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** information retrieval, knowledge systems, vector search<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository with a concrete retrieval, indexing, vector, graph, or knowledge\-system role\.
+- **Exclude:** Exclude generic AI frameworks without a reviewed retrieval or knowledge role\.

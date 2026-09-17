@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/apache/echarts){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** creative\-coding and data\-visualization prior art<br>
 **Need:** Compare established visual, generative, interactive, animation, and declarative\-visualization tools before building a custom rendering layer\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 67,342 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** creative\-coding and data\-visualization prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>
+
+## Reconsider when
+
+The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 
 - <a href="https://api.github.com/repos/apache/echarts">https://api.github.com/repos/apache/echarts</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it\.
 
 ## Attribution
 
