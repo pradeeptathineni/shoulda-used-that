@@ -44,3 +44,25 @@ def test_one_shot_catalog_upkeep_is_read_only() -> None:
     ) == [
         "catalog upkeep script contains forbidden boundary 'gh '",
     ]
+
+
+def test_homepage_actions_keep_mobile_touch_separation() -> None:
+    homepage = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    stylesheet = (ROOT / "docs" / "curation" / "assets" / "catalog.css").read_text(encoding="utf-8")
+
+    action_group = homepage.split('<div class="home-actions" markdown>', maxsplit=1)[1].split(
+        "</div>", maxsplit=1
+    )[0]
+    assert action_group.count("{ .md-button") == 3
+
+    mobile_rules = stylesheet.split("@media (max-width: 44rem)", maxsplit=1)[1].split(
+        "@media (prefers-reduced-motion", maxsplit=1
+    )[0]
+    action_layout = mobile_rules.split(".home-actions > p", maxsplit=1)[1].split("}", maxsplit=1)[0]
+    action_button = mobile_rules.split(".home-actions .md-button", maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "gap: .75rem" in action_layout
+    assert "min-height: 3rem" in action_button
+    assert "white-space: normal" in action_button
+    assert "width: 100%" in action_button
