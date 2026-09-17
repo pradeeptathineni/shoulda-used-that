@@ -20,6 +20,7 @@ from shoulda_used_that.models import (
     SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
+from shoulda_used_that.projection import GitHubProjectionPlan
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "schemas"
@@ -34,6 +35,7 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "curation-profile": CurationProfile,
     "curation-snapshot": CurationSnapshot,
     "project-snapshot": ProjectSnapshot,
+    "github-projection-plan": GitHubProjectionPlan,
 }
 
 

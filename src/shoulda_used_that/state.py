@@ -26,6 +26,7 @@ from shoulda_used_that.models import (
     SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
+from shoulda_used_that.projection import GitHubProjectionPlan
 
 PROFILE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
 ModelT = TypeVar("ModelT", bound=BaseModel)
@@ -72,6 +73,7 @@ class StateStore:
             self.profile_root / "baselines",
             self.profile_root / "plans" / "projections",
             self.profile_root / "plans" / "adoptions",
+            self.profile_root / "plans" / "github-curation",
             self.profile_root / "curations",
             self.profile_root / "curations" / "latest",
             self.profile_root / "projects",
@@ -162,6 +164,18 @@ class StateStore:
     def read_adoption(self, plan_id: str) -> AdoptionPlan:
         return self._read_model(
             self._path("plans", "adoptions", f"{_safe_id(plan_id)}.json"), AdoptionPlan
+        )
+
+    def write_github_projection(self, plan: GitHubProjectionPlan) -> bool:
+        self.initialize()
+        return self._write_immutable(
+            self._path("plans", "github-curation", f"{plan.plan_id}.json"), plan
+        )
+
+    def read_github_projection(self, plan_id: str) -> GitHubProjectionPlan:
+        return self._read_model(
+            self._path("plans", "github-curation", f"{_safe_id(plan_id)}.json"),
+            GitHubProjectionPlan,
         )
 
     def write_curation(self, snapshot: CurationSnapshot) -> bool:

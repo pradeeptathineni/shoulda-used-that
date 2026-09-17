@@ -1,0 +1,573 @@
+{
+  "$defs": {
+    "GitHubCapabilityProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "gh_version": {
+          "title": "Gh Version",
+          "type": "string"
+        },
+        "host": {
+          "const": "github.com",
+          "default": "github.com",
+          "title": "Host",
+          "type": "string"
+        },
+        "lists_field_present": {
+          "title": "Lists Field Present",
+          "type": "boolean"
+        },
+        "login": {
+          "title": "Login",
+          "type": "string"
+        },
+        "missing_scopes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Scopes",
+          "type": "array"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "operator_command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operator Command"
+        },
+        "repository_item_union_exact": {
+          "title": "Repository Item Union Exact",
+          "type": "boolean"
+        },
+        "required_mutations": {
+          "default": [
+            "createUserList",
+            "updateUserListsForItem"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Mutations",
+          "type": "array"
+        },
+        "required_mutations_present": {
+          "title": "Required Mutations Present",
+          "type": "boolean"
+        },
+        "rest_api_probe_passed": {
+          "title": "Rest Api Probe Passed",
+          "type": "boolean"
+        },
+        "rest_api_version": {
+          "title": "Rest Api Version",
+          "type": "string"
+        },
+        "scopes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Scopes",
+          "type": "array"
+        },
+        "state": {
+          "$ref": "#/$defs/GitHubCapabilityState"
+        }
+      },
+      "required": [
+        "observed_at",
+        "state",
+        "login",
+        "gh_version",
+        "scopes",
+        "rest_api_version",
+        "rest_api_probe_passed",
+        "lists_field_present",
+        "repository_item_union_exact",
+        "required_mutations_present"
+      ],
+      "title": "GitHubCapabilityProbe",
+      "type": "object"
+    },
+    "GitHubCapabilityState": {
+      "enum": [
+        "available",
+        "missing_scope",
+        "preview_changed",
+        "unauthenticated",
+        "unavailable"
+      ],
+      "title": "GitHubCapabilityState",
+      "type": "string"
+    },
+    "GitHubProjectionOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_slug": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Collection Slug"
+        },
+        "kind": {
+          "enum": [
+            "create-list",
+            "star-repository",
+            "add-membership"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "list_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Description"
+        },
+        "list_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Name"
+        },
+        "list_node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Node Id"
+        },
+        "operation_id": {
+          "pattern": "^op_[0-9a-f]{24}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "preserved_list_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserved List Ids",
+          "type": "array"
+        },
+        "repository": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repository"
+        },
+        "repository_node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repository Node Id"
+        }
+      },
+      "required": [
+        "operation_id",
+        "kind"
+      ],
+      "title": "GitHubProjectionOperation",
+      "type": "object"
+    },
+    "OperationCaps": {
+      "additionalProperties": false,
+      "properties": {
+        "add_memberships": {
+          "maximum": 5000,
+          "minimum": 0,
+          "title": "Add Memberships",
+          "type": "integer"
+        },
+        "create_lists": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Create Lists",
+          "type": "integer"
+        },
+        "star_repositories": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Star Repositories",
+          "type": "integer"
+        },
+        "total": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Total",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "total",
+        "create_lists",
+        "star_repositories",
+        "add_memberships"
+      ],
+      "title": "OperationCaps",
+      "type": "object"
+    },
+    "ProjectedList": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_slug": {
+          "title": "Collection Slug",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "desired_repositories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Desired Repositories",
+          "type": "array"
+        },
+        "existing_node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Existing Node Id"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection_slug",
+        "name",
+        "description",
+        "desired_repositories"
+      ],
+      "title": "ProjectedList",
+      "type": "object"
+    },
+    "ProjectedRepository": {
+      "additionalProperties": false,
+      "properties": {
+        "desired_collection_slugs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Desired Collection Slugs",
+          "type": "array"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "preserved_existing_list_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserved Existing List Ids",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "was_starred": {
+          "title": "Was Starred",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "repository",
+        "node_id",
+        "was_starred",
+        "desired_collection_slugs",
+        "preserved_existing_list_ids"
+      ],
+      "title": "ProjectedRepository",
+      "type": "object"
+    },
+    "ProjectionExclusion": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_slug": {
+          "title": "Collection Slug",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "collection_slug",
+        "reason"
+      ],
+      "title": "ProjectionExclusion",
+      "type": "object"
+    },
+    "ProjectionOperationCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "add_memberships": {
+          "minimum": 0,
+          "title": "Add Memberships",
+          "type": "integer"
+        },
+        "create_lists": {
+          "minimum": 0,
+          "title": "Create Lists",
+          "type": "integer"
+        },
+        "star_repositories": {
+          "minimum": 0,
+          "title": "Star Repositories",
+          "type": "integer"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "create_lists",
+        "star_repositories",
+        "add_memberships",
+        "total"
+      ],
+      "title": "ProjectionOperationCounts",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/github-projection-plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "apply_ready": {
+      "title": "Apply Ready",
+      "type": "boolean"
+    },
+    "canonical_plan_fingerprint": {
+      "pattern": "^plan_[0-9a-f]{64}$",
+      "title": "Canonical Plan Fingerprint",
+      "type": "string"
+    },
+    "capability": {
+      "$ref": "#/$defs/GitHubCapabilityProbe"
+    },
+    "caps": {
+      "$ref": "#/$defs/OperationCaps"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "exclusions": {
+      "items": {
+        "$ref": "#/$defs/ProjectionExclusion"
+      },
+      "title": "Exclusions",
+      "type": "array"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "forbidden_operation_classes": {
+      "default": [
+        "change-list-privacy",
+        "delete-list",
+        "mutate-private-repository",
+        "remove-list-membership",
+        "rename-list",
+        "replace-memberships",
+        "unstar-repository"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Forbidden Operation Classes",
+      "type": "array"
+    },
+    "github_state_fingerprint": {
+      "title": "Github State Fingerprint",
+      "type": "string"
+    },
+    "github_state_observed_at": {
+      "format": "date-time",
+      "title": "Github State Observed At",
+      "type": "string"
+    },
+    "mutation_state": {
+      "const": "sealed-unapplied",
+      "default": "sealed-unapplied",
+      "title": "Mutation State",
+      "type": "string"
+    },
+    "observed_account_node_id": {
+      "title": "Observed Account Node Id",
+      "type": "string"
+    },
+    "observed_login": {
+      "title": "Observed Login",
+      "type": "string"
+    },
+    "operation_counts": {
+      "$ref": "#/$defs/ProjectionOperationCounts"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/GitHubProjectionOperation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "plan_id": {
+      "pattern": "^gcp_[0-9a-f]{24}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "plan_kind": {
+      "const": "github-curation",
+      "default": "github-curation",
+      "title": "Plan Kind",
+      "type": "string"
+    },
+    "projected_lists": {
+      "items": {
+        "$ref": "#/$defs/ProjectedList"
+      },
+      "title": "Projected Lists",
+      "type": "array"
+    },
+    "projected_repositories": {
+      "items": {
+        "$ref": "#/$defs/ProjectedRepository"
+      },
+      "title": "Projected Repositories",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_curation_fingerprint": {
+      "title": "Source Curation Fingerprint",
+      "type": "string"
+    },
+    "source_curation_snapshot_id": {
+      "title": "Source Curation Snapshot Id",
+      "type": "string"
+    },
+    "target_account": {
+      "title": "Target Account",
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_id",
+    "created_at",
+    "expires_at",
+    "target_account",
+    "observed_login",
+    "observed_account_node_id",
+    "source_curation_snapshot_id",
+    "source_curation_fingerprint",
+    "github_state_fingerprint",
+    "github_state_observed_at",
+    "capability",
+    "projected_lists",
+    "projected_repositories",
+    "operations",
+    "exclusions",
+    "operation_counts",
+    "caps",
+    "apply_ready",
+    "canonical_plan_fingerprint"
+  ],
+  "title": "GitHubProjectionPlan",
+  "type": "object"
+}

@@ -12,6 +12,12 @@ from shoulda_used_that.curation import CurationSnapshot, compile_profile, load_p
 from shoulda_used_that.errors import ShouldaError, SourceError, StateError
 from shoulda_used_that.filters import evaluate_candidates, normalized_predicate_tree
 from shoulda_used_that.github import GhClient
+from shoulda_used_that.github_lists import (
+    GitHubCapabilityState,
+    GitHubReadClient,
+    probe_capabilities,
+    read_curation_state,
+)
 from shoulda_used_that.models import (
     AdoptionPlan,
     Candidate,
@@ -39,6 +45,11 @@ from shoulda_used_that.project_context import (
     applicability_evidence,
     inspect_project,
 )
+from shoulda_used_that.projection import (
+    GitHubProjectionPlan,
+    build_projection_plan,
+    desired_projection_repositories,
+)
 from shoulda_used_that.sources import SourceBatch, load_sources, merge_batches
 from shoulda_used_that.state import StateStore
 
@@ -51,6 +62,60 @@ def curated(store: StateStore, *, profile_path: Path) -> CurationSnapshot:
     snapshot = compile_profile(profile_path, previous=previous)
     store.write_curation(snapshot)
     return snapshot
+
+
+def projected(
+    store: StateStore,
+    *,
+    curation_snapshot_id: str,
+    account: str,
+    github: GitHubReadClient | None = None,
+    planned_at: datetime | None = None,
+) -> GitHubProjectionPlan:
+    """Read exact GitHub state and seal an additive-only plan without mutation."""
+
+    snapshot = store.read_curation(curation_snapshot_id)
+    expected_account = snapshot.projection_policy.account
+    if expected_account is None or expected_account.casefold() != account.casefold():
+        raise StateError(
+            code="github_account_mismatch",
+            message="Requested account does not match the curation profile's exact account.",
+        )
+    timestamp = planned_at or utc_now()
+    client = github or GhClient()
+    capability = probe_capabilities(client, observed_at=timestamp)
+    if capability.state not in {
+        GitHubCapabilityState.AVAILABLE,
+        GitHubCapabilityState.MISSING_SCOPE,
+    }:
+        raise StateError(
+            code="github_capability_unavailable",
+            message=(
+                f"GitHub Lists capability is {capability.state.value}; "
+                "no projection plan was written."
+            ),
+            details={"error_code": capability.error_code},
+        )
+    if capability.login.casefold() != account.casefold():
+        raise StateError(
+            code="github_account_mismatch",
+            message="Requested and authenticated GitHub accounts must match.",
+        )
+    state = read_curation_state(
+        client,
+        account=account,
+        desired_repositories=desired_projection_repositories(snapshot),
+        observed_at=timestamp,
+    )
+    plan = build_projection_plan(
+        snapshot,
+        state,
+        capability,
+        account=account,
+        created_at=timestamp,
+    )
+    store.write_github_projection(plan)
+    return plan
 
 
 def inspected(

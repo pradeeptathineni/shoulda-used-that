@@ -309,3 +309,206 @@ def test_async_sbom_pending_unsafe_url_failure_and_response_limit(
     with pytest.raises(GitHubSchemaError) as too_large:
         client._api_json("repos/a/b", maximum_output_bytes=4)
     assert too_large.value.code == "github_response_too_large"
+
+
+def test_auth_status_reads_identity_and_scopes_without_retrieving_token(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    auth_payload = {
+        "hosts": {
+            "github.com": [
+                {
+                    "active": True,
+                    "state": "success",
+                    "login": "fixture-user",
+                    "host": "github.com",
+                    "scopes": "repo, read:org, repo",
+                    "tokenSource": "keyring",
+                }
+            ]
+        }
+    }
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner(
+            [
+                _completed(("gh",), out="gh version 2.101.0 (test)\n"),
+                _completed(("gh",), out=json.dumps(auth_payload)),
+            ],
+            captured,
+        ),
+    )
+
+    status = GhClient().auth_status()
+
+    assert status.login == "fixture-user"
+    assert status.scopes == ("read:org", "repo")
+    assert status.token_source == "keyring"
+    assert "--show-token" not in captured[1][0]
+    assert captured[1][0][-2:] == ("--json", "hosts")
+
+
+def test_graphql_and_public_star_reads_are_bounded_and_typed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner(
+            [
+                _completed(("gh",), out='{"data": {"viewer": {"login": "fixture"}}}'),
+                _completed(
+                    ("gh",),
+                    out='[[{"full_name": "fixture/repo", "node_id": "R1"}]]',
+                ),
+                _completed(("gh",), out='{"errors": [{"message": "schema changed"}]}'),
+                _completed(("gh",), out='{"data": {"viewer": {"login": "fixture"}}}'),
+            ],
+            captured,
+        ),
+    )
+    client = GhClient()
+    client._tool_version = "2.test"
+
+    result = client.graphql("query($login: String!) { viewer { login } }", variables={"login": "x"})
+    stars = client.user_starred("fixture-user")
+
+    assert result.payload["data"]["viewer"]["login"] == "fixture"
+    assert "login=x" in captured[0][0]
+    assert stars.payload[0]["full_name"] == "fixture/repo"
+    assert "users/fixture-user/starred" in captured[1][0]
+    with pytest.raises(GitHubSchemaError) as graphql_error:
+        client.graphql("query { viewer { login } }")
+    assert graphql_error.value.code == "github_graphql_error"
+    with pytest.raises(GitHubSchemaError) as too_large:
+        client.graphql("query { viewer { login } }", maximum_output_bytes=4)
+    assert too_large.value.code == "github_response_too_large"
+
+
+def test_auth_status_and_graphql_reject_invalid_shapes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner(
+            [
+                _completed(("gh",), out="gh version 2.test\n"),
+                _completed(("gh",), out='{"hosts": {"github.com": []}}'),
+            ],
+            captured,
+        ),
+    )
+    with pytest.raises(GitHubAuthError) as inactive:
+        GhClient().auth_status()
+    assert inactive.value.code == "github_auth_inactive"
+
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner([_completed(("gh",), out="[]")], captured),
+    )
+    client = GhClient()
+    client._tool_version = "2.test"
+    with pytest.raises(GitHubSchemaError) as invalid_graphql:
+        client.graphql("query { viewer { login } }")
+    assert invalid_graphql.value.code == "github_schema_mismatch"
+
+
+@pytest.mark.parametrize(
+    ("output", "error_type", "code"),
+    [
+        ("{", GitHubSchemaError, "github_auth_schema_invalid"),
+        ("{}", GitHubAuthError, "github_auth_inactive"),
+        (
+            json.dumps(
+                {
+                    "hosts": {
+                        "github.com": [
+                            {
+                                "active": True,
+                                "state": "success",
+                                "host": "github.com",
+                                "scopes": [],
+                                "tokenSource": "fixture",
+                            }
+                        ]
+                    }
+                }
+            ),
+            GitHubSchemaError,
+            "github_auth_schema_invalid",
+        ),
+        (
+            json.dumps(
+                {
+                    "hosts": {
+                        "github.com": [
+                            {
+                                "active": True,
+                                "state": "success",
+                                "login": "fixture",
+                                "host": "github.com",
+                                "scopes": 42,
+                                "tokenSource": "fixture",
+                            }
+                        ]
+                    }
+                }
+            ),
+            GitHubSchemaError,
+            "github_auth_schema_invalid",
+        ),
+    ],
+)
+def test_auth_status_schema_faults_are_typed(
+    monkeypatch: pytest.MonkeyPatch,
+    output: str,
+    error_type: type[GitHubError],
+    code: str,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner([_completed(("gh",), out=output)], captured),
+    )
+    client = GhClient()
+    client._tool_version = "2.test"
+    with pytest.raises(error_type) as raised:
+        client.auth_status()
+    assert raised.value.code == code
+
+
+@pytest.mark.parametrize(
+    ("output", "error_type", "code"),
+    [
+        ("{", GitHubSchemaError, "github_invalid_json"),
+        ('{"data": null}', GitHubSchemaError, "github_schema_mismatch"),
+        (
+            '{"errors": [{"message": "API rate limit exceeded"}]}',
+            GitHubRateLimitError,
+            "github_rate_limited",
+        ),
+        (
+            '{"errors": [{"message": "authentication required"}]}',
+            GitHubAuthError,
+            "github_auth_failed",
+        ),
+    ],
+)
+def test_graphql_faults_are_typed(
+    monkeypatch: pytest.MonkeyPatch,
+    output: str,
+    error_type: type[GitHubError],
+    code: str,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner([_completed(("gh",), out=output)], captured),
+    )
+    client = GhClient()
+    client._tool_version = "2.test"
+    with pytest.raises(error_type) as raised:
+        client.graphql("query { viewer { login } }")
+    assert raised.value.code == code
