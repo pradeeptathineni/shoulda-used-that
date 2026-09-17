@@ -10,7 +10,7 @@ def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None
     first = rendered_schemas()
     second = rendered_schemas()
     assert first == second
-    assert len(first) == len(SCHEMAS) == 7
+    assert len(first) == len(SCHEMAS) == 9
     write_schemas(tmp_path)
     assert check_schemas(tmp_path) == []
     changed = tmp_path / sorted(first)[0]

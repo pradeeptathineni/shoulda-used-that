@@ -1,0 +1,422 @@
+{
+  "$defs": {
+    "CollectionDefinition": {
+      "additionalProperties": false,
+      "description": "Durable collection semantics independent of a GitHub List.",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "exact_bound_sources": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Exact Bound Sources",
+          "type": "array"
+        },
+        "exclusion_rule": {
+          "minLength": 1,
+          "title": "Exclusion Rule",
+          "type": "string"
+        },
+        "github_list_projection": {
+          "default": false,
+          "title": "Github List Projection",
+          "type": "boolean"
+        },
+        "inclusion_rule": {
+          "minLength": 1,
+          "title": "Inclusion Rule",
+          "type": "string"
+        },
+        "max_candidates": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Max Candidates",
+          "type": "integer"
+        },
+        "max_repositories": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Max Repositories",
+          "type": "integer"
+        },
+        "public_site_visibility": {
+          "default": true,
+          "title": "Public Site Visibility",
+          "type": "boolean"
+        },
+        "reconsideration_cadence_days": {
+          "exclusiveMinimum": 0,
+          "maximum": 3650,
+          "title": "Reconsideration Cadence Days",
+          "type": "integer"
+        },
+        "semantics": {
+          "minLength": 1,
+          "title": "Semantics",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "slug",
+        "title",
+        "description",
+        "semantics",
+        "inclusion_rule",
+        "exclusion_rule",
+        "exact_bound_sources",
+        "max_candidates",
+        "max_repositories",
+        "reconsideration_cadence_days"
+      ],
+      "title": "CollectionDefinition",
+      "type": "object"
+    },
+    "CurationDisposition": {
+      "description": "Primary meaning of one repository in one curation context.",
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build",
+        "inbox"
+      ],
+      "title": "CurationDisposition",
+      "type": "string"
+    },
+    "CurationSourceSpec": {
+      "additionalProperties": false,
+      "description": "Exact public input bound into a profile.",
+      "properties": {
+        "attribution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attribution"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "kind": {
+          "const": "public-json",
+          "default": "public-json",
+          "title": "Kind",
+          "type": "string"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        }
+      },
+      "required": [
+        "locator",
+        "content_sha256"
+      ],
+      "title": "CurationSourceSpec",
+      "type": "object"
+    },
+    "CurationVisibility": {
+      "description": "Whether a profile is private, public, or composed with a private overlay.",
+      "enum": [
+        "private",
+        "public",
+        "public-with-private-overlay"
+      ],
+      "title": "CurationVisibility",
+      "type": "string"
+    },
+    "MutationPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "additive_only": {
+          "const": true,
+          "default": true,
+          "title": "Additive Only",
+          "type": "boolean"
+        },
+        "caps": {
+          "$ref": "#/$defs/OperationCaps"
+        },
+        "forbid_ci": {
+          "const": true,
+          "default": true,
+          "title": "Forbid Ci",
+          "type": "boolean"
+        },
+        "plan_expiry_hours": {
+          "exclusiveMinimum": 0,
+          "maximum": 168,
+          "title": "Plan Expiry Hours",
+          "type": "integer"
+        },
+        "require_tty": {
+          "const": true,
+          "default": true,
+          "title": "Require Tty",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "plan_expiry_hours",
+        "caps"
+      ],
+      "title": "MutationPolicy",
+      "type": "object"
+    },
+    "OperationCaps": {
+      "additionalProperties": false,
+      "properties": {
+        "add_memberships": {
+          "maximum": 5000,
+          "minimum": 0,
+          "title": "Add Memberships",
+          "type": "integer"
+        },
+        "create_lists": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Create Lists",
+          "type": "integer"
+        },
+        "star_repositories": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Star Repositories",
+          "type": "integer"
+        },
+        "total": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Total",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "total",
+        "create_lists",
+        "star_repositories",
+        "add_memberships"
+      ],
+      "title": "OperationCaps",
+      "type": "object"
+    },
+    "ProjectionPolicy": {
+      "additionalProperties": false,
+      "description": "Deliberately smaller public GitHub projection than the full catalog.",
+      "properties": {
+        "account": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "max_projected_lists": {
+          "default": 0,
+          "maximum": 20,
+          "minimum": 0,
+          "title": "Max Projected Lists",
+          "type": "integer"
+        },
+        "selected_collection_slugs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Selected Collection Slugs",
+          "type": "array"
+        }
+      },
+      "title": "ProjectionPolicy",
+      "type": "object"
+    },
+    "ReviewPolicy": {
+      "additionalProperties": false,
+      "description": "Deterministic freshness reference used by the compiler.",
+      "properties": {
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "default_freshness_days": {
+          "exclusiveMinimum": 0,
+          "maximum": 3650,
+          "title": "Default Freshness Days",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "as_of",
+        "default_freshness_days"
+      ],
+      "title": "ReviewPolicy",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/curation-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Human intent compiled into a curation snapshot.",
+  "properties": {
+    "allowed_dispositions": {
+      "items": {
+        "$ref": "#/$defs/CurationDisposition"
+      },
+      "minItems": 1,
+      "title": "Allowed Dispositions",
+      "type": "array"
+    },
+    "canonical_fingerprint": {
+      "pattern": "^profile_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "collections": {
+      "items": {
+        "$ref": "#/$defs/CollectionDefinition"
+      },
+      "minItems": 1,
+      "title": "Collections",
+      "type": "array"
+    },
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "mutation_policy": {
+      "$ref": "#/$defs/MutationPolicy"
+    },
+    "non_ranking_disclaimer": {
+      "minLength": 1,
+      "title": "Non Ranking Disclaimer",
+      "type": "string"
+    },
+    "popularity_treatment": {
+      "minLength": 1,
+      "title": "Popularity Treatment",
+      "type": "string"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "projection_policy": {
+      "$ref": "#/$defs/ProjectionPolicy"
+    },
+    "public_owner_identity": {
+      "minLength": 1,
+      "title": "Public Owner Identity",
+      "type": "string"
+    },
+    "publication_targets": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Publication Targets",
+      "type": "array"
+    },
+    "review_policy": {
+      "$ref": "#/$defs/ReviewPolicy"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_specifications": {
+      "items": {
+        "$ref": "#/$defs/CurationSourceSpec"
+      },
+      "minItems": 1,
+      "title": "Source Specifications",
+      "type": "array"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "visibility": {
+      "$ref": "#/$defs/CurationVisibility"
+    }
+  },
+  "required": [
+    "profile_id",
+    "title",
+    "description",
+    "public_owner_identity",
+    "visibility",
+    "source_specifications",
+    "collections",
+    "projection_policy",
+    "allowed_dispositions",
+    "review_policy",
+    "popularity_treatment",
+    "non_ranking_disclaimer",
+    "publication_targets",
+    "mutation_policy",
+    "canonical_fingerprint"
+  ],
+  "title": "CurationProfile",
+  "type": "object"
+}

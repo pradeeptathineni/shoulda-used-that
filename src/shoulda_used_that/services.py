@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from datetime import datetime
+from pathlib import Path
 
 from shoulda_used_that import __version__
 from shoulda_used_that.canonical import digest, short_id
+from shoulda_used_that.curation import CurationSnapshot, compile_profile, load_profile
 from shoulda_used_that.errors import ShouldaError, SourceError, StateError
 from shoulda_used_that.filters import evaluate_candidates, normalized_predicate_tree
 from shoulda_used_that.github import GhClient
@@ -32,6 +34,17 @@ from shoulda_used_that.models import (
 )
 from shoulda_used_that.sources import SourceBatch, load_sources, merge_batches
 from shoulda_used_that.state import StateStore
+
+
+def curated(store: StateStore, *, profile_path: Path) -> CurationSnapshot:
+    """Compile a versioned public profile without refreshing any external source."""
+
+    profile = load_profile(profile_path)
+    previous = store.latest_curation(profile.profile_id)
+    snapshot = compile_profile(profile_path, previous=previous)
+    store.write_curation(snapshot)
+    return snapshot
+
 
 MATERIAL_FIELDS = {
     "role",

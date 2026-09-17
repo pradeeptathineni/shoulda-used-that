@@ -253,6 +253,19 @@ def rechecked_command(runtime: Runtime, target_id: str) -> None:
         _fail(runtime, exc)
 
 
+@cli.command("curated")
+@click.argument("profile_path", type=click.Path(path_type=Path, dir_okay=False, exists=True))
+@click.pass_obj
+def curated_command(runtime: Runtime, profile_path: Path) -> None:
+    """Compile one exact profile into a deterministic curation snapshot."""
+
+    try:
+        snapshot = services.curated(runtime.store, profile_path=profile_path)
+        click.echo(render(snapshot, runtime.output_format), nl=False)
+    except ShouldaError as exc:
+        _fail(runtime, exc)
+
+
 @cli.command("used")
 @click.argument("repository")
 @click.option("--for", "need", required=True)
