@@ -10,9 +10,13 @@ hide:
 ShouldaUsedThat keeps the relationship that bookmarks and generic catalogs cannot: the exact
 project, named need, evidence, contextual decision, adoption role, and reconsideration trigger.
 
+<div class="home-actions" markdown>
+
 [Explore the public catalog](curation/index.md){ .md-button .md-button--primary }
 [See ShouldaUsedThat use itself](curation/dogfood.md){ .md-button }
 [Read the implementation contract](architecture/implementation-brief.md){ .md-button }
+
+</div>
 
 ## What the public proof shows
 

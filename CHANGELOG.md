@@ -19,6 +19,8 @@ All notable changes to this project are documented here. The format is based on 
 - Membership apply now advances from GitHub's strictly validated mutation result and requires a
   full remote replay before completion, avoiding redundant eventually consistent account reads
   while retaining one immutable receipt per sealed operation.
+- Homepage calls to action now use a dedicated responsive group with separated, equal-width,
+  touch-friendly controls on phone-sized viewports.
 
 ### Verified
 

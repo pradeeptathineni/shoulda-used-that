@@ -1223,6 +1223,25 @@ def _catalog_css() -> str:
 }
 
 .catalog-actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.25rem; }
+
+.home-actions { margin: 1.25rem 0 2rem; }
+.home-actions > p {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin: 0;
+}
+.home-actions .md-button {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  margin: 0;
+  min-height: 2.75rem;
+  text-align: center;
+}
+
 .catalog-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); margin: 1.2rem 0 2rem; }
 
 .catalog-card {
@@ -1267,7 +1286,7 @@ def _catalog_css() -> str:
 }
 
 .table-scroll { overflow-x: auto; margin: 1rem 0 2rem; }
-.table-scroll:focus-visible, .catalog-card a:focus-visible, .catalog-actions a:focus-visible {
+.table-scroll:focus-visible, .catalog-card a:focus-visible, .catalog-actions a:focus-visible, .home-actions a:focus-visible {
   outline: 3px solid var(--sut-accent);
   outline-offset: 3px;
 }
@@ -1279,6 +1298,19 @@ def _catalog_css() -> str:
 @media (max-width: 44rem) {
   .catalog-hero { border-radius: .7rem; }
   .catalog-grid { grid-template-columns: 1fr; }
+  .home-actions > p {
+    display: grid;
+    gap: .75rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .home-actions .md-button {
+    border-radius: .75rem;
+    line-height: 1.35;
+    min-height: 3rem;
+    padding: .65rem 1rem;
+    white-space: normal;
+    width: 100%;
+  }
   .catalog-actions .md-button { text-align: center; width: 100%; }
 }
 
