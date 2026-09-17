@@ -3,21 +3,28 @@
 **Turn “Shit, I shoulda used that” into “Glad I checked first.”**
 
 ShouldaUsedThat is a deterministic-first, AI-optional coordinator that discovers, vets,
-remembers, and revalidates existing OSS before you write more code.
+remembers, and revalidates existing OSS before you write more code. It turns one named need into a
+replayable chain: **check → decision → adoption or curation → sealed projection → independent
+verification**.
 
-The released `v0.1.0` is local-first and deliberately read-only outside its own private state
-directory. It can inspect explicit fixtures or public GitHub data, produce immutable evidence and
-decision receipts, and prepare adoption or GitHub List plans. It cannot star a repository, change a
-List, modify a target project, run an unattended model, or publish a package.
+The local-first CLI now compiles evidence-bound OSS catalogs, inspects explicit projects and
+standards-based SBOMs, and can prepare narrowly additive GitHub Stars/List operations. Stars are
+bookmarks, not adoption evidence. Recommendations apply to the stated need and context; they are
+not a universal “best OSS” ranking.
 
 ## Status
 
 [`v0.1.0`](https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.1.0)
-is released with verified hosted checks, checksums, a runtime SBOM, and GitHub artifact
-attestations. Development now targets `v0.2.0`: deterministic project inspection, evidence-backed
-curation snapshots, an allowlisted public catalog, and sealed additive GitHub Stars/Lists plans.
-No personal star or List change is allowed until the maintainer approves the exact account, plan
-fingerprint, operations, and caps.
+is the latest tagged release. The `v0.2.0` release candidate adds deterministic project
+inspection, versioned curation snapshots, an allowlisted public catalog, and verified additive-only
+GitHub projection machinery. No personal star or List change has been made: the first live change
+remains blocked until the maintainer approves the exact sealed account, fingerprint, operations,
+and caps.
+
+Browse the committed [public catalog](docs/curation/index.md), its
+[canonical JSON](docs/curation/catalog.json), [freshness ledger](docs/curation/freshness.md), and
+[source/attribution inventory](docs/curation/sources.md). The same content is the source for the
+GitHub Pages site; it remains complete even when personal GitHub List projection is disabled.
 
 ## Install for development
 
@@ -62,7 +69,7 @@ uv run shoulda checked "canonical JSON" \
   --not-archived
 ```
 
-The remaining participle commands continue the receipt chain:
+Continue the receipt chain with explicit, named inputs:
 
 ```console
 # Save the exact visible set from a named check; this is local and idempotent.
@@ -84,11 +91,40 @@ uv run shoulda used trailofbits/rfc8785.py \
   --in another-project \
   --postcondition "published vectors pass" \
   --rollback "remove the dependency and adapter"
+
+# Compile the reviewed public profile, then export only its allowlisted fields.
+uv run shoulda --format json curated curation/profiles/shoulda-used-that.json
+uv run shoulda --format json exported cur_REPLACE_WITH_ID \
+  --public \
+  --output .tmp/public-catalog
+
+# Read current GitHub state and seal a plan. This command does not mutate GitHub.
+uv run shoulda --format json projected cur_REPLACE_WITH_ID \
+  --to github-lists \
+  --account pradeeptathineni
+
+# Apply remains interactive, additive-only, expiry/cap checked, and exact-fingerprint bound.
+uv run shoulda apply gcp_REPLACE_WITH_ID --fingerprint plan_REPLACE_WITH_FINGERPRINT
+uv run shoulda verify app_REPLACE_WITH_ID
 ```
 
 JSON is the authoritative machine output. YAML and Markdown are validated renderings; terminal
 tables are human summaries. Runtime state defaults to the operating system's user-data location
 and can be isolated with `--state-dir` and `--profile`.
+
+## What ShouldaUsedThat uses
+
+| Role | Evidenced implementation |
+| --- | --- |
+| Runtime | Click, Pydantic, JMESPath, platformdirs, PyYAML, Rich, and RFC 8785 canonical JSON |
+| Development | uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, and pre-commit |
+| CI and security | GitHub Actions, CodeQL, dependency review, actionlint, zizmor, and Scorecard |
+| Catalog | Generated Markdown/JSON with a pinned, replaceable Zensical development trial |
+| Release | Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations |
+
+The full role, version, boundary, alternative, and removal evidence is in
+[What ShouldaUsedThat uses](docs/curation/in-use.md) and the
+[facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md).
 
 ## Semantics that fail closed
 
@@ -103,17 +139,19 @@ and can be isolated with `--state-dir` and `--profile`.
 - Receipts are immutable. Changed judgment creates a new receipt that explicitly supersedes the
   earlier one.
 - `v0.1.0` keeps `apply` and `verify` closed. The `v0.2.0` contract permits only approved,
-  additive `github-curation` plans and independently read-back postconditions; destructive or CI
-  execution remains forbidden.
+  additive `github-curation` plans and independently read-back postconditions; destructive, silent,
+  expired, drifted, non-interactive, or CI execution remains forbidden.
 
 ## Public evidence
 
 - [Implementation contract](docs/architecture/implementation-brief.md)
 - [Curated OSS coordinator expansion](docs/architecture/curation-v0.2.md)
+- [Generated public catalog](docs/curation/index.md)
 - [Facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md)
 - [Prior-art and decision receipts](docs/decisions/README.md)
 - [Context-engineering receipt](docs/development/context-receipt.md)
 - [Executed SBOM comparison](docs/development/sbom-comparison.md)
+- [Catalog scale validation](docs/development/catalog-scale-validation.md)
 - [v0.1.0 correctness and security review](docs/development/review-v0.1.0.md)
 - [Contributing and validation](CONTRIBUTING.md)
 - [Security policy and boundaries](SECURITY.md)

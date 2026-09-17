@@ -4,6 +4,7 @@
     {
       "repository": "pallets/click",
       "url": "https://github.com/pallets/click",
+      "description": "Composable Python package for creating command-line interfaces.",
       "collection_memberships": ["platform-engineering-delivery", "python-engineering", "oss-curation-foundations"],
       "primary_disposition": "adopt",
       "role": "runtime CLI parser",
@@ -26,6 +27,7 @@
     {
       "repository": "pydantic/pydantic",
       "url": "https://github.com/pydantic/pydantic",
+      "description": "Data validation and settings management using Python type annotations.",
       "collection_memberships": ["python-engineering", "oss-curation-foundations"],
       "primary_disposition": "adopt",
       "role": "runtime typed contracts",
@@ -48,6 +50,7 @@
     {
       "repository": "jmespath/jmespath.py",
       "url": "https://github.com/jmespath/jmespath.py",
+      "description": "Python implementation of the JMESPath query language for JSON documents.",
       "collection_memberships": ["python-engineering", "oss-curation-foundations"],
       "primary_disposition": "adopt",
       "role": "runtime advanced filter language",
@@ -70,6 +73,7 @@
     {
       "repository": "trailofbits/rfc8785.py",
       "url": "https://github.com/trailofbits/rfc8785.py",
+      "description": "Python implementation of the RFC 8785 JSON Canonicalization Scheme.",
       "collection_memberships": ["python-engineering", "oss-curation-foundations"],
       "primary_disposition": "adopt",
       "role": "runtime canonical JSON",
@@ -92,6 +96,7 @@
     {
       "repository": "astral-sh/uv",
       "url": "https://github.com/astral-sh/uv",
+      "description": "Fast Python package and project manager written in Rust.",
       "collection_memberships": ["platform-engineering-delivery", "python-engineering"],
       "primary_disposition": "adopt",
       "role": "development environment, lock, and execution",
@@ -114,6 +119,7 @@
     {
       "repository": "pytest-dev/pytest",
       "url": "https://github.com/pytest-dev/pytest",
+      "description": "Python testing framework for readable tests, fixtures, and plugins.",
       "collection_memberships": ["python-engineering", "software-supply-chain"],
       "primary_disposition": "adopt",
       "role": "development test runner",
@@ -136,6 +142,7 @@
     {
       "repository": "github/codeql-action",
       "url": "https://github.com/github/codeql-action",
+      "description": "GitHub Action for initializing, building, and analyzing projects with CodeQL.",
       "collection_memberships": ["platform-engineering-delivery", "software-supply-chain"],
       "primary_disposition": "adopt",
       "role": "hosted source security analysis",
@@ -158,6 +165,7 @@
     {
       "repository": "zensical/zensical",
       "url": "https://github.com/zensical/zensical",
+      "description": "Static site generator for modern, searchable project documentation.",
       "collection_memberships": ["platform-engineering-delivery", "oss-curation-foundations"],
       "primary_disposition": "trial",
       "role": "development-only static catalog view adapter",
@@ -180,6 +188,7 @@
     {
       "repository": "addyosmani/agent-skills",
       "url": "https://github.com/addyosmani/agent-skills",
+      "description": "Open development guidance and reusable skills for agent-assisted engineering.",
       "collection_memberships": ["generative-ai-agents", "oss-curation-foundations"],
       "primary_disposition": "reference",
       "role": "pinned development guidance",
@@ -202,6 +211,7 @@
     {
       "repository": "best-of-lists/best-of",
       "url": "https://github.com/best-of-lists/best-of",
+      "description": "Curated best-of lists backed by structured project metadata.",
       "collection_memberships": ["oss-curation-foundations"],
       "primary_disposition": "reference",
       "role": "attributed discovery source",
@@ -224,6 +234,7 @@
     {
       "repository": "amintacccp/githubstarsmanager",
       "url": "https://github.com/AmintaCCCP/GithubStarsManager",
+      "description": "Desktop application for browsing, searching, and organizing GitHub stars.",
       "collection_memberships": ["oss-curation-foundations"],
       "primary_disposition": "reference",
       "role": "star-manager UX prior art",
@@ -246,6 +257,7 @@
     {
       "repository": "ejacobhayes/parsecio",
       "url": "https://github.com/ejacobhayes/parsecio",
+      "description": "Static dashboard experiment for organizing starred repositories.",
       "collection_memberships": ["oss-curation-foundations"],
       "primary_disposition": "watch",
       "role": "static zero-dependency catalog prior art",
@@ -268,6 +280,7 @@
     {
       "repository": "best-of-lists/best-of-generator",
       "url": "https://github.com/best-of-lists/best-of-generator",
+      "description": "Generator and updater used by best-of list projects.",
       "collection_memberships": ["oss-curation-foundations"],
       "primary_disposition": "reject",
       "role": "catalog generator runtime",
@@ -290,6 +303,7 @@
     {
       "repository": "boffti/stardash",
       "url": "https://github.com/boffti/stardash",
+      "description": "Dashboard for exploring and organizing GitHub stars.",
       "collection_memberships": ["oss-curation-foundations"],
       "primary_disposition": "reject",
       "role": "hosted star dashboard runtime",
@@ -312,6 +326,7 @@
     {
       "repository": "pradeeptathineni/shoulda-used-that",
       "url": "https://github.com/pradeeptathineni/shoulda-used-that",
+      "description": "Evidence-bound coordinator for discovering, evaluating, and revisiting OSS choices.",
       "collection_memberships": ["oss-curation-foundations", "platform-engineering-delivery"],
       "primary_disposition": "build",
       "role": "deterministic evidence and curation coordinator",

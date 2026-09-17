@@ -14,7 +14,11 @@ from platformdirs import user_data_path
 from pydantic import BaseModel, ValidationError
 
 from shoulda_used_that.canonical import canonical_bytes, digest
-from shoulda_used_that.curation import CurationSnapshot
+from shoulda_used_that.curation import (
+    CurationProfile,
+    CurationSnapshot,
+    validate_curation_profile,
+)
 from shoulda_used_that.errors import StateError
 from shoulda_used_that.github_apply import (
     ApplyOperationReceipt,
@@ -86,6 +90,7 @@ class StateStore:
             self.profile_root / "verifications",
             self.profile_root / "curations",
             self.profile_root / "curations" / "latest",
+            self.profile_root / "curation-profiles",
             self.profile_root / "projects",
             self.profile_root / "projects" / "latest",
         ):
@@ -289,6 +294,33 @@ class StateStore:
             },
         )
         return created
+
+    def write_curation_profile(self, profile: CurationProfile) -> bool:
+        validate_curation_profile(profile)
+        self.initialize()
+        return self._write_immutable(
+            self._path(
+                "curation-profiles",
+                f"{profile.canonical_fingerprint}.json",
+            ),
+            profile,
+        )
+
+    def read_curation_profile(self, profile_fingerprint: str) -> CurationProfile:
+        profile = self._read_model(
+            self._path(
+                "curation-profiles",
+                f"{_safe_id(profile_fingerprint)}.json",
+            ),
+            CurationProfile,
+        )
+        validate_curation_profile(profile)
+        if profile.canonical_fingerprint != profile_fingerprint:
+            raise StateError(
+                code="curation_profile_fingerprint_mismatch",
+                message="Stored curation profile does not match the requested fingerprint.",
+            )
+        return profile
 
     def read_curation(self, snapshot_id: str) -> CurationSnapshot:
         return self._read_model(

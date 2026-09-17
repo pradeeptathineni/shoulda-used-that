@@ -243,6 +243,7 @@ class CurationEntry(FrozenModel):
     schema_version: Literal["2.0"] = CURATION_SCHEMA_VERSION
     repository: str
     url: str
+    description: str = Field(min_length=1)
     collection_memberships: tuple[str, ...]
     primary_disposition: CurationDisposition
     role: str = Field(min_length=1)
@@ -447,6 +448,18 @@ def profile_fingerprint(profile_payload: dict[str, Any]) -> str:
     return digest(semantic, prefix="profile")
 
 
+def validate_curation_profile(profile: CurationProfile) -> None:
+    """Verify that a validated profile still carries its normalized semantic identity."""
+
+    expected = digest(profile.identity_view(), prefix="profile")
+    if profile.canonical_fingerprint != expected:
+        raise StateError(
+            code="curation_profile_fingerprint_mismatch",
+            message="Curation profile fingerprint does not match its normalized public intent.",
+            details={"expected": expected, "actual": profile.canonical_fingerprint},
+        )
+
+
 def load_profile(path: Path) -> CurationProfile:
     payload = _read_json(path, maximum_bytes=MAX_SOURCE_BYTES)
     try:
@@ -463,6 +476,7 @@ def load_profile(path: Path) -> CurationProfile:
             message="Curation profile fingerprint does not match its canonical public intent.",
             details={"expected": expected, "actual": profile.canonical_fingerprint},
         )
+    validate_curation_profile(profile)
     return profile
 
 

@@ -22,6 +22,7 @@ from shoulda_used_that.models import (
 )
 from shoulda_used_that.project_context import ProjectSnapshot
 from shoulda_used_that.projection import GitHubProjectionPlan
+from shoulda_used_that.public_export import PublicCatalogExport
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "schemas"
@@ -39,6 +40,7 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "github-projection-plan": GitHubProjectionPlan,
     "apply-receipt": ApplyReceipt,
     "verify-receipt": VerifyReceipt,
+    "public-catalog-export": PublicCatalogExport,
 }
 
 

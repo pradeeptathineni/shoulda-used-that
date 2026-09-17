@@ -1,0 +1,546 @@
+{
+  "$defs": {
+    "CurationDisposition": {
+      "description": "Primary meaning of one repository in one curation context.",
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build",
+        "inbox"
+      ],
+      "title": "CurationDisposition",
+      "type": "string"
+    },
+    "ExcludedCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "reason",
+        "source"
+      ],
+      "title": "ExcludedCandidate",
+      "type": "object"
+    },
+    "FreshnessState": {
+      "enum": [
+        "current",
+        "stale",
+        "partial",
+        "blocked"
+      ],
+      "title": "FreshnessState",
+      "type": "string"
+    },
+    "GeneratedFileDigest": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "title": "Bytes",
+          "type": "integer"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "title": "GeneratedFileDigest",
+      "type": "object"
+    },
+    "PopularitySnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "stars": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stars"
+        }
+      },
+      "title": "PopularitySnapshot",
+      "type": "object"
+    },
+    "PublicAttribution": {
+      "additionalProperties": false,
+      "properties": {
+        "obligations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Obligations",
+          "type": "array"
+        },
+        "observed_license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed License"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "source_locators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Locators",
+          "type": "array"
+        }
+      },
+      "required": [
+        "repository",
+        "observed_license",
+        "source_locators",
+        "obligations"
+      ],
+      "title": "PublicAttribution",
+      "type": "object"
+    },
+    "PublicCatalogRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Archived"
+        },
+        "attribution_obligations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Attribution Obligations",
+          "type": "array"
+        },
+        "collections": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Collections",
+          "type": "array"
+        },
+        "decision_receipt_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Decision Receipt Ids",
+          "type": "array"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "disposition": {
+          "$ref": "#/$defs/CurationDisposition"
+        },
+        "disposition_label": {
+          "title": "Disposition Label",
+          "type": "string"
+        },
+        "evidence_receipt_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Receipt Ids",
+          "type": "array"
+        },
+        "freshness_state": {
+          "$ref": "#/$defs/FreshnessState"
+        },
+        "last_checked_at": {
+          "title": "Last Checked At",
+          "type": "string"
+        },
+        "latest_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Latest Commit"
+        },
+        "latest_release": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Latest Release"
+        },
+        "need": {
+          "title": "Need",
+          "type": "string"
+        },
+        "observed_license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed License"
+        },
+        "popularity": {
+          "$ref": "#/$defs/PopularitySnapshot"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "reconsideration_trigger": {
+          "title": "Reconsideration Trigger",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "source_provenance": {
+          "items": {
+            "$ref": "#/$defs/SourceProvenance"
+          },
+          "title": "Source Provenance",
+          "type": "array"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "url",
+        "description",
+        "collections",
+        "disposition",
+        "disposition_label",
+        "role",
+        "need",
+        "rationale",
+        "decision_receipt_ids",
+        "evidence_receipt_ids",
+        "observed_license",
+        "archived",
+        "latest_release",
+        "latest_commit",
+        "popularity",
+        "last_checked_at",
+        "freshness_state",
+        "reconsideration_trigger",
+        "source_provenance",
+        "attribution_obligations"
+      ],
+      "title": "PublicCatalogRecord",
+      "type": "object"
+    },
+    "PublicCollection": {
+      "additionalProperties": false,
+      "properties": {
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "exclusion_rule": {
+          "title": "Exclusion Rule",
+          "type": "string"
+        },
+        "github_list_projection": {
+          "title": "Github List Projection",
+          "type": "boolean"
+        },
+        "inclusion_rule": {
+          "title": "Inclusion Rule",
+          "type": "string"
+        },
+        "reconsideration_cadence_days": {
+          "title": "Reconsideration Cadence Days",
+          "type": "integer"
+        },
+        "semantics": {
+          "title": "Semantics",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "slug",
+        "title",
+        "description",
+        "aliases",
+        "semantics",
+        "inclusion_rule",
+        "exclusion_rule",
+        "github_list_projection",
+        "reconsideration_cadence_days"
+      ],
+      "title": "PublicCollection",
+      "type": "object"
+    },
+    "SourceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "content_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Digest"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "locator",
+        "observed_at"
+      ],
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/public-catalog-export.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowlist_schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Allowlist Schema Version",
+      "type": "string"
+    },
+    "canonical_fingerprint": {
+      "pattern": "^public_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "collections": {
+      "items": {
+        "$ref": "#/$defs/PublicCollection"
+      },
+      "title": "Collections",
+      "type": "array"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "excluded_candidates": {
+      "items": {
+        "$ref": "#/$defs/ExcludedCandidate"
+      },
+      "title": "Excluded Candidates",
+      "type": "array"
+    },
+    "export_id": {
+      "pattern": "^pcx_[0-9a-f]{24}$",
+      "title": "Export Id",
+      "type": "string"
+    },
+    "exported_records": {
+      "items": {
+        "$ref": "#/$defs/PublicCatalogRecord"
+      },
+      "title": "Exported Records",
+      "type": "array"
+    },
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "generated_file_manifest": {
+      "items": {
+        "$ref": "#/$defs/GeneratedFileDigest"
+      },
+      "title": "Generated File Manifest",
+      "type": "array"
+    },
+    "license_attribution_inventory": {
+      "items": {
+        "$ref": "#/$defs/PublicAttribution"
+      },
+      "title": "License Attribution Inventory",
+      "type": "array"
+    },
+    "non_ranking_disclaimer": {
+      "title": "Non Ranking Disclaimer",
+      "type": "string"
+    },
+    "omitted_private_field_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Omitted Private Field Counts",
+      "type": "object"
+    },
+    "popularity_treatment": {
+      "title": "Popularity Treatment",
+      "type": "string"
+    },
+    "public_owner_identity": {
+      "title": "Public Owner Identity",
+      "type": "string"
+    },
+    "renderer_version": {
+      "title": "Renderer Version",
+      "type": "string"
+    },
+    "reproducibility_status": {
+      "const": "verified-deterministic",
+      "title": "Reproducibility Status",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_curation_fingerprint": {
+      "pattern": "^curation_[0-9a-f]{64}$",
+      "title": "Source Curation Fingerprint",
+      "type": "string"
+    },
+    "source_curation_snapshot_id": {
+      "pattern": "^cur_[0-9a-f]{24}$",
+      "title": "Source Curation Snapshot Id",
+      "type": "string"
+    },
+    "source_profile_fingerprint": {
+      "pattern": "^profile_[0-9a-f]{64}$",
+      "title": "Source Profile Fingerprint",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "export_id",
+    "source_curation_snapshot_id",
+    "source_curation_fingerprint",
+    "source_profile_fingerprint",
+    "title",
+    "description",
+    "public_owner_identity",
+    "generated_at",
+    "popularity_treatment",
+    "non_ranking_disclaimer",
+    "collections",
+    "exported_records",
+    "excluded_candidates",
+    "omitted_private_field_counts",
+    "license_attribution_inventory",
+    "generated_file_manifest",
+    "renderer_version",
+    "reproducibility_status",
+    "canonical_fingerprint"
+  ],
+  "title": "PublicCatalogExport",
+  "type": "object"
+}

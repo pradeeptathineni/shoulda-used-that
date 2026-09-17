@@ -297,6 +297,36 @@ def curated_command(runtime: Runtime, profile_path: Path) -> None:
         _fail(runtime, exc)
 
 
+@cli.command("exported")
+@click.argument("curation_id")
+@click.option("--public", "public_export", is_flag=True, help="Use the public allowlist boundary.")
+@click.option(
+    "--output",
+    type=click.Path(path_type=Path, file_okay=False),
+    required=True,
+    help="Dedicated generated catalog directory.",
+)
+@click.pass_obj
+def exported_command(
+    runtime: Runtime,
+    curation_id: str,
+    public_export: bool,
+    output: Path,
+) -> None:
+    """Export one curation through the staged public allowlist boundary."""
+
+    try:
+        receipt = services.exported(
+            runtime.store,
+            curation_snapshot_id=curation_id,
+            public=public_export,
+            output=output,
+        )
+        click.echo(render(receipt, runtime.output_format), nl=False)
+    except ShouldaError as exc:
+        _fail(runtime, exc)
+
+
 @cli.command("projected")
 @click.argument("curation_id")
 @click.option(
