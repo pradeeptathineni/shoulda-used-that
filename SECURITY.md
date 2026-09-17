@@ -6,7 +6,10 @@ Until a later release exists, only the latest `0.1.x` release receives security 
 
 ## Reporting
 
-Use GitHub's private vulnerability reporting for this repository. Do not include live credentials, private source, or unrelated personal data in an issue.
+Use [GitHub's private vulnerability reporting](https://github.com/pradeeptathineni/shoulda-used-that/security/advisories/new)
+for this repository. Do not include live credentials, private source, or unrelated personal data in
+an issue. General security posture and published advisories are available on the repository's
+[Security page](https://github.com/pradeeptathineni/shoulda-used-that/security).
 
 ## Safety boundary
 

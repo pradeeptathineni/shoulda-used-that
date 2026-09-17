@@ -78,14 +78,17 @@ jobs:
       - name: Install Python
         env:
           PYTHON_VERSION: ${{ matrix.python }}
+        shell: bash
         run: uv python install "${PYTHON_VERSION}"
       - name: Sync locked environment
         env:
           PYTHON_VERSION: ${{ matrix.python }}
+        shell: bash
         run: uv sync --all-groups --frozen --python "${PYTHON_VERSION}"
       - name: Run tests
         env:
           PYTHON_VERSION: ${{ matrix.python }}
+        shell: bash
         run: uv run --python "${PYTHON_VERSION}" pytest
 
   package:
