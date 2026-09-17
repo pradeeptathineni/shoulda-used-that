@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import tempfile
+from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any, Literal
 from urllib.parse import quote
@@ -83,7 +84,7 @@ TOOLCHAIN_GROUPS = (
     ),
     (
         "Development",
-        "uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, and pre-commit",
+        "uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale",
         "../architecture/dogfood-reuse-audit.md",
     ),
     (
@@ -98,8 +99,8 @@ TOOLCHAIN_GROUPS = (
     ),
     (
         "Docs",
-        "Generated Markdown/JSON, typos, lychee, and the bounded Zensical trial",
-        "../decisions/zensical-site.json",
+        "Generated Markdown/JSON, Vale, typos, lychee, and the bounded Zensical trial",
+        "../decisions/public-writing.json",
     ),
     (
         "Release",
@@ -594,30 +595,37 @@ def _index_markdown(
     records: tuple[PublicCatalogRecord, ...],
 ) -> str:
     current = sum(record.freshness_state is FreshnessState.CURRENT for record in records)
-    cards = "\n".join(_record_card(record, "") for record in records)
-    aliases = ", ".join(alias for collection in collections for alias in collection.aliases)
+    cards = "\n".join(
+        _collection_card(
+            collection,
+            sum(collection.slug in record.collections for record in records),
+            entry_prefix="collections/",
+            show_eligibility=False,
+        )
+        for collection in collections
+    )
     return (
         _frontmatter(profile.title, profile.description, ("OSS curation", "evidence"))
         + f"""# {_markdown_text(profile.title)}
 
 <div class="catalog-hero">
-  <p class="catalog-kicker">Evidence before enthusiasm</p>
-  <p class="catalog-lead">{html.escape(profile.description)}</p>
+  <p class="catalog-kicker">Check before you build</p>
+  <p class="catalog-lead">Find open-source options by the need they serve, then inspect the evidence and decision behind each one.</p>
   <div class="catalog-actions">
-    <a class="md-button md-button--primary" href="in-use.md">See what is used</a>
-    <a class="md-button" href="collections/index.md">Browse collections</a>
+    <a class="md-button md-button--primary" href="entries/index.md">Search all entries</a>
+    <a class="md-button" href="in-use.md">See what is used here</a>
     <a class="md-button" href="dogfood.md">See Shoulda use itself</a>
   </div>
 </div>
 
-!!! info "Meaning before ranking"
-    {_markdown_text(profile.non_ranking_disclaimer)} Stars are bookmarks; each recommendation is bound to the need and evidence shown on its entry.
+!!! info "What reviewed means"
+    Each entry passed its stated metadata and fit checks or carries a visible exception. This is not a code audit, security approval, adoption claim, or universal ranking. A GitHub star is only a bookmark.
 
 ## Catalog at a glance
 
-This export contains **{len(records)} reviewed records** across **{len(collections)} public collections**. **{current} records** were current at `{snapshot.compiled_at.isoformat()}`. Counts describe this bounded snapshot; they are not popularity scores.
+This export contains **{len(records)} reviewed records** across **{len(collections)} public collections**. **{current} records** were inside the profile's **{profile.review_policy.default_freshness_days}-day review window** at **{_display_timestamp(snapshot.compiled_at)}**. “Current” refers to each record's last review timestamp, not a code audit, security result, or guarantee of active maintenance. Counts describe this bounded snapshot; they are not popularity scores.
 
-Search understands repository names, roles, needs, disposition labels, collection titles, and aliases such as **{_markdown_text(aliases)}**.
+Start with a collection below, use site search for a repository or need, or open the [complete entry index](entries/index.md). The overview stays short; individual entries retain rationale, provenance, freshness, and reconsideration triggers.
 
 <div class="catalog-grid">
 {cards}
@@ -676,7 +684,7 @@ def _dogfood_markdown(
         )
         + f"""# ShouldaUsedThat uses itself
 
-This repository is both the tool and a public execution of its central claim: **look for strong existing OSS before building another implementation, then preserve the evidence and decision boundary**.
+This repository is both the tool and a public execution of its central claim: **look for existing OSS with relevant public signals before building another implementation, then preserve the evidence and decision boundary**.
 
 ## The executed shape
 
@@ -751,7 +759,7 @@ def _selection_markdown(
 
 This is the readable projection of the human-authored `curation/selections/personal-interests.json` manifest. It contains **{len(selected)} unique repositories**, **{memberships} domain memberships**, and **{multi_collection} repositories with intentional multi-domain membership**.
 
-Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it does not mean automatic adoption.
+Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it is not a code audit, security approval, or automatic adoption.
 
 {(chr(10) * 2).join(sections)}
 
@@ -876,7 +884,7 @@ def _freshness_markdown(
         )
         + f"""# Freshness and reconsideration
 
-This snapshot was compiled at `{snapshot.compiled_at.isoformat()}`. “Current” means current under this profile's dated review policy, not permanently correct.
+This snapshot was compiled at **{_display_timestamp(snapshot.compiled_at)}**. “Current” means current under this profile's dated review policy, not permanently correct.
 
 {_markdown_text(profile.popularity_treatment)}
 
@@ -1130,11 +1138,21 @@ def _record_card(record: PublicCatalogRecord, entry_prefix: str) -> str:
 </article>"""
 
 
-def _collection_card(collection: PublicCollection, count: int) -> str:
+def _collection_card(
+    collection: PublicCollection,
+    count: int,
+    *,
+    entry_prefix: str = "",
+    show_eligibility: bool = True,
+) -> str:
     eligibility = "GitHub List eligible" if collection.github_list_projection else "Site collection"
+    meta = (
+        f'  <div class="catalog-card__meta"><span class="projection-chip">{eligibility}</span></div>\n'
+        if show_eligibility
+        else ""
+    )
     return f"""<article class="catalog-card collection-card">
-  <div class="catalog-card__meta"><span class="projection-chip">{eligibility}</span></div>
-  <h3><a href="{html.escape(collection.slug, quote=True)}.md">{html.escape(collection.title)}</a></h3>
+{meta}  <h3><a href="{html.escape(entry_prefix + collection.slug, quote=True)}.md">{html.escape(collection.title)}</a></h3>
   <p>{html.escape(collection.description)}</p>
   <p><strong>{count}</strong> reviewed {"entry" if count == 1 else "entries"}</p>
   <p class="catalog-aliases"><strong>Aliases</strong> {html.escape(", ".join(collection.aliases) or "none")}</p>
@@ -1156,6 +1174,11 @@ def _freshness_chip(state: FreshnessState) -> str:
 
 def _repository_slug(repository: str) -> str:
     return repository.replace("/", "--")
+
+
+def _display_timestamp(value: datetime) -> str:
+    rendered = value.isoformat(timespec="minutes")
+    return f"{rendered.removesuffix('+00:00')} UTC" if rendered.endswith("+00:00") else rendered
 
 
 def _github_list_slug(name: str) -> str:

@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_public_writing_2026_09_17",
+  "need": "Keep the repository's most visible writing clear, credible, and interesting without making a model or a bespoke prose engine authoritative.",
+  "artifact_role": "public_writing_quality_loop",
+  "discovery": {
+    "queries": [
+      "offline prose linter Vale",
+      "First Reader agent skill",
+      "ZeroSlop AI writing patterns",
+      "inclusive language linter alex",
+      "custom readability script",
+      "model-only rewrite"
+    ],
+    "stop_condition": "A mature deterministic tool covered repeatable wording checks, while small review-only techniques covered first-impression and AI-pattern judgment without entering runtime behavior."
+  },
+  "contenders": [
+    {
+      "name": "Vale 3.21.0 and vale-action 3.0.0",
+      "disposition": "adopt",
+      "evidence": [
+        "MIT",
+        "Vale tag commit ed7117697bd9e8e0f8cd6b6217125878321ef17b",
+        "vale-action tag commit 518a9136acc6e6668ce7c00d367051e0941e87ff",
+        "6108 and 249 GitHub stars respectively at 2026-09-17 review",
+        "offline project-owned rules",
+        "official pinned GitHub Action"
+      ]
+    },
+    {
+      "name": "First Reader in Shubhamsaboo/awesome-llm-apps at f163bb5a92111cee4610ac98e5dce4c6a2a09c26",
+      "disposition": "trial",
+      "evidence": [
+        "Apache-2.0 parent repository",
+        "fresh-reader quick skim separates first impression from editorial context",
+        "no runtime or package dependency",
+        "parent repository is a broad learning collection rather than a blanket dependency endorsement"
+      ]
+    },
+    {
+      "name": "ZeroSlop 2.12.1",
+      "disposition": "reference",
+      "evidence": [
+        "MIT",
+        "tag commit 98e34b5cddbafdb25bff385d046fe0cef4d05fad",
+        "122 GitHub stars at 2026-09-17 review",
+        "offline scorer is explicitly heuristic and not an authorship detector"
+      ]
+    },
+    {
+      "name": "reader-first-writing-skills",
+      "disposition": "watch",
+      "evidence": [
+        "Apache-2.0",
+        "useful fidelity and reader-journey concepts",
+        "one GitHub star and no stable release at 2026-09-17 review"
+      ]
+    },
+    {
+      "name": "alex",
+      "disposition": "reference",
+      "evidence": [
+        "MIT",
+        "5101 GitHub stars at 2026-09-17 review",
+        "valuable but narrower inclusive-language role",
+        "last repository push observed in 2024"
+      ]
+    },
+    {
+      "name": "custom prose scorer or model-only rewrite gate",
+      "disposition": "reject",
+      "evidence": [
+        "duplicates established linting mechanics",
+        "opaque or nondeterministic pass criteria",
+        "risk of changing factual meaning and repository voice"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "runtime and canonical state remain model-free",
+    "automated prose checks are deterministic and offline",
+    "rules target a small public entrypoint set rather than generated upstream descriptions",
+    "human review remains responsible for meaning, evidence, and final tone",
+    "AI-pattern scores never become authorship claims or release thresholds",
+    "hosted rewriting services receive no unpublished repository prose"
+  ],
+  "unknowns": [
+    "First-impression judgments vary by reader and cannot be reduced to a score.",
+    "Project-owned Vale rules need evidence-based refinement as the public voice evolves.",
+    "Young AI-tone tools may mature enough to justify a later bounded trial."
+  ],
+  "decision_effect": "Use Vale 3.21.0 with a pinned official action and narrow local rules for repeatable public-copy checks. Require a context-free first-reader skim for material entrypoint changes. Keep First Reader and ZeroSlop as optional review techniques only; neither can author facts, gate releases by score, or enter the runtime dependency graph.",
+  "reconsider_when": [
+    "Vale rules create repeated false positives or miss a measured public-writing failure",
+    "A mature offline tool demonstrates better reader-journey checks with a clear removal boundary",
+    "The public entrypoint set or documentation generator changes materially",
+    "AI-assisted editing can no longer preserve an inspectable human approval boundary"
+  ],
+  "observed_at": "2026-09-17T16:00:00Z"
+}

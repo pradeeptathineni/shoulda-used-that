@@ -10,7 +10,7 @@ tags:
 
 This is the readable projection of the human-authored `curation/selections/personal-interests.json` manifest. It contains **206 unique repositories**, **225 domain memberships**, and **19 repositories with intentional multi-domain membership**.
 
-Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it does not mean automatic adoption.
+Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it is not a code audit, security approval, or automatic adoption.
 
 ## [Cloud Infrastructure &amp; IaC](collections/cloud-infrastructure-iac.md) — 16
 

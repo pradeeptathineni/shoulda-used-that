@@ -21,7 +21,7 @@ tags:
 **Meaning:** Kept for educational value without an integration claim\.<br>
 **Role:** generative\-AI and agent\-system prior art<br>
 **Need:** Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 138,613 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Use this broad learning map to discover examples and techniques, not as a production dependency or a blanket endorsement of its many subprojects\. This review inspected the First Reader skill at commit f163bb5a92111cee4610ac98e5dce4c6a2a09c26; every example still needs its own dependency, security, and fit review\.<br>
 **Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>
 
 ## Observed facts

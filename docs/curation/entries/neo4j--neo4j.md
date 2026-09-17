@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** retrieval, search, and knowledge\-system prior art<br>
 **Need:** Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 17,237 stars, a recent default\-branch push, and GPL\-3\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 17,237 stars, a recent default\-branch push, and GPL\-3\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/rag-search-knowledge.md">RAG, Search &amp; Knowledge</a>
 
 ## Observed facts

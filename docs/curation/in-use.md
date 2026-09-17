@@ -15,10 +15,10 @@ tags:
   <thead><tr><th scope="col">Role family</th><th scope="col">Current owners</th><th scope="col">Evidence</th></tr></thead>
   <tbody>
 <tr><th scope="row">Runtime</th><td>Click, Pydantic, JMESPath, platformdirs, PyYAML, Rich, and rfc8785</td><td><a href="../decisions/dependencies.json">decision evidence</a></td></tr>
-<tr><th scope="row">Development</th><td>uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, and pre-commit</td><td><a href="../architecture/dogfood-reuse-audit.md">decision evidence</a></td></tr>
+<tr><th scope="row">Development</th><td>uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale</td><td><a href="../architecture/dogfood-reuse-audit.md">decision evidence</a></td></tr>
 <tr><th scope="row">CI</th><td>GitHub Actions, checkout, setup-uv, and tested distribution artifacts</td><td><a href="../architecture/dogfood-reuse-audit.md">decision evidence</a></td></tr>
 <tr><th scope="row">Security</th><td>pip-audit, CodeQL, dependency review, actionlint, zizmor, and Scorecard</td><td><a href="../decisions/quality-security.json">decision evidence</a></td></tr>
-<tr><th scope="row">Docs</th><td>Generated Markdown/JSON, typos, lychee, and the bounded Zensical trial</td><td><a href="../decisions/zensical-site.json">decision evidence</a></td></tr>
+<tr><th scope="row">Docs</th><td>Generated Markdown/JSON, Vale, typos, lychee, and the bounded Zensical trial</td><td><a href="../decisions/public-writing.json">decision evidence</a></td></tr>
 <tr><th scope="row">Release</th><td>Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations</td><td><a href="../decisions/sbom-release.json">decision evidence</a></td></tr>
   </tbody>
 </table>
@@ -82,6 +82,13 @@ tags:
   <p>Python implementation of the RFC 8785 JSON Canonicalization Scheme.</p>
   <p class="catalog-card__role"><strong>Role</strong> runtime canonical JSON</p>
   <p class="catalog-card__need"><strong>Need</strong> Interoperable content identity for immutable receipts.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--adopt">Used here</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="entries/vale-cli--vale.md">vale-cli/vale</a></h3>
+  <p>Markup-aware prose linter with project-owned styles and offline execution.</p>
+  <p class="catalog-card__role"><strong>Role</strong> deterministic public-writing lint</p>
+  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler in the most visible public entrypoints without building a prose engine or making a model authoritative.</p>
 </article>
 </div>
 

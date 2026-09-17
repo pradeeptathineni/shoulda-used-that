@@ -11,8 +11,8 @@ tags:
 ## Bound source snapshots
 
 <ul>
-<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>5c2cb329760193e490c0e468c1997a5f0d49ef08aa6487935597207ce9b16193</code>; 15 entries</li>
-<li><code>curation/entries/personal-interests.json</code> — SHA-256 <code>452fa85247145d3d6b9499b2d6e62ecbf1f76d949ae86c3d341e9331d179014d</code>; 206 entries</li>
+<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>dea05ae0e98dd16401626c0cb1dff56d2bc09f45c188a2f9e99cd16c91ce775d</code>; 16 entries</li>
+<li><code>curation/entries/personal-interests.json</code> — SHA-256 <code>fc43e4cecf45ebf939d801ea3eeda56acb8197c9b8956cdb2ad7f85009036c0f</code>; 206 entries</li>
 </ul>
 
 The profile source is Apache-2.0 repository-authored review data. Upstream material remains under its own license; catalog-specific obligations are listed below.
@@ -229,6 +229,7 @@ The profile source is Apache-2.0 repository-authored review data. Upstream mater
 <tr><th scope="row">ultralytics/ultralytics</th><td>AGPL-3.0</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/ultralytics/ultralytics</td></tr>
 <tr><th scope="row">unslothai/unsloth</th><td>Apache-2.0</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/unslothai/unsloth</td></tr>
 <tr><th scope="row">usememos/memos</th><td>MIT</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/usememos/memos</td></tr>
+<tr><th scope="row">vale-cli/vale</th><td>MIT</td><td>No additional catalog obligation recorded.</td><td>https://github.com/vale-cli/vale/releases/tag/v3.21.0</td></tr>
 <tr><th scope="row">vega/altair</th><td>BSD-3-Clause</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/vega/altair</td></tr>
 <tr><th scope="row">vega/vega</th><td>BSD-3-Clause</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/vega/vega</td></tr>
 <tr><th scope="row">vega/vega-lite</th><td>BSD-3-Clause</td><td>No additional catalog obligation recorded.</td><td>docs/decisions/personal-oss-curation.json, https://api.github.com/repos/vega/vega-lite</td></tr>

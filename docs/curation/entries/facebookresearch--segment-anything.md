@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** computer\-vision and multimodal prior art<br>
 **Need:** Compare established image, video, geometry, perception, and vision\-language components before creating a visual pipeline\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 54,872 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 54,872 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/computer-vision-multimodal.md">Computer Vision &amp; Multimodal</a>
 
 ## Observed facts

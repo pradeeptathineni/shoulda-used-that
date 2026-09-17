@@ -86,7 +86,7 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert first_export == second_export
     assert first_files == second_files
     assert first_export.reproducibility_status == "verified-deterministic"
-    assert len(first_export.exported_records) == 221
+    assert len(first_export.exported_records) == 222
     assert len(first_export.collections) == 12
     assert set(first_export.omitted_private_field_counts.values()) == {0}
     assert {item.repository for item in first_export.license_attribution_inventory} == {
@@ -98,6 +98,10 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
         *(item.path for item in first_export.generated_file_manifest),
     }
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
+    assert b"Search all entries" in first_files["index.md"]
+    assert b"collections/cloud-infrastructure-iac.md" in first_files["index.md"]
+    assert b"not a code audit" in first_files["index.md"]
+    assert b"pallets/click" not in first_files["index.md"]
     assert b"../entries/pallets--click.md" in first_files["entries/index.md"]
     assert b"DevOps" in first_files["collections/index.md"]
     assert b"opencv/opencv" in first_files["collections/computer-vision-multimodal.md"]
@@ -138,7 +142,6 @@ def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
         "entries/index.md",
         "entries/pallets--click.md",
         "in-use.md",
-        "index.md",
         MANIFEST_NAME,
         "sources.md",
     }

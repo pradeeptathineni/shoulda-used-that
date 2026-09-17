@@ -11,7 +11,7 @@
       "primary_disposition": "learn",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 94,000 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 94,000 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -56,7 +56,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 1,038 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 1,038 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -101,7 +101,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,263 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,263 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -146,7 +146,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,958 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,958 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -191,7 +191,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 14,781 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 14,781 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -236,7 +236,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 12,897 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 12,897 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -281,7 +281,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,572 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,572 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -326,7 +326,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 101,006 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 101,006 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -371,7 +371,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 70,711 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 70,711 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -416,7 +416,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 46,882 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 46,882 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -461,7 +461,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 67,342 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 67,342 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -507,7 +507,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 37,955 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 37,955 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -552,7 +552,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 24,176 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 24,176 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -597,7 +597,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 49,659 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 49,659 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -642,7 +642,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 164,991 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 164,991 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -688,7 +688,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 319,833 stars, a recent default-branch push, and CC-BY-SA-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 319,833 stars, a recent default-branch push, and CC-BY-SA-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -739,7 +739,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,215 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,215 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -784,7 +784,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 12,899 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 12,899 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -829,7 +829,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 26,080 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 26,080 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -874,7 +874,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,428 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,428 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -919,7 +919,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 48,231 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 48,231 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -964,7 +964,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 49,459 stars, a recent default-branch push, and 0BSD licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 49,459 stars, a recent default-branch push, and 0BSD licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1015,7 +1015,7 @@
       "primary_disposition": "learn",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 74,005 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 74,005 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1060,7 +1060,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 20,452 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 20,452 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1106,7 +1106,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,007 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,007 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1151,7 +1151,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 114,908 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 114,908 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1196,7 +1196,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 14,726 stars, a recent default-branch push, and Zlib licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 14,726 stars, a recent default-branch push, and Zlib licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1247,7 +1247,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 75,894 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 75,894 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1292,7 +1292,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 35,846 stars, a recent default-branch push, and CC0-1.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 35,846 stars, a recent default-branch push, and CC0-1.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1337,7 +1337,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 29,315 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 29,315 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1382,7 +1382,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,065 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,065 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1427,7 +1427,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,993 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,993 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1473,7 +1473,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 133,619 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 133,619 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1518,7 +1518,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 18,311 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 18,311 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1563,7 +1563,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 61,914 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 61,914 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1608,7 +1608,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 58,692 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 58,692 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1653,7 +1653,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 12,082 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 12,082 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1698,7 +1698,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 391 stars, a recent default-branch push, and Apache-2.0 licensing; the reviewed exception was: Official CycloneDX Python tooling is a standards implementation with direct supply-chain relevance despite a sub-1,000 star count.. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 391 stars, a recent default-branch push, and Apache-2.0 licensing; the reviewed exception was: Official CycloneDX Python tooling is a standards implementation with direct supply-chain relevance despite a sub-1,000 star count.. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1743,7 +1743,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 113,739 stars, a recent default-branch push, and ISC licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 113,739 stars, a recent default-branch push, and ISC licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1788,7 +1788,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 16,165 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 16,165 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1834,7 +1834,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 26,526 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 26,526 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1879,7 +1879,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 108,459 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 108,459 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1924,7 +1924,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,771 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,771 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -1969,7 +1969,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 7,694 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 7,694 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2015,7 +2015,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 91,114 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 91,114 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2060,7 +2060,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 38,174 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 38,174 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2105,7 +2105,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 32,145 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 32,145 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2150,7 +2150,7 @@
       "primary_disposition": "learn",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 370,475 stars, a recent default-branch push, and CC-BY-4.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 370,475 stars, a recent default-branch push, and CC-BY-4.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2201,7 +2201,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 10,349 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 10,349 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2246,7 +2246,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 69,453 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 69,453 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2291,7 +2291,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,713 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,713 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2336,7 +2336,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 54,872 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 54,872 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2381,7 +2381,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 12,543 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 12,543 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2427,7 +2427,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 102,390 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 102,390 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2472,7 +2472,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 19,992 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 19,992 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2517,7 +2517,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 8,410 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 8,410 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2562,7 +2562,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 30,954 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 30,954 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2607,7 +2607,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 128,539 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 128,539 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2652,7 +2652,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 29,357 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 29,357 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2697,7 +2697,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 58,041 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 58,041 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2742,7 +2742,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 16,156 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 16,156 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2787,7 +2787,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 117,356 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 117,356 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2832,7 +2832,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,985 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,985 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2877,7 +2877,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 15,192 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 15,192 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2922,7 +2922,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 3,235 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 3,235 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -2967,7 +2967,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 11,043 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 11,043 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3013,7 +3013,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 76,786 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 76,786 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3058,7 +3058,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 28,905 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 28,905 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3103,7 +3103,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,477 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,477 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3148,7 +3148,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,835 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,835 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3193,7 +3193,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 30,250 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 30,250 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3238,7 +3238,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 90,614 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 90,614 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3283,7 +3283,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,531 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,531 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3328,7 +3328,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 29,361 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 29,361 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3373,7 +3373,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 166,287 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 166,287 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3418,7 +3418,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 8,978 stars, a recent default-branch push, and MPL-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 8,978 stars, a recent default-branch push, and MPL-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3469,7 +3469,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 114,502 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 114,502 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3514,7 +3514,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 90,878 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 90,878 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3559,7 +3559,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 12,519 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 12,519 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3604,7 +3604,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 57,235 stars, a recent default-branch push, and GPL-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 57,235 stars, a recent default-branch push, and GPL-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3650,7 +3650,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 33,976 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 33,976 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3695,7 +3695,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 37,385 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 37,385 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3740,7 +3740,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 11,361 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 11,361 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3786,7 +3786,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 127,868 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 127,868 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3832,7 +3832,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 146,521 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 146,521 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3877,7 +3877,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 41,820 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 41,820 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3922,7 +3922,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 91,462 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 91,462 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -3967,7 +3967,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 40,891 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 40,891 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4012,7 +4012,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 23,226 stars, a recent default-branch push, and PSF-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 23,226 stars, a recent default-branch push, and PSF-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4063,7 +4063,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 65,487 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 65,487 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4108,7 +4108,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 3,844 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 3,844 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4153,7 +4153,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 61,016 stars, a recent default-branch push, and CC-BY-4.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 61,016 stars, a recent default-branch push, and CC-BY-4.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4198,7 +4198,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,009 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,009 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4243,7 +4243,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 28,566 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 28,566 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4288,7 +4288,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 111,103 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 111,103 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4333,7 +4333,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 46,139 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 46,139 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4378,7 +4378,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 22,442 stars, a recent default-branch push, and BSD-2-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 22,442 stars, a recent default-branch push, and BSD-2-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4423,7 +4423,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 14,145 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 14,145 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4474,7 +4474,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 72,106 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 72,106 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4519,7 +4519,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 24,320 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 24,320 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4564,7 +4564,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 115,600 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 115,600 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4610,7 +4610,7 @@
       "primary_disposition": "learn",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 2,577 stars, a recent default-branch push, and MIT licensing; the reviewed exception was: This stable MIT-licensed example corpus is the canonical Processing companion to a directly stated creative-simulation interest.. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 2,577 stars, a recent default-branch push, and MIT licensing; the reviewed exception was: This stable MIT-licensed example corpus is the canonical Processing companion to a directly stated creative-simulation interest.. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4655,7 +4655,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 72,024 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 72,024 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4700,7 +4700,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 17,237 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 17,237 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4745,7 +4745,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 80,557 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 80,557 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4790,7 +4790,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,826 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,826 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4835,7 +4835,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,151 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,151 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4880,7 +4880,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 33,589 stars, a recent default-branch push, and LGPL-3.0-only licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 33,589 stars, a recent default-branch push, and LGPL-3.0-only licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4931,7 +4931,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 121,978 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 121,978 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -4982,7 +4982,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 11,154 stars, a recent default-branch push, and BSD-2-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 11,154 stars, a recent default-branch push, and BSD-2-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5028,7 +5028,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 32,762 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 32,762 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5079,7 +5079,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,381 stars, a recent default-branch push, and ISC licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,381 stars, a recent default-branch push, and ISC licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5124,7 +5124,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 181,241 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 181,241 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5169,7 +5169,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 7,561 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 7,561 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5214,7 +5214,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,318 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,318 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5259,7 +5259,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 29,516 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 29,516 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5304,7 +5304,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 90,868 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 90,868 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5349,7 +5349,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 88,265 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 88,265 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5394,7 +5394,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 68,362 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 68,362 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5439,7 +5439,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 13,725 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 13,725 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5484,7 +5484,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 30,201 stars, a recent default-branch push, and MPL-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 30,201 stars, a recent default-branch push, and MPL-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5529,7 +5529,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 2,431 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 2,431 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5574,7 +5574,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 1,457 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 1,457 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5620,7 +5620,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,692 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,692 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5665,7 +5665,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 95,979 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 95,979 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5717,7 +5717,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 74,743 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 74,743 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5762,7 +5762,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 49,737 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 49,737 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5807,7 +5807,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 23,040 stars, a recent default-branch push, and PostgreSQL licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 23,040 stars, a recent default-branch push, and PostgreSQL licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5858,7 +5858,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 23,159 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 23,159 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5903,7 +5903,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 60,953 stars, a recent default-branch push, and EUPL-1.2 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 60,953 stars, a recent default-branch push, and EUPL-1.2 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5954,7 +5954,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 48,176 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 48,176 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -5999,7 +5999,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 18,335 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 18,335 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6044,7 +6044,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 32,881 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 32,881 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6089,7 +6089,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 38,509 stars, a recent default-branch push, and Zlib licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 38,509 stars, a recent default-branch push, and Zlib licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6134,7 +6134,7 @@
       "primary_disposition": "learn",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 283,622 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 283,622 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6180,7 +6180,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 15,579 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 15,579 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6225,7 +6225,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 23,996 stars, a recent default-branch push, and LGPL-2.1 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 23,996 stars, a recent default-branch push, and LGPL-2.1 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6270,7 +6270,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 493 stars, a recent default-branch push, and GPL-2.0-only AND LGPL-2.1-or-later licensing; the reviewed exception was: Processing is the foundation-backed canonical creative-coding environment and a direct stated personal interest.. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 493 stars, a recent default-branch push, and GPL-2.0-only AND LGPL-2.1-or-later licensing; the reviewed exception was: Processing is the foundation-backed canonical creative-coding environment and a direct stated personal interest.. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6322,7 +6322,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 66,102 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 66,102 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6367,7 +6367,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 25,218 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 25,218 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6412,7 +6412,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 41,844 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 41,844 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6457,7 +6457,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 25,693 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 25,693 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6502,7 +6502,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,951 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,951 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6547,7 +6547,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 20,007 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 20,007 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6592,7 +6592,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 7,235 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 7,235 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6637,7 +6637,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 10,288 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 10,288 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6682,7 +6682,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 13,818 stars, a recent default-branch push, and HPND licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 13,818 stars, a recent default-branch push, and HPND licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6733,7 +6733,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,301 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,301 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6778,7 +6778,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 77,195 stars, a recent default-branch push, and PSF-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 77,195 stars, a recent default-branch push, and PSF-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6829,7 +6829,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 20,642 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 20,642 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6880,7 +6880,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 103,065 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 103,065 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6931,7 +6931,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 17,915 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 17,915 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -6976,7 +6976,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 34,629 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 34,629 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7021,7 +7021,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 58,765 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 58,765 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7066,7 +7066,7 @@
       "primary_disposition": "learn",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 105,128 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 105,128 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7117,7 +7117,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 59,803 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 59,803 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7162,7 +7162,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 250,528 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 250,528 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7207,7 +7207,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 56,573 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 56,573 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7252,7 +7252,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 22,515 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 22,515 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7297,7 +7297,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,091 stars, a recent default-branch push, and BSD-2-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,091 stars, a recent default-branch push, and BSD-2-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7342,7 +7342,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,597 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,597 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7387,7 +7387,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 4,232 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 4,232 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7433,7 +7433,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 52,197 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 52,197 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7478,7 +7478,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,591 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,591 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7529,7 +7529,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 67,282 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 67,282 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7574,7 +7574,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 15,019 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 15,019 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7619,7 +7619,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 64,378 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 64,378 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7664,7 +7664,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 16,676 stars, a recent default-branch push, and LGPL-2.1 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 16,676 stars, a recent default-branch push, and LGPL-2.1 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7709,7 +7709,7 @@
       "primary_disposition": "learn",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 138,613 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Use this broad learning map to discover examples and techniques, not as a production dependency or a blanket endorsement of its many subprojects. This review inspected the First Reader skill at commit f163bb5a92111cee4610ac98e5dce4c6a2a09c26; every example still needs its own dependency, security, and fit review.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7754,7 +7754,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,309 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,309 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7799,7 +7799,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 506,988 stars, a recent default-branch push, and CC0-1.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 506,988 stars, a recent default-branch push, and CC0-1.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7844,7 +7844,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 599 stars, a recent default-branch push, and Apache-2.0 licensing; the reviewed exception was: The official SLSA GitHub generator implements a named provenance standard and is included for that bounded control role.. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 599 stars, a recent default-branch push, and Apache-2.0 licensing; the reviewed exception was: The official SLSA GitHub generator implements a named provenance standard and is included for that bounded control role.. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7889,7 +7889,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 27,449 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 27,449 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7934,7 +7934,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 1,268 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 1,268 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -7979,7 +7979,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 10,596 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 10,596 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8024,7 +8024,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 88,127 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 88,127 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8069,7 +8069,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 88,674 stars, a recent default-branch push, and MPL-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 88,674 stars, a recent default-branch push, and MPL-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8114,7 +8114,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 36,573 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 36,573 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8159,7 +8159,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 97,590 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 97,590 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8204,7 +8204,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 9,064 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 9,064 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8249,7 +8249,7 @@
       "primary_disposition": "reference",
       "role": "platform engineering and software-delivery prior art",
       "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 23,224 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 23,224 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8294,7 +8294,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 3,262 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 3,262 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8339,7 +8339,7 @@
       "primary_disposition": "reference",
       "role": "cloud infrastructure and infrastructure-as-code prior art",
       "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,816 stars, a recent default-branch push, and MPL-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,816 stars, a recent default-branch push, and MPL-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8384,7 +8384,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 57,379 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 57,379 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8429,7 +8429,7 @@
       "primary_disposition": "learn",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 224,669 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 224,669 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8474,7 +8474,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 3,934 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 3,934 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8519,7 +8519,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 64,877 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 64,877 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8564,7 +8564,7 @@
       "primary_disposition": "reference",
       "role": "OSS discovery, comparison, and learning prior art",
       "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 244,296 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 244,296 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8609,7 +8609,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 27,967 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 27,967 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8654,7 +8654,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 26,564 stars, a recent default-branch push, and GPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 26,564 stars, a recent default-branch push, and GPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8699,7 +8699,7 @@
       "primary_disposition": "reference",
       "role": "computer-vision and multimodal prior art",
       "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 61,715 stars, a recent default-branch push, and AGPL-3.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 61,715 stars, a recent default-branch push, and AGPL-3.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8744,7 +8744,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 76,285 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 76,285 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8789,7 +8789,7 @@
       "primary_disposition": "reference",
       "role": "homelab and self-hosted operations prior art",
       "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 63,125 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 63,125 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8834,7 +8834,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 10,476 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 10,476 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8879,7 +8879,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 11,991 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 11,991 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8924,7 +8924,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,490 stars, a recent default-branch push, and BSD-3-Clause licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,490 stars, a recent default-branch push, and BSD-3-Clause licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -8969,7 +8969,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 142,339 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 142,339 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9014,7 +9014,7 @@
       "primary_disposition": "reference",
       "role": "retrieval, search, and knowledge-system prior art",
       "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 7,090 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 7,090 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9059,7 +9059,7 @@
       "primary_disposition": "reference",
       "role": "nature, physics, and simulation prior art",
       "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 1,065 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 1,065 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9105,7 +9105,7 @@
       "primary_disposition": "reference",
       "role": "Python implementation and developer-tooling prior art",
       "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 321,225 stars, a recent default-branch push, and CC-BY-4.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 321,225 stars, a recent default-branch push, and CC-BY-4.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9156,7 +9156,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 14,594 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 14,594 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9201,7 +9201,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 82,858 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 82,858 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9246,7 +9246,7 @@
       "primary_disposition": "reference",
       "role": "generative-AI and agent-system prior art",
       "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 92,009 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 92,009 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9291,7 +9291,7 @@
       "primary_disposition": "reference",
       "role": "web engineering and interface-system prior art",
       "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 54,413 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 54,413 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9336,7 +9336,7 @@
       "primary_disposition": "reference",
       "role": "creative-coding and data-visualization prior art",
       "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 5,345 stars, a recent default-branch push, and Apache-2.0 licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 5,345 stars, a recent default-branch push, and Apache-2.0 licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],
@@ -9381,7 +9381,7 @@
       "primary_disposition": "reference",
       "role": "software supply-chain and assurance prior art",
       "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "rationale": "Selected as a strong prior-art checkpoint after cross-source discovery and maintainer review; live metadata showed 6,525 stars, a recent default-branch push, and MIT licensing. A star records consideration, not adoption.",
+      "rationale": "Included for this collection after public metadata and fit review; live metadata showed 6,525 stars, a recent default-branch push, and MIT licensing. These signals support discovery, not code, security, or adoption approval.",
       "decision_receipt_ids": [
         "par_personal_oss_curation_2026_09_17"
       ],

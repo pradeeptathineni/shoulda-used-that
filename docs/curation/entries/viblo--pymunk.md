@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** nature, physics, and simulation prior art<br>
 **Need:** Compare simulation engines and learning references before implementing physical, agent\-based, emergent, or reinforcement\-learning environments\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 1,065 stars, a recent default\-branch push, and MIT licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 1,065 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/nature-physics-simulation.md">Nature, Physics &amp; Simulation</a>
 
 ## Observed facts

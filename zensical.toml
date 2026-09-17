@@ -1,7 +1,7 @@
 [project]
 site_name = "ShouldaUsedThat"
 site_url = "https://pradeeptathineni.github.io/shoulda-used-that/"
-site_description = "Evidence-bound OSS decisions, project context, and safe GitHub curation."
+site_description = "Find and vet existing open source before building from scratch."
 site_author = "Pradeep Tathineni"
 copyright = "ShouldaUsedThat · Apache-2.0 · Evidence before enthusiasm"
 docs_dir = "docs"
@@ -27,6 +27,7 @@ nav = [
   { "Architecture" = [
     { "Curated OSS coordinator contract" = "architecture/curation-v0.2.md" },
     { "Implementation reuse gate" = "architecture/dogfood-reuse-audit.md" },
+    { "Public writing quality loop" = "architecture/public-writing.md" },
     { "Public implementation contract" = "architecture/implementation-brief.md" },
   ] },
   { "Decision receipts" = "decisions/README.md" },
@@ -41,6 +42,7 @@ nav = [
     { "v0.1.0 correctness and security review" = "development/review-v0.1.0.md" },
     { "Executed SBOM comparison" = "development/sbom-comparison.md" },
     { "Catalog scale validation" = "development/catalog-scale-validation.md" },
+    { "Architecture and public-writing review" = "development/architecture-review-2026-09-17.md" },
   ] },
   { "Releases" = [
     { "v0.2.0" = "releases/v0.2.0.md" },

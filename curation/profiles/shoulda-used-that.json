@@ -2,21 +2,21 @@
   "schema_version": "2.0",
   "profile_id": "shoulda-used-that",
   "title": "Pradeep's ShouldaUsedThat OSS Curation",
-  "description": "A public, evidence-bound map of strong OSS to consider across Pradeep Tathineni's engineering and creative interests before building another implementation.",
+  "description": "A public, evidence-bound map of OSS worth considering across Pradeep Tathineni's engineering and creative interests before building another implementation.",
   "public_owner_identity": "pradeeptathineni/shoulda-used-that",
   "visibility": "public",
   "source_specifications": [
     {
       "kind": "public-json",
       "locator": "curation/entries/shoulda-used-that.json",
-      "content_sha256": "5c2cb329760193e490c0e468c1997a5f0d49ef08aa6487935597207ce9b16193",
+      "content_sha256": "dea05ae0e98dd16401626c0cb1dff56d2bc09f45c188a2f9e99cd16c91ce775d",
       "license": "Apache-2.0",
       "attribution": "Repository-authored review records; individual entries retain any listed upstream attribution obligations."
     },
     {
       "kind": "public-json",
       "locator": "curation/entries/personal-interests.json",
-      "content_sha256": "452fa85247145d3d6b9499b2d6e62ecbf1f76d949ae86c3d341e9331d179014d",
+      "content_sha256": "fc43e4cecf45ebf939d801ea3eeda56acb8197c9b8956cdb2ad7f85009036c0f",
       "license": "Apache-2.0",
       "attribution": "Maintainer-reviewed personal-interest selections enriched from dated public repository metadata and documented ecosystem discovery sources."
     }
@@ -320,7 +320,7 @@
     "watch"
   ],
   "review_policy": {
-    "as_of": "2026-09-17T12:15:00Z",
+    "as_of": "2026-09-17T16:00:00Z",
     "default_freshness_days": 90
   },
   "popularity_treatment": "Popularity is a dated discovery signal only; it never proves suitability, security, maintenance quality, or project fit.",
@@ -341,5 +341,5 @@
       "add_memberships": 600
     }
   },
-  "canonical_fingerprint": "profile_d6ff1c0f94ded605e7db11fb2e98b551a99da88b6000611e867b7cfdcbb41c32"
+  "canonical_fingerprint": "profile_b0290c717cec55e9fc84f3ad295eb22946da8675fc8af8908a314a1f1be31c42"
 }

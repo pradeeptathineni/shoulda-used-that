@@ -1,16 +1,21 @@
 # ShouldaUsedThat
 
-**Turn “Shit, I shoulda used that” into “Glad I checked first.”**
+**Before you build another tool, check what open source already exists and what the evidence says.**
 
-ShouldaUsedThat is a deterministic-first, AI-optional coordinator that discovers, vets,
-remembers, and revalidates existing OSS before you write more code. It turns one named need into a
-replayable chain: **check → decision → adoption or curation → sealed projection → independent
-verification**.
+ShouldaUsedThat helps you find existing projects worth considering for a named need, record why one fits,
+and notice when the evidence changes. It turns “I should have used that” from a late discovery into
+an early, repeatable check.
 
-The local-first CLI now compiles evidence-bound OSS catalogs, inspects explicit projects and
-standards-based SBOMs, and can prepare narrowly additive GitHub Stars/List operations. Stars are
-bookmarks, not adoption evidence. Recommendations apply to the stated need and context; they are
-not a universal “best OSS” ranking.
+Use it in two ways:
+
+- **Browse the [public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/)**
+  to explore reviewed options by need, role, and decision status.
+- **Run the local CLI** to check explicit sources, preserve a decision, inspect a project, or prepare
+  an additive GitHub Stars and Lists plan.
+
+The product is deterministic and local-first. AI may help an author edit public prose, but it does
+not decide facts, filters, hashes, state transitions, or mutation plans. Stars remain bookmarks,
+and a reviewed entry is not a universal ranking, security approval, or automatic adoption.
 
 ## Status
 
@@ -18,10 +23,11 @@ This source tree is version `0.2.0` plus unreleased catalog and projection impro
 [GitHub Releases](https://github.com/pradeeptathineni/shoulda-used-that/releases); PyPI remains
 intentionally unused. This version adds deterministic project inspection, versioned curation
 snapshots, an allowlisted public catalog, and additive-only GitHub projection machinery. The
-repository now dogfoods that machinery across 221 reviewed records and 12 public Lists: the
-initial furnishing completed 438 exact additive operations and verified 488 postconditions. A
-metadata-only self-freshness reseal then projected a semantic no-op and independently verified
-all 730 current postconditions, again with zero mismatches.
+current catalog contains 222 reviewed records across 12 public collections. The last applied
+GitHub projection covered the preceding snapshot and was independently verified with zero
+mismatches. Exact operation and readback counts are in the
+[live projection evidence](docs/operations/live-projection.md). The newly adopted Vale record is
+cataloged here but is not claimed by that earlier verification.
 
 Browse the [live public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/),
 the committed [Markdown source](docs/curation/index.md), [canonical JSON](docs/curation/catalog.json),
@@ -35,7 +41,8 @@ catalog-to-GitHub execution chain.
 
 ## Install for development
 
-Prerequisites are Python 3.12–3.14, [`uv`](https://docs.astral.sh/uv/), Git, and the official
+Prerequisites are Python 3.12–3.14, [`uv`](https://docs.astral.sh/uv/), Git,
+[`Vale 3.21.0`](https://github.com/vale-cli/vale/releases/tag/v3.21.0), and the official
 [`gh`](https://cli.github.com/) CLI for live read-only GitHub sources.
 
 ```console
@@ -124,7 +131,7 @@ and can be isolated with `--state-dir` and `--profile`.
 | Role | Evidenced implementation |
 | --- | --- |
 | Runtime | Click, Pydantic, JMESPath, platformdirs, PyYAML, Rich, and RFC 8785 canonical JSON |
-| Development | uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, and pre-commit |
+| Development | uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale |
 | CI and security | GitHub Actions, CodeQL, dependency review, actionlint, zizmor, and Scorecard |
 | Catalog | Generated Markdown/JSON with a pinned, replaceable Zensical development trial |
 | Release | Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations |

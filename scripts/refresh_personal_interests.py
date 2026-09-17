@@ -72,10 +72,17 @@ def build_entries(
     disposition_overrides = _object(
         selection.get("disposition_overrides", {}), "disposition_overrides"
     )
+    rationale_overrides = _object(selection.get("rationale_overrides", {}), "rationale_overrides")
     license_overrides = _object(selection.get("license_overrides", {}), "license_overrides")
     exceptions = _object(selection.get("gate_exceptions", {}), "gate_exceptions")
     entries: list[dict[str, Any]] = []
     failures: list[str] = []
+    unknown_rationale_overrides = sorted(set(rationale_overrides) - set(memberships))
+    if unknown_rationale_overrides:
+        raise SystemExit(
+            "rationale_overrides reference unselected repositories: "
+            + ", ".join(unknown_rationale_overrides)
+        )
     cutoff = reviewed_at - timedelta(days=maximum_staleness_days)
 
     for requested_repository in sorted(memberships, key=str.casefold):
@@ -192,6 +199,16 @@ def build_entries(
                     "content_digest": None,
                 }
             )
+        rationale_override = rationale_overrides.get(requested_repository)
+        rationale = (
+            _string(rationale_override, f"{requested_repository}.rationale_override")
+            if rationale_override is not None
+            else (
+                f"Included for this collection after public metadata and fit review; "
+                f"{metric_phrase}. These signals support discovery, not code, security, "
+                f"or adoption approval."
+            )
+        )
         entries.append(
             {
                 "repository": repository,
@@ -201,11 +218,7 @@ def build_entries(
                 "primary_disposition": disposition,
                 "role": _string(collection.get("role"), f"{primary_slug}.role"),
                 "need": _string(collection.get("need"), f"{primary_slug}.need"),
-                "rationale": (
-                    f"Selected as a strong prior-art checkpoint after cross-source discovery "
-                    f"and maintainer review; {metric_phrase}. A star records consideration, "
-                    f"not adoption."
-                ),
+                "rationale": rationale,
                 "decision_receipt_ids": [decision_receipt_id],
                 "evidence_receipt_ids": [evidence_receipt],
                 "observed_license": license_id,

@@ -76,7 +76,7 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert first.profile_fingerprint == profile.canonical_fingerprint
     assert first.counts.model_dump() == {
         "sources": 2,
-        "entries": 221,
+        "entries": 222,
         "excluded": 1,
         "inbox": 0,
         "stale": 0,
@@ -293,7 +293,7 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
         [*base, "--format", "json", "curated", str(PUBLIC_PROFILE)],
     )
     assert machine.exit_code == 0, machine.output
-    assert json.loads(machine.stdout)["counts"]["entries"] == 221
+    assert json.loads(machine.stdout)["counts"]["entries"] == 222
 
     human = runner.invoke(
         cli,
@@ -301,7 +301,7 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
     )
     assert human.exit_code == 0, human.output
     assert "pradeeptathineni/shoulda-used-that" in human.stdout
-    assert "entries=221 excluded=1 inbox=0 stale=0" in human.stdout
+    assert "entries=222 excluded=1 inbox=0 stale=0" in human.stdout
     assert "canonical_fingerprint" not in human.stdout
 
     markdown = render(compile_profile(PUBLIC_PROFILE), OutputFormat.MARKDOWN)

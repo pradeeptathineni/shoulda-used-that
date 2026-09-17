@@ -22,7 +22,7 @@ tags:
 **Meaning:** Kept for educational value without an integration claim\.<br>
 **Role:** creative\-coding and data\-visualization prior art<br>
 **Need:** Compare established visual, generative, interactive, animation, and declarative\-visualization tools before building a custom rendering layer\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 2,577 stars, a recent default\-branch push, and MIT licensing; the reviewed exception was: This stable MIT\-licensed example corpus is the canonical Processing companion to a directly stated creative\-simulation interest\.\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 2,577 stars, a recent default\-branch push, and MIT licensing; the reviewed exception was: This stable MIT\-licensed example corpus is the canonical Processing companion to a directly stated creative\-simulation interest\.\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>, <a href="../collections/nature-physics-simulation.md">Nature, Physics &amp; Simulation</a>
 
 ## Observed facts

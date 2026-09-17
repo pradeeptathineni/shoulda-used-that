@@ -1,0 +1,10 @@
+extends: substitution
+message: "Use direct wording: consider '%s' instead of '%s'."
+level: warning
+ignorecase: true
+swap:
+  "at this point in time": "now"
+  "due to the fact that": "because"
+  "in order to": "to"
+  "it is important to note that": "state the point directly"
+  "it should be noted that": "state the point directly"

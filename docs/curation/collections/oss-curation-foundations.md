@@ -187,6 +187,13 @@ The product\-specific collection showing the components, sources, and prior art 
   <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
 </article>
 <article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--adopt">Used here</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/vale-cli--vale.md">vale-cli/vale</a></h3>
+  <p>Markup-aware prose linter with project-owned styles and offline execution.</p>
+  <p class="catalog-card__role"><strong>Role</strong> deterministic public-writing lint</p>
+  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler in the most visible public entrypoints without building a prose engine or making a model authoritative.</p>
+</article>
+<article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
   <h3><a href="../entries/vinta--awesome-python.md">vinta/awesome-python</a></h3>
   <p>The definitive list that answers &quot;I want to do X in Python, which tool should I use?&quot;</p>

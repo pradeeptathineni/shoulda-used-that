@@ -1,0 +1,13 @@
+extends: existence
+message: "Replace '%s' with a concrete, evidenced claim or omit it."
+level: warning
+ignorecase: true
+tokens:
+  - "cutting[- ]edge"
+  - "game[- ]changing"
+  - "revolutionary"
+  - "seamless(?:ly)?"
+  - "world[- ]class"
+  - "unlock(?:s|ed|ing)? (?:the )?(?:power|potential)"
+  - "delve(?:s|d|ing)?"
+  - "in today's (?:fast-paced|rapidly evolving)"

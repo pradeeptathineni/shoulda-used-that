@@ -7,7 +7,7 @@ tags:
 ---
 # Freshness and reconsideration
 
-This snapshot was compiled at `2026-09-17T12:15:00+00:00`. “Current” means current under this profile's dated review policy, not permanently correct.
+This snapshot was compiled at **2026-09-17T16:00 UTC**. “Current” means current under this profile's dated review policy, not permanently correct.
 
 Popularity is a dated discovery signal only; it never proves suitability, security, maintenance quality, or project fit\.
 
@@ -223,6 +223,7 @@ Popularity is a dated discovery signal only; it never proves suitability, securi
 <tr><th scope="row"><a href="entries/ultralytics--ultralytics.md">ultralytics/ultralytics</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>Maintenance, licensing, model provenance, or benchmark relevance changes materially.</td></tr>
 <tr><th scope="row"><a href="entries/unslothai--unsloth.md">unslothai/unsloth</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role.</td></tr>
 <tr><th scope="row"><a href="entries/usememos--memos.md">usememos/memos</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>The project becomes inactive, materially changes its self-hosted or license terms, or no longer has a maintainable deployment path.</td></tr>
+<tr><th scope="row"><a href="entries/vale-cli--vale.md">vale-cli/vale</a></th><td>current</td><td><time datetime="2026-09-17T16:00:00+00:00">2026-09-17T16:00:00+00:00</time></td><td>The pinned version cannot lint the selected sources deterministically, or the project-owned rules create repeated false positives.</td></tr>
 <tr><th scope="row"><a href="entries/vega--altair.md">vega/altair</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it.</td></tr>
 <tr><th scope="row"><a href="entries/vega--vega.md">vega/vega</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it.</td></tr>
 <tr><th scope="row"><a href="entries/vega--vega-lite.md">vega/vega-lite</a></th><td>current</td><td><time datetime="2026-09-17T12:15:00+00:00">2026-09-17T12:15:00+00:00</time></td><td>The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it.</td></tr>
