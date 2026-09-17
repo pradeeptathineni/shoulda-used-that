@@ -42,6 +42,10 @@ class GitHubRateLimitError(GitHubError):
     """GitHub refused the operation because of a rate limit."""
 
 
+class GitHubNotFoundError(GitHubError):
+    """GitHub could not expose the requested public or authorized resource."""
+
+
 class GitHubSchemaError(GitHubError):
     """A GitHub response did not match the documented shape."""
 

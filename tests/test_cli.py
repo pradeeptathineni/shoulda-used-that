@@ -234,6 +234,7 @@ def test_version_and_help_expose_stable_surface() -> None:
     for command in (
         "checked",
         "curated",
+        "inspected",
         "saved",
         "remembered",
         "rechecked",

@@ -1,5 +1,62 @@
 {
   "$defs": {
+    "ApplicabilityEvidence": {
+      "additionalProperties": false,
+      "description": "Visible project/candidate comparison that never changes global popularity.",
+      "properties": {
+        "candidate_values": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Candidate Values",
+          "type": "array"
+        },
+        "effect": {
+          "const": "evidence-only",
+          "default": "evidence-only",
+          "title": "Effect",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "ecosystem",
+            "language"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "project_values": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Project Values",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "relationship": {
+          "enum": [
+            "match",
+            "mismatch",
+            "unknown"
+          ],
+          "title": "Relationship",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "candidate_values",
+        "project_values",
+        "relationship",
+        "reason"
+      ],
+      "title": "ApplicabilityEvidence",
+      "type": "object"
+    },
     "Candidate": {
       "additionalProperties": false,
       "description": "Canonical, source-neutral candidate used by filters and receipts.",
@@ -230,6 +287,14 @@
     "CandidateEvaluation": {
       "additionalProperties": false,
       "properties": {
+        "applicability": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ApplicabilityEvidence"
+          },
+          "title": "Applicability",
+          "type": "array"
+        },
         "candidate": {
           "$ref": "#/$defs/Candidate"
         },
@@ -742,6 +807,42 @@
     "profile": {
       "title": "Profile",
       "type": "string"
+    },
+    "project_snapshot_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Project Snapshot Fingerprint"
+    },
+    "project_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Project Snapshot Id"
+    },
+    "project_target_identity": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Project Target Identity"
     },
     "result_repositories": {
       "items": {

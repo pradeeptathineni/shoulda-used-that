@@ -270,10 +270,22 @@ class PredicateResult(FrozenModel):
     reason: str
 
 
+class ApplicabilityEvidence(FrozenModel):
+    """Visible project/candidate comparison that never changes global popularity."""
+
+    field: Literal["ecosystem", "language"]
+    candidate_values: tuple[str, ...]
+    project_values: tuple[str, ...]
+    relationship: Literal["match", "mismatch", "unknown"]
+    effect: Literal["evidence-only"] = "evidence-only"
+    reason: str = Field(min_length=1)
+
+
 class CandidateEvaluation(FrozenModel):
     candidate: Candidate
     included: bool
     reasons: tuple[PredicateResult, ...]
+    applicability: tuple[ApplicabilityEvidence, ...] = ()
 
 
 class CheckCounts(FrozenModel):
@@ -302,6 +314,28 @@ class CheckReceipt(FrozenModel):
     result_set_fingerprint: str
     ordering: tuple[str, ...]
     counts: CheckCounts
+    project_snapshot_id: str | None = None
+    project_snapshot_fingerprint: str | None = None
+    project_target_identity: str | None = None
+
+    @model_validator(mode="after")
+    def project_context_is_complete(self) -> CheckReceipt:
+        context = (
+            self.project_snapshot_id,
+            self.project_snapshot_fingerprint,
+            self.project_target_identity,
+        )
+        if any(context) and not all(context):
+            raise ValueError("project context identifiers must be present together")
+        if self.project_snapshot_id and not re.fullmatch(
+            r"psn_[0-9a-f]{24}", self.project_snapshot_id
+        ):
+            raise ValueError("project_snapshot_id has an invalid content identity")
+        if self.project_snapshot_fingerprint and not re.fullmatch(
+            r"project_[0-9a-f]{64}", self.project_snapshot_fingerprint
+        ):
+            raise ValueError("project_snapshot_fingerprint has an invalid content identity")
+        return self
 
 
 class SavedItem(FrozenModel):

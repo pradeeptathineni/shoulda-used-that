@@ -15,6 +15,7 @@ from shoulda_used_that.github import GhClient
 from shoulda_used_that.models import (
     AdoptionPlan,
     Candidate,
+    CandidateEvaluation,
     CheckReceipt,
     DecisionReceipt,
     DiffMateriality,
@@ -32,6 +33,12 @@ from shoulda_used_that.models import (
     SourceRequest,
     utc_now,
 )
+from shoulda_used_that.project_context import (
+    ProjectGitHub,
+    ProjectSnapshot,
+    applicability_evidence,
+    inspect_project,
+)
 from shoulda_used_that.sources import SourceBatch, load_sources, merge_batches
 from shoulda_used_that.state import StateStore
 
@@ -44,6 +51,35 @@ def curated(store: StateStore, *, profile_path: Path) -> CurationSnapshot:
     snapshot = compile_profile(profile_path, previous=previous)
     store.write_curation(snapshot)
     return snapshot
+
+
+def inspected(
+    store: StateStore,
+    *,
+    target: str,
+    sbom_path: Path | None = None,
+    github: ProjectGitHub | None = None,
+    observed_at: datetime | None = None,
+) -> ProjectSnapshot:
+    """Create and persist a bounded read-only snapshot of one explicit project."""
+
+    snapshot = inspect_project(target, sbom_path=sbom_path, github=github, observed_at=observed_at)
+    store.write_project(snapshot)
+    return snapshot
+
+
+def resolve_project_context(
+    store: StateStore,
+    value: str,
+    *,
+    github: ProjectGitHub | None = None,
+    observed_at: datetime | None = None,
+) -> ProjectSnapshot:
+    """Resolve an immutable snapshot ID or inspect one explicit target."""
+
+    if value.startswith("psn_"):
+        return store.read_project(value)
+    return inspected(store, target=value, github=github, observed_at=observed_at)
 
 
 MATERIAL_FIELDS = {
@@ -65,6 +101,7 @@ def checked(
     need: str,
     source_requests: tuple[SourceRequest, ...],
     filter_spec: FilterSpec,
+    project_snapshot: ProjectSnapshot | None = None,
     github: GhClient | None = None,
     observed_at: datetime | None = None,
 ) -> CheckReceipt:
@@ -81,6 +118,8 @@ def checked(
     evaluations, visible, result_fingerprint, counts = evaluate_candidates(
         candidates, filter_spec, observed_at=timestamp, raw_count=raw_count
     )
+    if project_snapshot is not None:
+        evaluations = _with_project_context(evaluations, project_snapshot)
     source_fingerprint = _source_fingerprint(batches)
     seed = {
         "need": need,
@@ -89,6 +128,9 @@ def checked(
         "source_snapshot_fingerprint": source_fingerprint,
         "filter_spec": filter_spec.model_dump(mode="json"),
         "result_set_fingerprint": result_fingerprint,
+        "project_snapshot_fingerprint": (
+            project_snapshot.canonical_fingerprint if project_snapshot else None
+        ),
     }
     receipt = CheckReceipt(
         check_id=short_id(seed, prefix="chk"),
@@ -104,6 +146,15 @@ def checked(
         unknown_policy={
             "hard_gate": "unknown facts are excluded",
             "soft_evidence": "unknown facts remain unless explicitly filtered",
+            **(
+                {
+                    "project_context": (
+                        "visible evidence only; never an implicit need or popularity rank"
+                    )
+                }
+                if project_snapshot
+                else {}
+            ),
         },
         evaluations=evaluations,
         result_repositories=tuple(candidate.repository for candidate in visible),
@@ -113,6 +164,11 @@ def checked(
             "repo",
         ),
         counts=counts,
+        project_snapshot_id=(project_snapshot.project_snapshot_id if project_snapshot else None),
+        project_snapshot_fingerprint=(
+            project_snapshot.canonical_fingerprint if project_snapshot else None
+        ),
+        project_target_identity=(project_snapshot.target_identity if project_snapshot else None),
     )
     store.write_check(receipt)
     return receipt
@@ -390,6 +446,14 @@ def rechecked(
         evaluations, visible, current_fingerprint, counts = evaluate_candidates(
             candidates, prior.filter_spec, observed_at=timestamp, raw_count=raw_count
         )
+        if prior.project_snapshot_id:
+            project_snapshot = store.read_project(prior.project_snapshot_id)
+            if project_snapshot.canonical_fingerprint != prior.project_snapshot_fingerprint:
+                raise StateError(
+                    code="project_snapshot_fingerprint_mismatch",
+                    message="The check's bound project snapshot fingerprint does not match state.",
+                )
+            evaluations = _with_project_context(evaluations, project_snapshot)
         diffs = _diff_candidates(prior, visible)
         if any(item.materiality is DiffMateriality.MATERIAL_REVIEW for item in diffs):
             outcome = RecheckOutcome.MATERIAL_REVIEW_REQUIRED
@@ -410,6 +474,7 @@ def rechecked(
             "source_snapshot_fingerprint": source_fingerprint,
             "filter_spec": prior.filter_spec.model_dump(mode="json"),
             "result_set_fingerprint": current_fingerprint,
+            "project_snapshot_fingerprint": prior.project_snapshot_fingerprint,
         }
         snapshot = prior.model_copy(
             update={
@@ -573,6 +638,17 @@ def _projection_plan(
 
 def _source_fingerprint(batches: Sequence[SourceBatch]) -> str:
     return digest([batch.observation.identity_view() for batch in batches], prefix="srcset")
+
+
+def _with_project_context(
+    evaluations: tuple[CandidateEvaluation, ...], snapshot: ProjectSnapshot
+) -> tuple[CandidateEvaluation, ...]:
+    return tuple(
+        evaluation.model_copy(
+            update={"applicability": applicability_evidence(evaluation.candidate, snapshot)}
+        )
+        for evaluation in evaluations
+    )
 
 
 def _source_identity_from_observations(observations: tuple[SourceObservation, ...]) -> str:

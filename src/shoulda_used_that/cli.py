@@ -62,6 +62,23 @@ def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format:
     )
 
 
+@cli.command("inspected")
+@click.argument("target")
+@click.option("--sbom", "sbom_path", type=click.Path(path_type=Path, dir_okay=False))
+@click.pass_obj
+def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> None:
+    """Inspect one explicit project and optional supplied SPDX/CycloneDX document."""
+
+    try:
+        snapshot = services.inspected(runtime.store, target=target, sbom_path=sbom_path)
+        click.echo(render(snapshot, runtime.output_format), nl=False)
+    except (ShouldaError, ValueError) as exc:
+        _fail(
+            runtime,
+            exc if isinstance(exc, ShouldaError) else ShouldaError("invalid_input", str(exc)),
+        )
+
+
 @cli.command("checked")
 @click.argument("need")
 @click.option("--source", type=_enum_choice(SourceKind), multiple=True, required=True)
@@ -88,6 +105,11 @@ def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format:
 @click.option("--sort", "sort_fields", multiple=True, default=("repo",), show_default=True)
 @click.option("--limit", type=click.IntRange(min=1, max=1000), default=50, show_default=True)
 @click.option("--explain-filter", is_flag=True)
+@click.option(
+    "--in",
+    "project_context",
+    help="Explicit psn_ snapshot ID, github:owner/repo target, or local project path.",
+)
 @click.pass_obj
 def checked_command(
     runtime: Runtime,
@@ -116,6 +138,7 @@ def checked_command(
     sort_fields: tuple[str, ...],
     limit: int,
     explain_filter: bool,
+    project_context: str | None,
 ) -> None:
     """Discover and record one immutable, post-filter check result."""
 
@@ -142,11 +165,17 @@ def checked_command(
             sort=sort_fields,
             limit=limit,
         )
+        project_snapshot = (
+            services.resolve_project_context(runtime.store, project_context)
+            if project_context
+            else None
+        )
         receipt = services.checked(
             runtime.store,
             need=need,
             source_requests=requests,
             filter_spec=filters,
+            project_snapshot=project_snapshot,
         )
         click.echo(render(receipt, runtime.output_format, explain=explain_filter), nl=False)
     except ShouldaError as exc:

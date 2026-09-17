@@ -1,0 +1,533 @@
+{
+  "$defs": {
+    "DependencyComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "component_type": {
+          "minLength": 1,
+          "title": "Component Type",
+          "type": "string"
+        },
+        "identity": {
+          "minLength": 1,
+          "title": "Identity",
+          "type": "string"
+        },
+        "licenses": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Licenses",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "provenance": {
+          "minLength": 1,
+          "title": "Provenance",
+          "type": "string"
+        },
+        "purl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Purl"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "identity",
+        "component_type",
+        "name",
+        "provenance"
+      ],
+      "title": "DependencyComponent",
+      "type": "object"
+    },
+    "ManifestFact": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_count": {
+          "minimum": 0,
+          "title": "Byte Count",
+          "type": "integer"
+        },
+        "ecosystem": {
+          "minLength": 1,
+          "title": "Ecosystem",
+          "type": "string"
+        },
+        "manifest_kind": {
+          "enum": [
+            "manifest",
+            "lockfile",
+            "dependency-configuration"
+          ],
+          "title": "Manifest Kind",
+          "type": "string"
+        },
+        "relative_path": {
+          "minLength": 1,
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relative_path",
+        "ecosystem",
+        "manifest_kind",
+        "byte_count",
+        "sha256"
+      ],
+      "title": "ManifestFact",
+      "type": "object"
+    },
+    "ProjectEvidenceGap": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/ProjectEvidenceState"
+        },
+        "subject": {
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "state",
+        "subject",
+        "explanation"
+      ],
+      "title": "ProjectEvidenceGap",
+      "type": "object"
+    },
+    "ProjectEvidenceState": {
+      "enum": [
+        "available",
+        "unavailable",
+        "pending",
+        "partial",
+        "error"
+      ],
+      "title": "ProjectEvidenceState",
+      "type": "string"
+    },
+    "ProjectLanguage": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_count": {
+          "minimum": 0,
+          "title": "Byte Count",
+          "type": "integer"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "byte_count"
+      ],
+      "title": "ProjectLanguage",
+      "type": "object"
+    },
+    "ProjectSourceReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "payload_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Payload Sha256"
+        },
+        "receipt_id": {
+          "pattern": "^src_[0-9a-f]{24}$",
+          "title": "Receipt Id",
+          "type": "string"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference"
+        },
+        "source_kind": {
+          "minLength": 1,
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/ProjectEvidenceState"
+        },
+        "tool_version": {
+          "minLength": 1,
+          "title": "Tool Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "source_kind",
+        "locator",
+        "observed_at",
+        "tool_version",
+        "state"
+      ],
+      "title": "ProjectSourceReceipt",
+      "type": "object"
+    },
+    "ProjectTargetKind": {
+      "enum": [
+        "github",
+        "local"
+      ],
+      "title": "ProjectTargetKind",
+      "type": "string"
+    },
+    "RepositoryProjectMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "archived": {
+          "title": "Archived",
+          "type": "boolean"
+        },
+        "default_branch": {
+          "title": "Default Branch",
+          "type": "string"
+        },
+        "head_commit": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{40,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Head Commit"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "private",
+            "internal",
+            "unknown"
+          ],
+          "title": "Visibility",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "visibility",
+        "default_branch",
+        "archived",
+        "url"
+      ],
+      "title": "RepositoryProjectMetadata",
+      "type": "object"
+    },
+    "SbomDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "component_count": {
+          "minimum": 0,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "document_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Name"
+        },
+        "format": {
+          "enum": [
+            "spdx",
+            "cyclonedx"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_reference": {
+          "minLength": 1,
+          "title": "Source Reference",
+          "type": "string"
+        },
+        "specification_version": {
+          "minLength": 1,
+          "title": "Specification Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "format",
+        "specification_version",
+        "sha256",
+        "component_count",
+        "source_reference"
+      ],
+      "title": "SbomDescriptor",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/project-snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_fingerprint": {
+      "pattern": "^project_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "dependency_components": {
+      "items": {
+        "$ref": "#/$defs/DependencyComponent"
+      },
+      "title": "Dependency Components",
+      "type": "array"
+    },
+    "ecosystems": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Ecosystems",
+      "type": "array"
+    },
+    "evidence_gaps": {
+      "items": {
+        "$ref": "#/$defs/ProjectEvidenceGap"
+      },
+      "title": "Evidence Gaps",
+      "type": "array"
+    },
+    "inspected_byte_count": {
+      "minimum": 0,
+      "title": "Inspected Byte Count",
+      "type": "integer"
+    },
+    "inspected_file_count": {
+      "minimum": 0,
+      "title": "Inspected File Count",
+      "type": "integer"
+    },
+    "inspector_version": {
+      "title": "Inspector Version",
+      "type": "string"
+    },
+    "languages": {
+      "items": {
+        "$ref": "#/$defs/ProjectLanguage"
+      },
+      "title": "Languages",
+      "type": "array"
+    },
+    "manifest_facts": {
+      "items": {
+        "$ref": "#/$defs/ManifestFact"
+      },
+      "title": "Manifest Facts",
+      "type": "array"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "project_snapshot_id": {
+      "pattern": "^psn_[0-9a-f]{24}$",
+      "title": "Project Snapshot Id",
+      "type": "string"
+    },
+    "repository_metadata": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RepositoryProjectMetadata"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "sbom": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SbomDescriptor"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_receipts": {
+      "items": {
+        "$ref": "#/$defs/ProjectSourceReceipt"
+      },
+      "minItems": 1,
+      "title": "Source Receipts",
+      "type": "array"
+    },
+    "target_identity": {
+      "minLength": 1,
+      "title": "Target Identity",
+      "type": "string"
+    },
+    "target_kind": {
+      "$ref": "#/$defs/ProjectTargetKind"
+    },
+    "topics": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Topics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "project_snapshot_id",
+    "target_kind",
+    "target_identity",
+    "observed_at",
+    "inspector_version",
+    "source_receipts",
+    "languages",
+    "topics",
+    "ecosystems",
+    "manifest_facts",
+    "dependency_components",
+    "evidence_gaps",
+    "inspected_file_count",
+    "inspected_byte_count",
+    "canonical_fingerprint"
+  ],
+  "title": "ProjectSnapshot",
+  "type": "object"
+}
