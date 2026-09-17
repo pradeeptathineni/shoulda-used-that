@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import subprocess
 import tomllib
 from pathlib import Path
@@ -12,8 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _git(*args: str) -> str:
+    git = shutil.which("git")
+    if git is None:
+        raise RuntimeError("git is required to verify an annotated release tag")
     completed = subprocess.run(  # noqa: S603 - fixed Git executable and repository arguments
-        ("/usr/bin/git", *args),
+        (git, *args),
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -31,7 +35,7 @@ def verify(tag: str, expected_commit: str) -> list[str]:
     try:
         object_type = _git("cat-file", "-t", tag)
         peeled = _git("rev-parse", f"{tag}^{{}}")
-    except subprocess.CalledProcessError as exc:
+    except (RuntimeError, subprocess.CalledProcessError) as exc:
         problems.append(f"tag cannot be resolved: {exc}")
     else:
         if object_type != "tag":
