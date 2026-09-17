@@ -9,7 +9,7 @@
     {
       "kind": "public-json",
       "locator": "curation/entries/shoulda-used-that.json",
-      "content_sha256": "c9140a96f7be1645d21c2c6519f90eb88fa036c6cb6cd809ad70b7576f121705",
+      "content_sha256": "804f7c4458710353283238485600ce616d605631c6f7148892322166d997fd15",
       "license": "Apache-2.0",
       "attribution": "Repository-authored review records; individual entries retain any listed upstream attribution obligations."
     }
@@ -20,10 +20,10 @@
       "title": "Homelab & Self-Hosting",
       "description": "Local infrastructure, private cloud, networking, storage, media, and operations at home.",
       "aliases": [
-        "home lab",
-        "self-hosted",
+        "Kubernetes at home",
         "NAS",
-        "Kubernetes at home"
+        "home lab",
+        "self-hosted"
       ],
       "semantics": "A durable domain collection for software used to run personally operated infrastructure.",
       "inclusion_rule": "Include a reviewed repository when operating a homelab or self-hosted service is one of its evidenced primary uses.",
@@ -44,8 +44,8 @@
       "aliases": [
         "GenAI",
         "LLM",
-        "agentic AI",
-        "RAG"
+        "RAG",
+        "agentic AI"
       ],
       "semantics": "A durable domain collection for reviewed generative-AI and agent-system components and references.",
       "inclusion_rule": "Include a reviewed repository when it directly supports a named model, retrieval, agent, context, or evaluation need.",
@@ -64,9 +64,9 @@
       "title": "Computational Nature & Simulation",
       "description": "Artificial life, ecosystems, physics, procedural systems, cellular automata, and scientific simulation.",
       "aliases": [
-        "nature simulation",
         "emergent systems",
-        "generative nature"
+        "generative nature",
+        "nature simulation"
       ],
       "semantics": "A durable domain collection for software that models natural, physical, or emergent systems.",
       "inclusion_rule": "Include a reviewed repository when simulation of natural or emergent behavior is an evidenced central role.",
@@ -85,10 +85,10 @@
       "title": "Computer Vision & Multimodal",
       "description": "Image and video understanding, geometry, perception, and vision-language systems.",
       "aliases": [
+        "3D vision",
         "CV",
         "VLM",
-        "image processing",
-        "3D vision"
+        "image processing"
       ],
       "semantics": "A durable domain collection for reviewed visual perception and multimodal systems.",
       "inclusion_rule": "Include a reviewed repository when image, video, geometry, or vision-language work is an evidenced primary role.",
@@ -108,9 +108,9 @@
       "description": "CI/CD, infrastructure as code, developer platforms, release engineering, observability, and operations.",
       "aliases": [
         "DevOps",
+        "GitOps",
         "SRE",
-        "cloud native",
-        "GitOps"
+        "cloud native"
       ],
       "semantics": "A durable domain collection for building, securing, releasing, and operating software platforms.",
       "inclusion_rule": "Include a reviewed repository when it has an evidenced delivery, platform, release, or operations role.",
@@ -129,8 +129,8 @@
       "title": "Python Engineering",
       "description": "Runtime libraries and development tools used to build and test dependable Python software.",
       "aliases": [
-        "Python tooling",
-        "Python development"
+        "Python development",
+        "Python tooling"
       ],
       "semantics": "A cross-cutting necessity collection for evidenced Python implementation roles.",
       "inclusion_rule": "Include a reviewed repository when this project uses or recommends it for a named Python engineering need.",
@@ -149,9 +149,9 @@
       "title": "Software Supply Chain",
       "description": "Testing, security analysis, dependency evidence, packaging, provenance, and release integrity.",
       "aliases": [
-        "supply chain security",
+        "SBOM",
         "release security",
-        "SBOM"
+        "supply chain security"
       ],
       "semantics": "A cross-cutting necessity collection for evidenced software integrity controls.",
       "inclusion_rule": "Include a reviewed repository when it supplies a named test, security, packaging, or provenance control.",
@@ -170,8 +170,8 @@
       "title": "OSS Curation Foundations",
       "description": "Native surfaces, catalogs, decision records, and presentation tools considered for evidence-backed OSS curation.",
       "aliases": [
-        "open source curation",
         "GitHub stars",
+        "open source curation",
         "prior art"
       ],
       "semantics": "The product-specific collection showing the components and prior art behind ShouldaUsedThat.",
@@ -198,13 +198,13 @@
   },
   "allowed_dispositions": [
     "adopt",
-    "trial",
-    "reference",
-    "learn",
-    "watch",
-    "reject",
     "build",
-    "inbox"
+    "inbox",
+    "learn",
+    "reference",
+    "reject",
+    "trial",
+    "watch"
   ],
   "review_policy": {
     "as_of": "2026-09-17T12:00:00Z",
@@ -228,5 +228,5 @@
       "add_memberships": 20
     }
   },
-  "canonical_fingerprint": "profile_7432f8a4b4e8040545ec2a929475ad82c292037ba0c0304a814a30ce660b6658"
+  "canonical_fingerprint": "profile_0b0d8ba302884b9b135e8c75f2aa6eb53a1e122adeeaa645f3090ac3f28fc31d"
 }

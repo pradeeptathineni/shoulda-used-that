@@ -72,6 +72,7 @@ from shoulda_used_that.projection import (
     build_projection_plan,
     desired_projection_repositories,
 )
+from shoulda_used_that.public_export import PublicCatalogExport, write_public_catalog
 from shoulda_used_that.sources import SourceBatch, load_sources, merge_batches
 from shoulda_used_that.state import StateStore
 
@@ -82,8 +83,29 @@ def curated(store: StateStore, *, profile_path: Path) -> CurationSnapshot:
     profile = load_profile(profile_path)
     previous = store.latest_curation(profile.profile_id)
     snapshot = compile_profile(profile_path, previous=previous)
+    store.write_curation_profile(profile)
     store.write_curation(snapshot)
     return snapshot
+
+
+def exported(
+    store: StateStore,
+    *,
+    curation_snapshot_id: str,
+    public: bool,
+    output: Path,
+) -> PublicCatalogExport:
+    """Write a staged allowlisted public catalog; private export is unsupported."""
+
+    if not public:
+        raise StateError(
+            code="public_export_flag_required",
+            message="Catalog export requires the explicit --public boundary.",
+        )
+    snapshot = store.read_curation(curation_snapshot_id)
+    profile = store.read_curation_profile(snapshot.profile_fingerprint)
+    receipt, _ = write_public_catalog(snapshot, profile, output)
+    return receipt
 
 
 def projected(

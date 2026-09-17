@@ -1,0 +1,95 @@
+[project]
+site_name = "ShouldaUsedThat"
+site_url = "https://pradeeptathineni.github.io/shoulda-used-that/"
+site_description = "Evidence-bound OSS decisions, project context, and safe GitHub curation."
+site_author = "Pradeep Tathineni"
+copyright = "ShouldaUsedThat · Apache-2.0 · Evidence before enthusiasm"
+docs_dir = "docs"
+site_dir = "site"
+repo_url = "https://github.com/pradeeptathineni/shoulda-used-that"
+repo_name = "pradeeptathineni/shoulda-used-that"
+edit_uri = "edit/main/docs"
+extra_css = ["curation/assets/catalog.css"]
+nav = [
+  { "Home" = "index.md" },
+  { "Catalog" = [
+    { "Overview" = "curation/index.md" },
+    { "What ShouldaUsedThat uses" = "curation/in-use.md" },
+    { "Considered choices" = "curation/considered.md" },
+    { "Freshness and reconsideration" = "curation/freshness.md" },
+    { "Sources and attribution" = "curation/sources.md" },
+    { "Collections" = "curation/collections/index.md" },
+    { "Entries" = "curation/entries/index.md" },
+    { "Tags" = "curation/tags.md" },
+  ] },
+  { "Architecture" = [
+    { "Curated OSS coordinator contract" = "architecture/curation-v0.2.md" },
+    { "Implementation reuse gate" = "architecture/dogfood-reuse-audit.md" },
+    { "Public implementation contract" = "architecture/implementation-brief.md" },
+  ] },
+  { "Decision receipts" = "decisions/README.md" },
+  { "Development evidence" = [
+    { "Development context receipt" = "development/context-receipt.md" },
+    { "v0.1.0 correctness and security review" = "development/review-v0.1.0.md" },
+    { "Executed SBOM comparison" = "development/sbom-comparison.md" },
+    { "Catalog scale validation" = "development/catalog-scale-validation.md" },
+  ] },
+  { "Releases" = [
+    { "v0.1.0" = "releases/v0.1.0.md" },
+  ] },
+]
+
+[project.theme]
+variant = "modern"
+language = "en"
+font = false
+custom_dir = "site-overrides"
+features = [
+  "content.action.view",
+  "content.code.copy",
+  "content.tooltips",
+  "navigation.footer",
+  "navigation.indexes",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+  "search.suggest",
+  "toc.follow",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Use light theme"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "teal"
+accent = "green"
+toggle.icon = "lucide/sun"
+toggle.name = "Use dark theme"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "teal"
+accent = "green"
+toggle.icon = "lucide/moon"
+toggle.name = "Use system theme"
+
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+md_in_html = {}
+toc.permalink = true
+pymdownx.details = {}
+pymdownx.superfences = {}
+
+[project.plugins.search]
+
+[project.plugins.tags]

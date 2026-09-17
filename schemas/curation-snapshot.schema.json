@@ -199,6 +199,11 @@
           "title": "Decision Receipt Ids",
           "type": "array"
         },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
         "evidence_receipt_ids": {
           "default": [],
           "items": {
@@ -309,6 +314,7 @@
       "required": [
         "repository",
         "url",
+        "description",
         "collection_memberships",
         "primary_disposition",
         "role",
