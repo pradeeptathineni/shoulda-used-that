@@ -533,6 +533,7 @@ def _render_files(
     files: dict[str, bytes] = {
         "catalog.json": canonical_bytes(catalog_payload) + b"\n",
         "index.md": _index_markdown(profile, snapshot, collections, records).encode(),
+        "selection.md": _selection_markdown(profile, collections, records).encode(),
         "dogfood.md": _dogfood_markdown(profile, snapshot, collections, records).encode(),
         "in-use.md": _in_use_markdown(profile, records).encode(),
         "considered.md": _considered_markdown(profile, records, excluded).encode(),
@@ -679,7 +680,7 @@ This repository is both the tool and a public execution of its central claim: **
 
 ## The executed shape
 
-1. A human-readable [interest selection](https://github.com/{html.escape(profile.public_owner_identity)}/blob/main/curation/selections/personal-interests.json) states the domains and exact repositories.
+1. A human-readable [interest selection](selection.md) exposes the domains and exact repositories compiled from `curation/selections/personal-interests.json`.
 2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
 3. `curated` compiles those public inputs with the repository's own dependency and prior-art receipts into immutable canonical JSON.
 4. `projected` reads the current GitHub account and seals only additive Star and List operations.
@@ -710,6 +711,53 @@ See the [sanitized live projection evidence](../operations/live-projection.md) f
 - It proves the repository can compile a substantial reviewed catalog, preserve meaningful multi-list membership, execute its bounded additive projection, and verify public postconditions.
 - It does not claim that stars equal adoption, that popularity equals quality, or that one list is a universal ranking.
 - It does not silently unstar, remove memberships, rename or delete Lists, expose private repositories, or grant scheduled jobs personal mutation authority.
+"""
+    )
+
+
+def _selection_markdown(
+    profile: CurationProfile,
+    collections: tuple[PublicCollection, ...],
+    records: tuple[PublicCatalogRecord, ...],
+) -> str:
+    receipt = "docs/decisions/personal-oss-curation.json"
+    selected = tuple(record for record in records if receipt in record.evidence_receipt_ids)
+    memberships = sum(len(record.collections) for record in selected)
+    multi_collection = sum(len(record.collections) > 1 for record in selected)
+    collection_by_slug = {item.slug: item for item in collections}
+    sections: list[str] = []
+    for slug in (
+        collection.slug
+        for collection in collections
+        if any(collection.slug in record.collections for record in selected)
+    ):
+        collection = collection_by_slug[slug]
+        members = tuple(record for record in selected if slug in record.collections)
+        rows = "\n".join(
+            f"- [{_markdown_text(record.repository)}](entries/{_repository_slug(record.repository)}.md) — {_markdown_text(record.disposition_label)}"
+            for record in members
+        )
+        sections.append(
+            f"## [{_markdown_text(collection.title)}](collections/{collection.slug}.md) — {len(members)}\n\n"
+            f"{_markdown_text(collection.description)}\n\n{rows}"
+        )
+    return (
+        _frontmatter(
+            "Personal OSS interest selection",
+            "The exact reviewed repositories grouped by the human-authored interest domains that drive the public GitHub projection.",
+            ("OSS curation", "interests", "prior art"),
+        )
+        + f"""# Personal OSS interest selection
+
+This is the readable projection of the human-authored `curation/selections/personal-interests.json` manifest. It contains **{len(selected)} unique repositories**, **{memberships} domain memberships**, and **{multi_collection} repositories with intentional multi-domain membership**.
+
+Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it does not mean automatic adoption.
+
+{(chr(10) * 2).join(sections)}
+
+## Relationship to the full catalog
+
+The [complete catalog](index.md) also includes ShouldaUsedThat's own dependency, prior-art, trial, rejection, and build records. The interest selection is kept separate so personal discovery intent remains readable while the compiled catalog remains authoritative for evidence and decision state.
 """
     )
 

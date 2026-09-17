@@ -104,6 +104,9 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert b"curated" in first_files["dogfood.md"]
     assert b"projected" in first_files["dogfood.md"]
     assert b"verify" in first_files["dogfood.md"]
+    assert b"206 unique repositories" in first_files["selection.md"]
+    assert b"entries/browser-use--browser-use.md" in first_files["selection.md"]
+    assert b"curation/selections/personal-interests.json" in first_files["selection.md"]
     combined = b"\n".join(first_files.values())
     assert str(ROOT).encode() not in combined
     assert b"github_pat_" not in combined

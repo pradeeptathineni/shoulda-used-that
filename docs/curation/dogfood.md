@@ -12,7 +12,7 @@ This repository is both the tool and a public execution of its central claim: **
 
 ## The executed shape
 
-1. A human-readable [interest selection](https://github.com/pradeeptathineni/shoulda-used-that/blob/main/curation/selections/personal-interests.json) states the domains and exact repositories.
+1. A human-readable [interest selection](selection.md) exposes the domains and exact repositories compiled from `curation/selections/personal-interests.json`.
 2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
 3. `curated` compiles those public inputs with the repository's own dependency and prior-art receipts into immutable canonical JSON.
 4. `projected` reads the current GitHub account and seals only additive Star and List operations.
