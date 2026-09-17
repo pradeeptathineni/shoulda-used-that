@@ -14,8 +14,9 @@ This dated gate records the selected owner for each implementation role. The mac
 | Canonical JSON | `rfc8785` 0.1.4 | Narrow bytes adapter and published vectors |
 | GitHub transport | installed official `gh` | Read-only argument-vector subprocesses; no token client or SDK |
 | Tests | pytest, Hypothesis, coverage.py | Examples, invariants, branch coverage |
-| Static quality | Ruff and strict mypy | No overlapping formatter/linter/type checker |
+| Static quality | Ruff and strict mypy | Python formatting, linting, complexity, and type checks; no overlapping Python checker |
 | Security | pip-audit, CodeQL, dependency review, actionlint, zizmor, Scorecard | Separate dependency, source, workflow, and posture roles |
+| Public writing | Vale 3.21.0 plus a context-free first-reader skim | Narrow offline phrase checks plus human judgment; no model-authored facts or universal prose score |
 | Docs | generated Markdown/JSON, Zensical 0.0.62, typos, lychee | Zensical is a development-only view adapter; canonical source remains portable |
 | Release | CycloneDX Python SBOM, GitHub release, checksum, GitHub attestation | Syft measured and rejected for this Python environment; no PyPI or second release service |
 | VCS lifecycle | Git and GitHub native commits, protected `main`, annotated tag, release | Coherent public commits; push before hosted validation; never rewrite released history |

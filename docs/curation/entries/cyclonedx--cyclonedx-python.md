@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** software supply\-chain and assurance prior art<br>
 **Need:** Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 391 stars, a recent default\-branch push, and Apache\-2\.0 licensing; the reviewed exception was: Official CycloneDX Python tooling is a standards implementation with direct supply\-chain relevance despite a sub\-1,000 star count\.\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 391 stars, a recent default\-branch push, and Apache\-2\.0 licensing; the reviewed exception was: Official CycloneDX Python tooling is a standards implementation with direct supply\-chain relevance despite a sub\-1,000 star count\.\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
 
 ## Observed facts

@@ -55,7 +55,7 @@ Collections organize evidence; they do not rank repositories. Aliases are search
   <div class="catalog-card__meta"><span class="projection-chip">GitHub List eligible</span></div>
   <h3><a href="oss-curation-foundations.md">OSS Curation &amp; Prior Art</a></h3>
   <p>Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools.</p>
-  <p><strong>25</strong> reviewed entries</p>
+  <p><strong>26</strong> reviewed entries</p>
   <p class="catalog-aliases"><strong>Aliases</strong> GitHub stars, open source curation, prior art</p>
 </article>
 <article class="catalog-card collection-card">

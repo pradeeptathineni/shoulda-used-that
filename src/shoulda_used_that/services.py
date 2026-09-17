@@ -182,68 +182,16 @@ def applied(
 ) -> ApplyReceipt:
     """Apply only sealed additive GitHub operations with append-only receipts."""
 
-    if not plan_id.startswith("gcp_"):
-        raise StateError(
-            code="unsupported_plan_kind",
-            message="v0.2.0 apply supports only a github-curation plan ID.",
-        )
-    plan = store.read_github_projection(plan_id)
-    if fingerprint != plan.canonical_plan_fingerprint:
-        raise StateError(
-            code="github_plan_fingerprint_mismatch",
-            message="The supplied plan fingerprint does not match the sealed plan.",
-        )
-    active_environment = environment or {}
-    forbidden_environment = sorted(
-        key for key in ("CI", "GITHUB_ACTIONS") if key in active_environment
+    plan, started_at = _validated_apply_plan(
+        store,
+        plan_id=plan_id,
+        fingerprint=fingerprint,
+        environment=environment,
+        stdin_isatty=stdin_isatty,
+        clock=clock,
     )
-    if forbidden_environment:
-        raise StateError(
-            code="github_apply_ci_refused",
-            message="GitHub curation apply is forbidden in CI and GitHub Actions.",
-            details={"environment_markers": forbidden_environment},
-        )
-    if not stdin_isatty:
-        raise StateError(
-            code="github_apply_tty_required",
-            message="GitHub curation apply requires an interactive terminal.",
-        )
-    started_at = clock()
-    if started_at >= plan.expires_at:
-        raise StateError(
-            code="github_plan_expired",
-            message="The sealed GitHub projection plan has expired; project it again.",
-        )
-    _enforce_apply_caps(plan)
-    if not plan.apply_ready or plan.capability.state is not GitHubCapabilityState.AVAILABLE:
-        raise StateError(
-            code="github_plan_not_apply_ready",
-            message="The sealed plan did not pass the mutation scope/capability probe.",
-            details={"operator_command": plan.capability.operator_command},
-        )
-
     client = github or GhMutationClient()
-    capability = probe_capabilities(client, observed_at=started_at)
-    if capability.state is not GitHubCapabilityState.AVAILABLE:
-        raise StateError(
-            code="github_apply_capability_unavailable",
-            message=(
-                "GitHub mutation capability is not currently available; no operation was attempted."
-            ),
-            details={
-                "state": capability.state.value,
-                "error_code": capability.error_code,
-                "operator_command": capability.operator_command,
-            },
-        )
-    if (
-        capability.login.casefold() != plan.target_account.casefold()
-        or capability.node_id != plan.observed_account_node_id
-    ):
-        raise StateError(
-            code="github_apply_identity_mismatch",
-            message="Authenticated GitHub identity does not match the sealed plan.",
-        )
+    _validate_live_apply_capability(client, plan, observed_at=started_at)
 
     baseline = store.read_github_state(plan.github_state_fingerprint)
     current = read_curation_state(
@@ -445,6 +393,86 @@ def applied(
     store.write_github_state(current)
     store.write_apply(receipt)
     return receipt
+
+
+def _validated_apply_plan(
+    store: StateStore,
+    *,
+    plan_id: str,
+    fingerprint: str,
+    environment: Mapping[str, str] | None,
+    stdin_isatty: bool,
+    clock: Callable[[], datetime],
+) -> tuple[GitHubProjectionPlan, datetime]:
+    if not plan_id.startswith("gcp_"):
+        raise StateError(
+            code="unsupported_plan_kind",
+            message="v0.2.0 apply supports only a github-curation plan ID.",
+        )
+    plan = store.read_github_projection(plan_id)
+    if fingerprint != plan.canonical_plan_fingerprint:
+        raise StateError(
+            code="github_plan_fingerprint_mismatch",
+            message="The supplied plan fingerprint does not match the sealed plan.",
+        )
+    active_environment = environment or {}
+    forbidden_environment = sorted(
+        key for key in ("CI", "GITHUB_ACTIONS") if key in active_environment
+    )
+    if forbidden_environment:
+        raise StateError(
+            code="github_apply_ci_refused",
+            message="GitHub curation apply is forbidden in CI and GitHub Actions.",
+            details={"environment_markers": forbidden_environment},
+        )
+    if not stdin_isatty:
+        raise StateError(
+            code="github_apply_tty_required",
+            message="GitHub curation apply requires an interactive terminal.",
+        )
+    started_at = clock()
+    if started_at >= plan.expires_at:
+        raise StateError(
+            code="github_plan_expired",
+            message="The sealed GitHub projection plan has expired; project it again.",
+        )
+    _enforce_apply_caps(plan)
+    if not plan.apply_ready or plan.capability.state is not GitHubCapabilityState.AVAILABLE:
+        raise StateError(
+            code="github_plan_not_apply_ready",
+            message="The sealed plan did not pass the mutation scope/capability probe.",
+            details={"operator_command": plan.capability.operator_command},
+        )
+    return plan, started_at
+
+
+def _validate_live_apply_capability(
+    client: GitHubApplyClient,
+    plan: GitHubProjectionPlan,
+    *,
+    observed_at: datetime,
+) -> None:
+    capability = probe_capabilities(client, observed_at=observed_at)
+    if capability.state is not GitHubCapabilityState.AVAILABLE:
+        raise StateError(
+            code="github_apply_capability_unavailable",
+            message=(
+                "GitHub mutation capability is not currently available; no operation was attempted."
+            ),
+            details={
+                "state": capability.state.value,
+                "error_code": capability.error_code,
+                "operator_command": capability.operator_command,
+            },
+        )
+    if (
+        capability.login.casefold() != plan.target_account.casefold()
+        or capability.node_id != plan.observed_account_node_id
+    ):
+        raise StateError(
+            code="github_apply_identity_mismatch",
+            message="Authenticated GitHub identity does not match the sealed plan.",
+        )
 
 
 def verified(

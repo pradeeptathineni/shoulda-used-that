@@ -340,6 +340,9 @@
     "rasbt/LLMs-from-scratch": "learn",
     "nature-of-code/noc-examples-processing": "learn"
   },
+  "rationale_overrides": {
+    "Shubhamsaboo/awesome-llm-apps": "Use this broad learning map to discover examples and techniques, not as a production dependency or a blanket endorsement of its many subprojects. This review inspected the First Reader skill at commit f163bb5a92111cee4610ac98e5dce4c6a2a09c26; every example still needs its own dependency, security, and fit review."
+  },
   "license_overrides": {
     "HypothesisWorks/hypothesis": {
       "spdx_id": "MPL-2.0",

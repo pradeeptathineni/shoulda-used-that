@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** software supply\-chain and assurance prior art<br>
 **Need:** Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 29,357 stars, a recent default\-branch push, and MIT licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 29,357 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
 
 ## Observed facts

@@ -6,13 +6,15 @@ All notable changes to this project are documented here. The format is based on 
 
 ### Added
 
-- A 221-record personal-interest catalog spanning 12 intentionally separated OSS domains, with
-  cross-source discovery evidence, live metadata gates, bounded exceptions, and meaningful
-  multi-List membership.
+- A 206-repository personal-interest selection compiled into a 222-record catalog spanning 12
+  intentionally separated OSS domains, with cross-source discovery evidence, live metadata gates,
+  bounded exceptions, and meaningful multi-List membership.
 - A generated self-use page and sanitized live-projection evidence linking the authoritative
   catalog to every public GitHub List.
 - A deterministic read-only refresh command that enriches human-authored selections from exact
   GitHub repository metadata and reseals the profile.
+- A Vale-based offline public-writing gate, context-free first-reader review policy, and explicit
+  boundaries for optional AI-pattern diagnostics.
 
 ### Changed
 
@@ -21,6 +23,10 @@ All notable changes to this project are documented here. The format is based on 
   while retaining one immutable receipt per sealed operation.
 - Homepage calls to action now use a dedicated responsive group with separated, equal-width,
   touch-friendly controls on phone-sized viewports.
+- The catalog overview now presents 12 collection routes instead of duplicating every entry, while
+  generated rationales state the exact metadata-and-fit review boundary.
+- Projection and apply orchestration now separate validation and live-capability phases, with a
+  Ruff complexity ceiling preventing further branch growth.
 
 ### Verified
 

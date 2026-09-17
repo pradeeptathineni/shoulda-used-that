@@ -22,7 +22,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** generative\-AI and agent\-system prior art<br>
 **Need:** Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 26,526 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 26,526 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>, <a href="../collections/rag-search-knowledge.md">RAG, Search &amp; Knowledge</a>
 
 ## Observed facts

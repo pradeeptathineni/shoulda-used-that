@@ -21,7 +21,7 @@ tags:
 **Meaning:** Kept for educational value without an integration claim\.<br>
 **Role:** OSS discovery, comparison, and learning prior art<br>
 **Need:** Consult maintained catalogs, learning maps, and repository\-evaluation tools before inventing another component or curation surface\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 74,005 stars, a recent default\-branch push, and MIT licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 74,005 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts

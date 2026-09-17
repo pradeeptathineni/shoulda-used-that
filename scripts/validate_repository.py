@@ -13,10 +13,13 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_DESCRIPTION = (
-    "A deterministic-first, AI-optional coordinator that discovers, vets, remembers, "
-    "and revalidates existing OSS before you write more code."
+    "Find, vet, and remember existing open source before building from scratch, then organize "
+    "the choices in GitHub Stars and Lists."
 )
-EXPECTED_TAGLINE = "Turn “Shit, I shoulda used that” into “Glad I checked first.”"
+EXPECTED_TAGLINE = (
+    "Before you build another tool, check what open source already exists "
+    "and what the evidence says."
+)
 RECEIPT_FIELDS = {
     "schema_version",
     "receipt_id",

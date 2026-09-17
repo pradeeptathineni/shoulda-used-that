@@ -22,7 +22,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** cloud infrastructure and infrastructure\-as\-code prior art<br>
 **Need:** Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 33,976 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 33,976 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/cloud-infrastructure-iac.md">Cloud Infrastructure &amp; IaC</a>, <a href="../collections/homelab-self-hosting.md">Homelab &amp; Self-Hosting</a>
 
 ## Observed facts

@@ -22,7 +22,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** homelab and self\-hosted operations prior art<br>
 **Need:** Compare widely used self\-hosted services, networking, storage, monitoring, and deployment tools before operating a home service\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 319,833 stars, a recent default\-branch push, and CC\-BY\-SA\-3\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 319,833 stars, a recent default\-branch push, and CC\-BY\-SA\-3\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/homelab-self-hosting.md">Homelab &amp; Self-Hosting</a>, <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts

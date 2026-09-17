@@ -8,7 +8,7 @@ tags:
 ---
 # ShouldaUsedThat uses itself
 
-This repository is both the tool and a public execution of its central claim: **look for strong existing OSS before building another implementation, then preserve the evidence and decision boundary**.
+This repository is both the tool and a public execution of its central claim: **look for existing OSS with relevant public signals before building another implementation, then preserve the evidence and decision boundary**.
 
 ## The executed shape
 
@@ -20,7 +20,7 @@ This repository is both the tool and a public execution of its central claim: **
 6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
 7. `exported` builds this allowlisted catalog and its deterministic manifest.
 
-The current public snapshot contains **221 reviewed repositories**, **12 projected Lists**, **218 projectable repositories**, and **248 intentional repository-to-List memberships**. Its canonical curation fingerprint is `curation_71798ffe0de72ea641ceea71746c7084c3bb0ecb1adb25e7c9e2e2d5cab73310`.
+The current public snapshot contains **222 reviewed repositories**, **12 projected Lists**, **219 projectable repositories**, and **249 intentional repository-to-List memberships**. Its canonical curation fingerprint is `curation_f7b3c8b2273880016511e50578c0656d3ced8a6b27dda7dfe80cd775b0dde662`.
 
 ## Native GitHub projection
 
@@ -37,7 +37,7 @@ The GitHub views are deliberately lossy navigation surfaces. The catalog remains
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/generative-ai-agents">Generative AI &amp; Agents</a></th><td>27</td><td>Foundation-model tooling, inference, RAG, agents, evaluation, context, and multimodal generation.</td></tr>
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/homelab-self-hosting">Homelab &amp; Self-Hosting</a></th><td>25</td><td>Private cloud, networking, storage, media, monitoring, and personally operated services.</td></tr>
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/nature-physics-simulation">Nature, Physics &amp; Simulation</a></th><td>13</td><td>Artificial life, physics, agents, procedural systems, reinforcement learning, and simulation.</td></tr>
-<tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/oss-curation-prior-art">OSS Curation &amp; Prior Art</a></th><td>22</td><td>Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools.</td></tr>
+<tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/oss-curation-prior-art">OSS Curation &amp; Prior Art</a></th><td>23</td><td>Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools.</td></tr>
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/platform-engineering-delivery">Platform Engineering &amp; Delivery</a></th><td>26</td><td>CI/CD, infrastructure as code, developer platforms, release engineering, observability, and operations.</td></tr>
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/python-engineering">Python Engineering</a></th><td>28</td><td>Runtime libraries, frameworks, packaging, typing, linting, testing, and developer tools.</td></tr>
 <tr><th scope="row"><a href="https://github.com/stars/pradeeptathineni/lists/rag-search-knowledge">RAG, Search &amp; Knowledge</a></th><td>15</td><td>Retrieval, search, vector and graph stores, indexing, RAG, and knowledge systems.</td></tr>

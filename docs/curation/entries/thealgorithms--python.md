@@ -21,7 +21,7 @@ tags:
 **Meaning:** Kept for educational value without an integration claim\.<br>
 **Role:** Python implementation and developer\-tooling prior art<br>
 **Need:** Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 224,669 stars, a recent default\-branch push, and MIT licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 224,669 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/python-engineering.md">Python Engineering</a>
 
 ## Observed facts

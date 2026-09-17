@@ -21,7 +21,7 @@ tags:
 **Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Role:** platform engineering and software\-delivery prior art<br>
 **Need:** Compare established build, workflow, GitOps, runtime, observability, and developer\-platform components before creating delivery machinery\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 35,846 stars, a recent default\-branch push, and CC0\-1\.0 licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 35,846 stars, a recent default\-branch push, and CC0\-1\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
 
 ## Observed facts

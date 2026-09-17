@@ -21,7 +21,7 @@ tags:
 **Meaning:** Kept for educational value without an integration claim\.<br>
 **Role:** creative\-coding and data\-visualization prior art<br>
 **Need:** Compare established visual, generative, interactive, animation, and declarative\-visualization tools before building a custom rendering layer\.<br>
-**Why:** Selected as a strong prior\-art checkpoint after cross\-source discovery and maintainer review; live metadata showed 94,000 stars, a recent default\-branch push, and MIT licensing\. A star records consideration, not adoption\.<br>
+**Why:** Included for this collection after public metadata and fit review; live metadata showed 94,000 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
 **Collections:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>
 
 ## Observed facts

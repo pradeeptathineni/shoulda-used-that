@@ -8,6 +8,8 @@
 - Use only public or synthetic fixtures. Do not use the maintainer's other projects as guidance, fixtures, or hidden test inputs.
 - JSON is authoritative for hashed state. YAML, Markdown, and terminal tables are renderings.
 - Add a public prior-art receipt before or alongside a production dependency or substantial custom module.
+- Lead public writing with the reader's need and outcome. Preserve evidence and caveats, but do not make internal receipt machinery the opening pitch.
+- Treat AI-assisted wording as a reviewed editorial aid only. It must never author facts, decisions, hashes, gates, or runtime behavior, and public claims must trace to repository evidence.
 
 ## Commands
 
@@ -17,6 +19,7 @@
 - Quality: `uv run ruff format --check . && uv run ruff check . && uv run mypy`
 - Build: `uv run python -m build`
 - Full local gate: `./scripts/check.sh`
+- Public writing: `./scripts/review_public_writing.sh`
 
 For work on domain behavior, use the repository skill `shoulda-development` and load only the relevant public contract, decision receipt, schema, source, and tests.
 

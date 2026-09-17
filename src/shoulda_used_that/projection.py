@@ -166,6 +166,66 @@ def build_projection_plan(
     """Build one byte-stable additive-only plan from exact observed state."""
 
     validate_curation_snapshot(snapshot)
+    _validate_projection_inputs(snapshot, state, capability, account)
+    projected_lists, desired_memberships, exclusions = _project_lists(snapshot, state)
+    projected_repositories = _project_repositories(state, desired_memberships)
+    operations_tuple = _projection_operations(projected_lists, projected_repositories)
+    counts = _operation_counts(operations_tuple)
+    _enforce_caps(counts, snapshot.mutation_policy.caps)
+    semantic = {
+        "schema_version": PROJECTION_SCHEMA_VERSION,
+        "plan_kind": "github-curation",
+        "created_at": _json_timestamp(created_at),
+        "expires_at": _json_timestamp(
+            created_at + timedelta(hours=snapshot.mutation_policy.plan_expiry_hours)
+        ),
+        "target_account": capability.login,
+        "observed_login": capability.login,
+        "observed_account_node_id": state.account_node_id,
+        "source_curation_snapshot_id": snapshot.curation_snapshot_id,
+        "source_curation_fingerprint": snapshot.canonical_fingerprint,
+        "github_state_fingerprint": state.state_fingerprint,
+        "github_state_observed_at": _json_timestamp(state.observed_at),
+        "capability": capability.model_dump(mode="json"),
+        "projected_lists": [item.model_dump(mode="json") for item in projected_lists],
+        "projected_repositories": [item.model_dump(mode="json") for item in projected_repositories],
+        "operations": [item.model_dump(mode="json") for item in operations_tuple],
+        "exclusions": [item.model_dump(mode="json") for item in exclusions],
+        "forbidden_operation_classes": list(FORBIDDEN_OPERATION_CLASSES),
+        "operation_counts": counts.model_dump(mode="json"),
+        "caps": snapshot.mutation_policy.caps.model_dump(mode="json"),
+        "apply_ready": capability.state is GitHubCapabilityState.AVAILABLE,
+        "mutation_state": "sealed-unapplied",
+    }
+    return GitHubProjectionPlan(
+        plan_id=short_id(semantic, prefix="gcp"),
+        created_at=created_at,
+        expires_at=created_at + timedelta(hours=snapshot.mutation_policy.plan_expiry_hours),
+        target_account=capability.login,
+        observed_login=capability.login,
+        observed_account_node_id=state.account_node_id,
+        source_curation_snapshot_id=snapshot.curation_snapshot_id,
+        source_curation_fingerprint=snapshot.canonical_fingerprint,
+        github_state_fingerprint=state.state_fingerprint,
+        github_state_observed_at=state.observed_at,
+        capability=capability,
+        projected_lists=tuple(projected_lists),
+        projected_repositories=tuple(projected_repositories),
+        operations=operations_tuple,
+        exclusions=tuple(exclusions),
+        operation_counts=counts,
+        caps=snapshot.mutation_policy.caps,
+        apply_ready=bool(semantic["apply_ready"]),
+        canonical_plan_fingerprint=digest(semantic, prefix="plan"),
+    )
+
+
+def _validate_projection_inputs(
+    snapshot: CurationSnapshot,
+    state: GitHubCurationState,
+    capability: GitHubCapabilityProbe,
+    account: str,
+) -> None:
     policy = snapshot.projection_policy
     if not policy.enabled:
         raise StateError(
@@ -207,20 +267,24 @@ def build_projection_plan(
             message="GitHub Lists returned an unknown item type; planning failed closed.",
             details={"item_types": unknown_item_types},
         )
-
-    collections = {item.slug: item for item in snapshot.collection_definitions}
-    selected = policy.selected_collection_slugs
-    if len(selected) > policy.max_projected_lists:
+    if len(policy.selected_collection_slugs) > policy.max_projected_lists:
         raise StateError(
             code="github_list_policy_exceeded",
             message="Selected collections exceed the profile's projected List cap.",
         )
+
+
+def _project_lists(
+    snapshot: CurationSnapshot,
+    state: GitHubCurationState,
+) -> tuple[list[ProjectedList], dict[str, set[str]], list[ProjectionExclusion]]:
+    collections = {item.slug: item for item in snapshot.collection_definitions}
     existing_by_name = _lists_by_name(state.lists)
     entries = {item.repository: item for item in snapshot.entries}
     desired_memberships: dict[str, set[str]] = {}
     exclusions: list[ProjectionExclusion] = []
     projected_lists: list[ProjectedList] = []
-    for slug in selected:
+    for slug in snapshot.projection_policy.selected_collection_slugs:
         collection = collections.get(slug)
         if collection is None or not collection.github_list_projection:
             raise StateError(
@@ -273,7 +337,13 @@ def build_projection_plan(
                 desired_repositories=tuple(sorted(set(desired_repositories))),
             )
         )
+    return projected_lists, desired_memberships, exclusions
 
+
+def _project_repositories(
+    state: GitHubCurationState,
+    desired_memberships: dict[str, set[str]],
+) -> list[ProjectedRepository]:
     repository_state = {item.repository: item for item in state.relevant_repositories}
     if set(repository_state) != set(desired_memberships):
         raise StateError(
@@ -294,17 +364,22 @@ def build_projection_plan(
                 code="github_archived_repository_blocked",
                 message=f"Archived repository {repository} requires review before projection.",
             )
-        preserved = memberships_by_node.get(observed.node_id, ())
         projected_repositories.append(
             ProjectedRepository(
                 repository=repository,
                 node_id=observed.node_id,
                 was_starred=observed.starred,
                 desired_collection_slugs=tuple(sorted(desired_memberships[repository])),
-                preserved_existing_list_ids=preserved,
+                preserved_existing_list_ids=memberships_by_node.get(observed.node_id, ()),
             )
         )
+    return projected_repositories
 
+
+def _projection_operations(
+    projected_lists: list[ProjectedList],
+    projected_repositories: list[ProjectedRepository],
+) -> tuple[GitHubProjectionOperation, ...]:
     operations: list[GitHubProjectionOperation] = []
     for projected_list in sorted(projected_lists, key=lambda item: item.collection_slug):
         if projected_list.existing_node_id is None:
@@ -343,55 +418,7 @@ def build_projection_plan(
                     preserved_list_ids=projected_repository.preserved_existing_list_ids,
                 )
             )
-    operations_tuple = tuple(operations)
-    counts = _operation_counts(operations_tuple)
-    _enforce_caps(counts, snapshot.mutation_policy.caps)
-    semantic = {
-        "schema_version": PROJECTION_SCHEMA_VERSION,
-        "plan_kind": "github-curation",
-        "created_at": _json_timestamp(created_at),
-        "expires_at": _json_timestamp(
-            created_at + timedelta(hours=snapshot.mutation_policy.plan_expiry_hours)
-        ),
-        "target_account": capability.login,
-        "observed_login": capability.login,
-        "observed_account_node_id": state.account_node_id,
-        "source_curation_snapshot_id": snapshot.curation_snapshot_id,
-        "source_curation_fingerprint": snapshot.canonical_fingerprint,
-        "github_state_fingerprint": state.state_fingerprint,
-        "github_state_observed_at": _json_timestamp(state.observed_at),
-        "capability": capability.model_dump(mode="json"),
-        "projected_lists": [item.model_dump(mode="json") for item in projected_lists],
-        "projected_repositories": [item.model_dump(mode="json") for item in projected_repositories],
-        "operations": [item.model_dump(mode="json") for item in operations_tuple],
-        "exclusions": [item.model_dump(mode="json") for item in exclusions],
-        "forbidden_operation_classes": list(FORBIDDEN_OPERATION_CLASSES),
-        "operation_counts": counts.model_dump(mode="json"),
-        "caps": snapshot.mutation_policy.caps.model_dump(mode="json"),
-        "apply_ready": capability.state is GitHubCapabilityState.AVAILABLE,
-        "mutation_state": "sealed-unapplied",
-    }
-    return GitHubProjectionPlan(
-        plan_id=short_id(semantic, prefix="gcp"),
-        created_at=created_at,
-        expires_at=created_at + timedelta(hours=snapshot.mutation_policy.plan_expiry_hours),
-        target_account=capability.login,
-        observed_login=capability.login,
-        observed_account_node_id=state.account_node_id,
-        source_curation_snapshot_id=snapshot.curation_snapshot_id,
-        source_curation_fingerprint=snapshot.canonical_fingerprint,
-        github_state_fingerprint=state.state_fingerprint,
-        github_state_observed_at=state.observed_at,
-        capability=capability,
-        projected_lists=tuple(projected_lists),
-        projected_repositories=tuple(projected_repositories),
-        operations=operations_tuple,
-        exclusions=tuple(exclusions),
-        operation_counts=counts,
-        caps=snapshot.mutation_policy.caps,
-        apply_ready=bool(semantic["apply_ready"]),
-        canonical_plan_fingerprint=digest(semantic, prefix="plan"),
-    )
+    return tuple(operations)
 
 
 def desired_projection_repositories(snapshot: CurationSnapshot) -> tuple[str, ...]:
