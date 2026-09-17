@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_zensical_site_2026_09_17",
+  "need": "Publish a polished searchable static catalog from authoritative Markdown and JSON without building a frontend or hosted service.",
+  "artifact_role": "static_catalog_view_adapter",
+  "discovery": {"queries": ["GitHub Lists", "Zensical", "MkDocs", "Starlight", "Docusaurus", "Hugo", "Pagefind", "custom SPA"], "stop_condition": "A Python-aligned static generator supplied responsive navigation, tags, client search, preview, and Pages output behind a removable development boundary."},
+  "contenders": [
+    {"name": "Zensical 0.0.62", "disposition": "trial", "evidence": ["MIT", "immutable v0.0.62 release", "commit 777d105f4e4cb03db6fa5e9a0887a8a013728b79", "built-in client search and tags", "Python 3.10+"]},
+    {"name": "MkDocs or Material", "disposition": "reference", "evidence": ["mature Markdown ecosystem", "new integration transition cost is higher for this release"]},
+    {"name": "Starlight, Docusaurus, or custom SPA", "disposition": "reject", "evidence": ["unnecessary Node or frontend architecture"]},
+    {"name": "Hugo", "disposition": "reject", "evidence": ["separate Go toolchain without measured advantage"]},
+    {"name": "Pagefind", "disposition": "watch", "evidence": ["fallback only if measured built-in search fails"]}
+  ],
+  "hard_gates": ["exact development pin", "strict deterministic build", "no third-party runtime requests", "source JSON and Markdown remain complete", "mobile and desktop visual validation", "keyboard and contrast checks"],
+  "unknowns": ["Pre-1.0 compatibility beyond the exact tested release.", "Search relevance at the synthetic 5000-entry scale until benchmarked."],
+  "decision_effect": "Pin and test Zensical 0.0.62 only in development/site workflows; keep public export independent and record a removal boundary at zensical.toml plus Pages build steps.",
+  "reconsider_when": ["The exact version cannot build deterministically", "Client search misses the measured corpus target", "The project changes license or network behavior"],
+  "observed_at": "2026-09-17T00:00:00Z"
+}

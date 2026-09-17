@@ -5,16 +5,19 @@
 ShouldaUsedThat is a deterministic-first, AI-optional coordinator that discovers, vets,
 remembers, and revalidates existing OSS before you write more code.
 
-`v0.1.0` is local-first and deliberately read-only outside its own private state directory. It can
-inspect explicit fixtures or public GitHub data, produce immutable evidence and decision receipts,
-and prepare adoption or GitHub List plans. It cannot star a repository, change a List, modify a
-target project, run an unattended model, or publish a package.
+The released `v0.1.0` is local-first and deliberately read-only outside its own private state
+directory. It can inspect explicit fixtures or public GitHub data, produce immutable evidence and
+decision receipts, and prepare adoption or GitHub List plans. It cannot star a repository, change a
+List, modify a target project, run an unattended model, or publish a package.
 
 ## Status
 
-This repository is under active `v0.1.0` development. The public contracts and prior-art decisions
-are already reviewable, but the release is not complete until the tagged GitHub release and its
-hosted checks, SBOM, checksums, and provenance are verified.
+[`v0.1.0`](https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.1.0)
+is released with verified hosted checks, checksums, a runtime SBOM, and GitHub artifact
+attestations. Development now targets `v0.2.0`: deterministic project inspection, evidence-backed
+curation snapshots, an allowlisted public catalog, and sealed additive GitHub Stars/Lists plans.
+No personal star or List change is allowed until the maintainer approves the exact account, plan
+fingerprint, operations, and caps.
 
 ## Install for development
 
@@ -28,8 +31,8 @@ uv sync --all-groups
 uv run shoulda --help
 ```
 
-No PyPI publication is planned for `v0.1.0`. Release wheels and source archives belong only to the
-verified GitHub release.
+No PyPI publication is planned. Release wheels and source archives belong only to verified GitHub
+releases.
 
 ## Check before building
 
@@ -99,11 +102,14 @@ and can be isolated with `--state-dir` and `--profile`.
 - A failed recheck preserves the last-known-good baseline and reports the source failure.
 - Receipts are immutable. Changed judgment creates a new receipt that explicitly supersedes the
   earlier one.
-- `apply` and `verify` fail closed in `v0.1.0`; no external mutation executor exists.
+- `v0.1.0` keeps `apply` and `verify` closed. The `v0.2.0` contract permits only approved,
+  additive `github-curation` plans and independently read-back postconditions; destructive or CI
+  execution remains forbidden.
 
 ## Public evidence
 
 - [Implementation contract](docs/architecture/implementation-brief.md)
+- [Curated OSS coordinator expansion](docs/architecture/curation-v0.2.md)
 - [Facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md)
 - [Prior-art and decision receipts](docs/decisions/README.md)
 - [Context-engineering receipt](docs/development/context-receipt.md)

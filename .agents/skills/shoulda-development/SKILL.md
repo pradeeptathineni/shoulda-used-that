@@ -19,13 +19,14 @@ The development method applies the pinned MIT-licensed `context-engineering` and
 ## Preserve these invariants
 
 - Commands `checked`, `saved`, `remembered`, `rechecked`, and `used` only read, reason, record, or plan.
-- `apply` and `verify` remain fixture-only contract commands in `v0.1.0`; no live external mutation path exists.
+- `apply` and `verify` may operate live only for the `github-curation` plan kind in `v0.2.0`. Apply requires an exact account and full fingerprint, a TTY, a fresh drift/cap/capability check, additive-only operations, append-only partial receipts, and independent verification. Personal-account execution remains gated by explicit approval of the rendered sealed plan.
 - State is profile-scoped and external to repositories. Receipts are immutable and superseded rather than edited.
 - Hard gates run before soft filters. Unknown hard-gate facts fail closed; unknown soft evidence remains visible unless explicitly filtered.
 - Repeated values within a field are OR; fields are AND; exclusions win; canonical identity is the final stable tie-breaker.
 - `saved --all` uses exactly one completed check's visible result and stored fingerprint.
 - Source errors retain last-known-good evidence and add a typed error observation.
 - JSON/RFC 8785 state is authoritative; YAML and Markdown are validated renderings.
+- Public catalog export constructs an allowlisted package from public inputs in staging and atomically replaces the destination; it never redacts a private serialized record in place.
 
 ## Finish with evidence
 

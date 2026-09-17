@@ -2,7 +2,7 @@
 
 ShouldaUsedThat is a local-first CLI and library for answering a narrow question: for this need, which existing open-source candidates survive explicit evidence gates, and what should happen next?
 
-## Release boundary
+## Released boundary
 
 Version `0.1.0` implements five read/reason/record flows:
 
@@ -13,6 +13,22 @@ Version `0.1.0` implements five read/reason/record flows:
 - `used` writes an adoption plan without touching the target.
 
 `apply` and `verify` expose fixture-safe plan validation only. There is no live star, List, or target-write implementation in this release.
+
+The immutable `v0.1.0` GitHub release was published on 2026-09-17 after the tagged commit passed
+the hosted CI, security, package, checksum, SBOM, and attestation gates.
+
+## `v0.2.0` expansion boundary
+
+The next release grows the thin core into a local-first curation control plane. It adds explicit
+project/SBOM snapshots, deterministic curation profiles and snapshots, read-only public and viewer
+Stars/Lists adapters, sealed additive GitHub projection plans, a narrowly scoped apply/verify
+executor, allowlisted public catalog export, and one-shot material rechecks. The complete public
+contract is [`curation-v0.2.md`](curation-v0.2.md).
+
+GitHub remains the native public star/List surface. Canonical ShouldaUsedThat receipts remain the
+evidence ledger, and generated Markdown/JSON plus the static site remain replaceable derived views.
+No model, crawler, database, hosted backend, analytics service, or package-registry publication is
+introduced.
 
 ## State and identity
 
@@ -30,6 +46,6 @@ Every result preserves its normalized predicate tree, unknown policy, pushdown n
 
 Public export is an allowlist of reusable fields. It excludes local paths, state-root paths, credentials, raw private payloads, and personal profile data. GitHub transport shells out only through an argument vector to the installed `gh` CLI, uses existing keyring authentication, and never requests or logs a token. Network mutations are absent from the implementation.
 
-## Explicit exclusions
+## Explicit exclusions for the released slice
 
 No web UI, hosted service, crawler, scanner, vector index, scheduler, runtime model, generic recommendation score, package-registry publication, automatic code change, star/unstar, or GitHub List mutation belongs in `v0.1.0`.

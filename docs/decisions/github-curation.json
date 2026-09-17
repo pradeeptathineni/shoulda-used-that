@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_github_curation_2026_09_17",
+  "need": "Read and safely project a reviewed public subset into GitHub Stars and Lists without another credential store or destructive synchronization.",
+  "artifact_role": "github_star_list_projection",
+  "discovery": {"queries": ["GitHub REST starring API", "GitHub GraphQL UserList schema", "HTML List scraping", "star-manager SDKs"], "stop_condition": "The live native schema exposed repository List items plus create and membership mutations, and REST exposed typed star reads/writes."},
+  "contenders": [
+    {"name": "official gh over REST and GraphQL", "disposition": "adopt", "evidence": ["gh 2.101.0 keyring authentication", "2026-03-10 and 2022-11-28 currently supported REST versions", "live UserList schema probe"]},
+    {"name": "HTML scraping", "disposition": "reject", "evidence": ["native APIs exist", "preview HTML is not a stable contract"]},
+    {"name": "PyGithub, Octokit, or direct token client", "disposition": "reject", "evidence": ["duplicates transport", "adds a credential boundary"]},
+    {"name": "replace-all synchronization", "disposition": "reject", "evidence": ["membership mutation accepts a set", "would remove unrelated user state unless the current union is preserved"]}
+  ],
+  "hard_gates": ["exact login and full fingerprint", "fresh capability and state probe", "TTY and no CI", "additive-only operation set", "per-operation append-only receipt", "independent readback"],
+  "unknowns": ["GitHub Lists remain in public preview and may change without a stable numeric platform limit.", "The current maintainer token lacks the user scope needed by the observed mutation route."],
+  "decision_effect": "Target REST 2026-03-10 and live GraphQL schema through argument-vector gh calls; seal pure plans and preserve the union of current plus approved List IDs.",
+  "reconsider_when": ["The preview schema changes", "GitHub publishes a safer dedicated Lists API", "A non-GitHub forge becomes required"],
+  "observed_at": "2026-09-17T00:00:00Z"
+}

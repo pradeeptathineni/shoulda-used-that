@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_project_inventory_2026_09_17",
+  "need": "Collect portable project facts and dependency components for applicability without writing to targets or inventing a universal manifest parser.",
+  "artifact_role": "project_inventory",
+  "discovery": {"queries": ["SPDX SBOM", "CycloneDX SBOM", "GitHub dependency graph SBOM", "Syft local inventory", "home-grown manifest parser"], "stop_condition": "Standards-based inputs and native GitHub metadata cover the required first slice; external scanners remain optional adapters."},
+  "contenders": [
+    {"name": "user-supplied SPDX and CycloneDX", "disposition": "adopt", "evidence": ["portable standards", "explicit input boundary", "no target writes"]},
+    {"name": "GitHub asynchronous dependency-graph SBOM", "disposition": "adopt", "evidence": ["native remote inventory", "synchronous route closes after 2026-11-13"]},
+    {"name": "bounded local manifest facts", "disposition": "build", "evidence": ["records detected files only", "does not infer dependency meaning"]},
+    {"name": "universal home-grown manifest parser", "disposition": "reject", "evidence": ["duplicates package-manager and SBOM semantics"]},
+    {"name": "Syft subprocess", "disposition": "watch", "evidence": ["role-specific fresh receipt and bounded-read trial still required"]}
+  ],
+  "hard_gates": ["explicit target", "bounded files and bytes", "symlink containment", "no absolute path in public output", "no silent installation", "typed unavailable states"],
+  "unknowns": ["Whether real local users need the optional Syft adapter after supplied/native SBOM support."],
+  "decision_effect": "Implement explicit GitHub/local/SPDX/CycloneDX snapshots; keep external scanners opt-in and deferred.",
+  "reconsider_when": ["A required ecosystem lacks usable SBOM or native package-manager output", "A bounded Syft trial proves unique value"],
+  "observed_at": "2026-09-17T00:00:00Z"
+}
