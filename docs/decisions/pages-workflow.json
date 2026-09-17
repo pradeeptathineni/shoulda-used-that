@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_pages_workflow_2026_09_17",
+  "need": "Verify the public catalog continuously and publish its deterministic static artifact without a hosted application, personal credential, or unattended GitHub curation mutation.",
+  "artifact_role": "catalog_ci_pages_and_read_only_upkeep",
+  "discovery": {
+    "queries": [
+      "GitHub Pages custom workflow",
+      "GitHub Actions schedule permissions",
+      "official Pages Actions releases"
+    ],
+    "stop_condition": "GitHub's native Pages artifact flow supplied a repository-scoped static deployment while the same build remained independently verifiable on pull requests and schedules."
+  },
+  "contenders": [
+    {
+      "name": "actions/configure-pages 6.0.0, upload-pages-artifact 5.0.0, and deploy-pages 5.0.1",
+      "disposition": "adopt",
+      "evidence": [
+        "official GitHub Pages actions",
+        "MIT",
+        "commits 45bfe0192ca1faeb007ade9deae92b16b8254a0d, fc324d3547104276b827a68afc52ff2a11cc49c9, and 368f82528645a54fb793d4d04e342629a3f51346",
+        "static artifact plus OIDC-bound deployment"
+      ]
+    },
+    {
+      "name": "actions/upload-artifact 7.0.1",
+      "disposition": "reuse",
+      "evidence": [
+        "already pinned for tested distributions",
+        "commit 043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "scheduled manifest retention only"
+      ]
+    },
+    {
+      "name": "gh-pages branch publishing",
+      "disposition": "reject",
+      "evidence": [
+        "adds generated branch mutation",
+        "duplicates the native Pages artifact boundary"
+      ]
+    },
+    {
+      "name": "external hosting service or backend",
+      "disposition": "reject",
+      "evidence": [
+        "unnecessary account and operational surface",
+        "the output is fully static"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "all Actions pinned to full commits",
+    "pull requests build but never deploy",
+    "only the deployment job receives pages and OIDC write permissions",
+    "scheduled upkeep receives contents read only",
+    "no personal token, model call, analytics, or GitHub star/List mutation",
+    "strict build and offline site verifier pass before artifact upload"
+  ],
+  "unknowns": [
+    "Scheduled runs may be delayed and may be disabled after repository inactivity.",
+    "The live Pages URL remains unverified until the workflow is enabled on main and its first deployment completes."
+  ],
+  "decision_effect": "Use one pinned workflow to verify every proposed catalog change, retain a manifest on scheduled/manual upkeep runs, and deploy only a verified main-branch artifact through GitHub Pages.",
+  "reconsider_when": [
+    "An official action release changes its permission or runtime boundary",
+    "Pages cannot serve the deterministic artifact without runtime network dependencies",
+    "Scheduled verification needs private evidence or a personal credential"
+  ],
+  "observed_at": "2026-09-17T00:00:00Z"
+}

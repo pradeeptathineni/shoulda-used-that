@@ -16,7 +16,7 @@ This dated gate records the selected owner for each implementation role. The mac
 | Tests | pytest, Hypothesis, coverage.py | Examples, invariants, branch coverage |
 | Static quality | Ruff and strict mypy | No overlapping formatter/linter/type checker |
 | Security | pip-audit, CodeQL, dependency review, actionlint, zizmor, Scorecard | Separate dependency, source, workflow, and posture roles |
-| Docs | executed examples, typos, lychee | No documentation framework |
+| Docs | generated Markdown/JSON, Zensical 0.0.62, typos, lychee | Zensical is a development-only view adapter; canonical source remains portable |
 | Release | CycloneDX Python SBOM, GitHub release, checksum, GitHub attestation | Syft measured and rejected for this Python environment; no PyPI or second release service |
 | VCS lifecycle | Git and GitHub native commits, protected `main`, annotated tag, release | Coherent public commits; push before hosted validation; never rewrite released history |
 
@@ -41,6 +41,13 @@ The current GitHub REST versions were read from `GET /versions` on 2026-09-17: `
 Zensical 0.0.62 was observed at immutable GitHub release `v0.0.62`, commit
 `777d105f4e4cb03db6fa5e9a0887a8a013728b79`, under MIT. It is a bounded view-adapter trial only;
 authoritative JSON and Markdown must remain complete if it is removed.
+
+The native Pages path uses the official MIT-licensed `actions/configure-pages` 6.0.0,
+`actions/upload-pages-artifact` 5.0.0, and `actions/deploy-pages` 5.0.1 releases pinned at commits
+`45bfe0192ca1faeb007ade9deae92b16b8254a0d`, `fc324d3547104276b827a68afc52ff2a11cc49c9`,
+and `368f82528645a54fb793d4d04e342629a3f51346`. Pull requests and schedules receive no deployment
+permission. The scheduled path reads only committed public inputs and cannot reach personal Stars
+or Lists.
 
 The implementation deliberately excludes Typer, Poetry, tox, Nox, Black, isort, Flake8, Bandit, Pyright, PyGithub, Octokit, agent frameworks, memory systems, embeddings, and extra release services because their roles are absent or already owned.
 

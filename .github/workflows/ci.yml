@@ -39,6 +39,11 @@ jobs:
         run: |
           uv run python scripts/generate_schemas.py --check
           uv run python scripts/validate_repository.py
+      - name: Verify deterministic catalog and static site
+        run: |
+          uv run python scripts/generate_catalog.py --check
+          uv run zensical build --clean --strict
+          uv run python scripts/verify_site.py
       - name: Run branch-aware coverage gate
         run: |
           uv run coverage run -m pytest

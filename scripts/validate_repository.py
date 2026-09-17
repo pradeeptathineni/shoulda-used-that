@@ -37,6 +37,33 @@ FORBIDDEN_PUBLIC_TEXT = (
     "Documents/code/" + "_PROJECTS",
 )
 ACTION_PIN = re.compile(r"^\s*-?\s*uses:\s*[^#\s]+@([0-9a-f]{40})(?:\s*#.*)?$")
+CATALOG_WORKFLOW_REQUIRED = (
+    'cron: "43 8 * * 4"',
+    "permissions: {}",
+    "contents: read",
+    "timeout-minutes:",
+    "scripts/generate_catalog.py --check",
+    "zensical build --clean --strict",
+    "scripts/verify_site.py",
+    "git diff --exit-code -- docs/curation",
+    "github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'",
+    "github.event_name == 'push' || github.event_name == 'workflow_dispatch'",
+    "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9",
+    "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d",
+    "actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346",
+    "id-token: write",
+    "pages: write",
+)
+CATALOG_WORKFLOW_FORBIDDEN = (
+    "pull_request_target:",
+    "secrets.",
+    "GH_TOKEN",
+    "gh auth",
+    "shoulda apply",
+    "updateUserList",
+    "updateUserListsForItem",
+    "PUT /user/starred",
+)
 
 
 def _candidate_files() -> list[Path]:
@@ -53,6 +80,22 @@ def _candidate_files() -> list[Path]:
     return [ROOT / line for line in completed.stdout.splitlines() if line]
 
 
+def catalog_workflow_problems(text: str) -> list[str]:
+    """Keep public upkeep and Pages deployment outside personal-account authority."""
+
+    problems = [
+        f"catalog workflow misses required boundary {value!r}"
+        for value in CATALOG_WORKFLOW_REQUIRED
+        if value not in text
+    ]
+    problems.extend(
+        f"catalog workflow contains forbidden boundary {value!r}"
+        for value in CATALOG_WORKFLOW_FORBIDDEN
+        if value in text
+    )
+    return problems
+
+
 def validate() -> list[str]:
     problems: list[str] = []
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
@@ -66,6 +109,12 @@ def validate() -> list[str]:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     if EXPECTED_TAGLINE not in readme:
         problems.append("README tagline differs from the public contract")
+
+    catalog_workflow = ROOT / ".github" / "workflows" / "catalog.yml"
+    if not catalog_workflow.is_file() or catalog_workflow.is_symlink():
+        problems.append("catalog workflow is missing or unsafe")
+    else:
+        problems.extend(catalog_workflow_problems(catalog_workflow.read_text(encoding="utf-8")))
 
     receipt_ids: set[str] = set()
     for path in sorted((ROOT / "docs" / "decisions").glob("*.json")):

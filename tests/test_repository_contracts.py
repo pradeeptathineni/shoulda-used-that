@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts.generate_schemas import SCHEMAS, check_schemas, rendered_schemas, write_schemas
-from scripts.validate_repository import validate
+from scripts.validate_repository import ROOT, catalog_workflow_problems, validate
 
 
 def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None:
@@ -20,3 +20,12 @@ def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None
 
 def test_repository_contract_validator_passes() -> None:
     assert validate() == []
+
+
+def test_catalog_workflow_excludes_personal_mutation_authority() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "catalog.yml").read_text(encoding="utf-8")
+    assert catalog_workflow_problems(workflow) == []
+    assert catalog_workflow_problems(workflow + "\nGH_TOKEN: ${{ secrets.PERSONAL_PAT }}\n") == [
+        "catalog workflow contains forbidden boundary 'secrets.'",
+        "catalog workflow contains forbidden boundary 'GH_TOKEN'",
+    ]
