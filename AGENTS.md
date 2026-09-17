@@ -4,7 +4,7 @@
 
 - Keep the core deterministic and runtime-AI-free. Facts, gates, hashes, state transitions, and mutation plans must not depend on a model.
 - Never write coordinator state into another repository. Runtime state belongs under `platformdirs` or an explicit `--state-dir`.
-- Live GitHub behavior is read-only in `v0.1.0`. `saved --list`, `used`, `apply`, and `verify` may create or validate local plans but must not star, unstar, change Lists, or edit targets.
+- Live GitHub behavior remains read-only for every read/reason/record command. In `v0.2.0`, `apply` may execute only an explicitly approved, unexpired `github-curation` plan whose full fingerprint and exact account match. It may add stars, create Lists, and add memberships; it must never unstar, remove membership, delete/rename a List, change privacy, run in CI, or edit a target.
 - Use only public or synthetic fixtures. Do not use the maintainer's other projects as guidance, fixtures, or hidden test inputs.
 - JSON is authoritative for hashed state. YAML, Markdown, and terminal tables are renderings.
 - Add a public prior-art receipt before or alongside a production dependency or substantial custom module.
@@ -28,4 +28,6 @@ For work on domain behavior, use the repository skill `shoulda-development` and 
 - Flag revalidation that replaces last-known-good evidence after a source error or treats a timestamp-only change as material.
 - Flag hashes produced from ordinary sorted JSON, mutable receipt edits, or renderings rather than RFC 8785 canonical JSON.
 - Flag exports based on deny lists. Public export must use explicit allowlisted fields.
+- Flag a GitHub membership update that sends only desired List IDs. It must re-read and send the union of current and approved memberships.
+- Flag personal star/List mutation without an exact sealed plan, interactive approval boundary, drift recheck, per-operation receipt, and independent readback.
 - Leave formatting and lint enforcement to CI.

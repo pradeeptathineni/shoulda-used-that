@@ -13,5 +13,9 @@ These receipts dogfood the product's decision vocabulary before or alongside imp
 | [`context.json`](context.json) | Adopt deterministic progressive disclosure; reject persistent capture/compression until measured |
 | [`sbom-release.json`](sbom-release.json) | Select CycloneDX Python after an executed clean-wheel comparison with Syft; use GitHub-native release and attestation |
 | [`vcs-lifecycle.json`](vcs-lifecycle.json) | Treat coherent commits, protected-main pushes, an annotated tag, and immutable GitHub release assets as product evidence |
+| [`curation-coordinator.json`](curation-coordinator.json) | Build only the deterministic curation/project/projection residual while keeping GitHub and standards authoritative |
+| [`github-curation.json`](github-curation.json) | Use native Stars/Lists APIs behind an additive sealed plan, drift check, operation receipts, and independent readback |
+| [`project-inventory.json`](project-inventory.json) | Prefer supplied standards-based SBOMs and bounded explicit inspection; reject a universal manifest parser |
+| [`zensical-site.json`](zensical-site.json) | Trial exact Zensical 0.0.62 as a removable static view adapter for the public catalog |
 
 Claims are distinct from behavior inspected locally or executed in CI. Dated popularity appears only as discovery evidence and never controls a disposition.

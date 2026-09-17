@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_curation_coordinator_2026_09_17",
+  "need": "Coordinate evidence-backed OSS project fit, personal curation, public proof, and freshness without replacing native GitHub or existing standards.",
+  "artifact_role": "curation_control_plane",
+  "discovery": {"queries": ["GitHub Stars and Lists", "star managers", "best-of catalogs", "decision ledgers", "static catalogs"], "stop_condition": "Native and established components covered identity, projection, discovery data, and presentation; only the cross-context deterministic receipt relationship remained."},
+  "contenders": [
+    {"name": "GitHub Stars and Lists alone", "disposition": "reference", "evidence": ["native public identity and organization", "no evidence ledger or private lifecycle semantics"]},
+    {"name": "existing star-manager runtime", "disposition": "reject", "evidence": ["duplicates the public surface", "credential, hosted, mutation, or maturity boundaries exceed the need"]},
+    {"name": "generic catalog generator", "disposition": "reference", "evidence": ["useful public data and rendering patterns", "generic rank is not project fit"]},
+    {"name": "small deterministic ShouldaUsedThat residual", "disposition": "build", "evidence": ["owns project plus need plus evidence plus decision plus freshness", "keeps native and standards-based components authoritative"]}
+  ],
+  "hard_gates": ["local-first canonical state", "bounded sources", "no hidden model judgment", "public/private construction boundary", "no destructive personal mutation"],
+  "unknowns": ["Long-term demand beyond file-backed single-user profiles."],
+  "decision_effect": "Add only project snapshots, profile compilation, additive projection plans, receipts, public export, and material replay as cohesive modules.",
+  "reconsider_when": ["A maintained component supplies the complete receipt relationship within the same privacy and mutation boundary", "Measured scale invalidates deterministic files and static search"],
+  "observed_at": "2026-09-17T00:00:00Z"
+}

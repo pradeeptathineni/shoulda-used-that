@@ -20,6 +20,28 @@ This dated gate records the selected owner for each implementation role. The mac
 | Release | CycloneDX Python SBOM, GitHub release, checksum, GitHub attestation | Syft measured and rejected for this Python environment; no PyPI or second release service |
 | VCS lifecycle | Git and GitHub native commits, protected `main`, annotated tag, release | Coherent public commits; push before hosted validation; never rewrite released history |
 
+## `v0.2.0` expansion decisions
+
+| Role | Selected owner | Boundary |
+|---|---|---|
+| Star/List identity and transport | GitHub REST plus GraphQL through `gh` 2.101.0 | Current live schema exposes repository-only `UserListItems`, native create/update membership mutations, and 2026-03-10 REST; no HTML scraping or second credential store |
+| Project inventory | Supplied SPDX/CycloneDX first; bounded local facts and GitHub metadata second | No universal manifest parser, target writes, inferred needs, or silent external-tool installation |
+| Curation compiler | Small deterministic ShouldaUsedThat residual | Joins exact public receipts and profile intent; popularity and source presence never become fit scores |
+| Public catalog | Generated JSON/Markdown plus Zensical 0.0.62 trial | Development-only, MIT, pre-1.0, pinned and removable; no runtime API, analytics, or database |
+| Public hosting | GitHub Pages Actions deployment | Static artifact only, least permissions, no personal credential |
+| Scheduling | One deterministic command invoked by OS scheduler or an optional product heartbeat | No daemon and never unattended `apply` |
+
+The current GitHub REST versions were read from `GET /versions` on 2026-09-17: `2026-03-10` and
+`2022-11-28`. New adapters target `2026-03-10`; the older version remains supported until
+2028-03-10 but is not the new integration baseline. Live GraphQL introspection confirmed
+`createUserList`, `updateUserList`, and `updateUserListsForItem`, with repository as the only current
+`UserListItems` variant. Lists remain a public preview, so capability probes and typed
+`preview_changed` failures stay mandatory.
+
+Zensical 0.0.62 was observed at immutable GitHub release `v0.0.62`, commit
+`777d105f4e4cb03db6fa5e9a0887a8a013728b79`, under MIT. It is a bounded view-adapter trial only;
+authoritative JSON and Markdown must remain complete if it is removed.
+
 The implementation deliberately excludes Typer, Poetry, tox, Nox, Black, isort, Flake8, Bandit, Pyright, PyGithub, Octokit, agent frameworks, memory systems, embeddings, and extra release services because their roles are absent or already owned.
 
 The dependency matrix was refreshed from PyPI and GitHub on 2026-09-16. Workflow action revisions,
