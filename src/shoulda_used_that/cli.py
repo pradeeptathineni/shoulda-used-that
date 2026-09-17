@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
@@ -374,20 +376,22 @@ def used_command(
 
 @cli.command("apply")
 @click.argument("plan_id")
+@click.option("--fingerprint", required=True, help="Exact canonical plan fingerprint.")
 @click.pass_obj
-def apply_command(runtime: Runtime, plan_id: str) -> NoReturn:
-    """Validate a sealed plan, then fail closed because v0.1.0 has no mutation executor."""
+def apply_command(runtime: Runtime, plan_id: str, fingerprint: str) -> None:
+    """Apply one approved, sealed, additive-only GitHub curation plan."""
 
     try:
-        services.validate_unapplied_plan(runtime.store, plan_id)
-        _fail(
-            runtime,
-            ShouldaError(
-                "mutation_not_available",
-                "v0.1.0 can validate this sealed plan but cannot execute external mutations.",
-                {"plan_id": plan_id},
-            ),
+        receipt = services.applied(
+            runtime.store,
+            plan_id=plan_id,
+            fingerprint=fingerprint,
+            environment=os.environ,
+            stdin_isatty=sys.stdin.isatty(),
         )
+        click.echo(render(receipt, runtime.output_format), nl=False)
+        if receipt.status.value != "complete":
+            raise click.exceptions.Exit(2)
     except ShouldaError as exc:
         _fail(runtime, exc)
 
@@ -395,18 +399,16 @@ def apply_command(runtime: Runtime, plan_id: str) -> NoReturn:
 @cli.command("verify")
 @click.argument("apply_id")
 @click.pass_obj
-def verify_command(runtime: Runtime, apply_id: str) -> NoReturn:
-    """Fail closed because no live apply receipt can exist in v0.1.0."""
+def verify_command(runtime: Runtime, apply_id: str) -> None:
+    """Independently read back an apply receipt's GitHub postconditions."""
 
-    _fail(
-        runtime,
-        ShouldaError(
-            "apply_receipt_not_supported",
-            "v0.1.0 performs no external apply operation, so there is no live "
-            "postcondition to verify.",
-            {"apply_id": apply_id},
-        ),
-    )
+    try:
+        receipt = services.verified(runtime.store, apply_receipt_id=apply_id)
+        click.echo(render(receipt, runtime.output_format), nl=False)
+        if receipt.status.value != "verified":
+            raise click.exceptions.Exit(2)
+    except ShouldaError as exc:
+        _fail(runtime, exc)
 
 
 def main() -> None:

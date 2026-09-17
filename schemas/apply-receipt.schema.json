@@ -1,0 +1,268 @@
+{
+  "$defs": {
+    "ApplyOperationOutcome": {
+      "enum": [
+        "succeeded",
+        "failed",
+        "indeterminate"
+      ],
+      "title": "ApplyOperationOutcome",
+      "type": "string"
+    },
+    "ApplyOperationReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt": {
+          "minimum": 1,
+          "title": "Attempt",
+          "type": "integer"
+        },
+        "canonical_fingerprint": {
+          "pattern": "^applyop_[0-9a-f]{64}$",
+          "title": "Canonical Fingerprint",
+          "type": "string"
+        },
+        "client_mutation_id": {
+          "pattern": "^cmid_[0-9a-f]{24}$",
+          "title": "Client Mutation Id",
+          "type": "string"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "operation_id": {
+          "pattern": "^op_[0-9a-f]{24}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "operation_receipt_id": {
+          "pattern": "^apo_[0-9a-f]{24}$",
+          "title": "Operation Receipt Id",
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/$defs/ApplyOperationOutcome"
+        },
+        "plan_id": {
+          "pattern": "^gcp_[0-9a-f]{24}$",
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "readback_satisfied": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Readback Satisfied"
+        },
+        "request_kind": {
+          "enum": [
+            "create-list",
+            "star-repository",
+            "add-membership"
+          ],
+          "title": "Request Kind",
+          "type": "string"
+        },
+        "requested_list_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested List Ids",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_receipt_id",
+        "plan_id",
+        "operation_id",
+        "request_kind",
+        "client_mutation_id",
+        "attempt",
+        "started_at",
+        "completed_at",
+        "outcome",
+        "canonical_fingerprint"
+      ],
+      "title": "ApplyOperationReceipt",
+      "type": "object"
+    },
+    "ApplyStatus": {
+      "enum": [
+        "complete",
+        "partial",
+        "failed"
+      ],
+      "title": "ApplyStatus",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/apply-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "apply_receipt_id": {
+      "pattern": "^app_[0-9a-f]{24}$",
+      "title": "Apply Receipt Id",
+      "type": "string"
+    },
+    "before_state_fingerprint": {
+      "pattern": "^github_[0-9a-f]{64}$",
+      "title": "Before State Fingerprint",
+      "type": "string"
+    },
+    "canonical_fingerprint": {
+      "pattern": "^apply_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "failure_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Code"
+    },
+    "operation_receipts": {
+      "items": {
+        "$ref": "#/$defs/ApplyOperationReceipt"
+      },
+      "title": "Operation Receipts",
+      "type": "array"
+    },
+    "plan_fingerprint": {
+      "pattern": "^plan_[0-9a-f]{64}$",
+      "title": "Plan Fingerprint",
+      "type": "string"
+    },
+    "plan_id": {
+      "pattern": "^gcp_[0-9a-f]{24}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "readback_snapshot_reference": {
+      "anyOf": [
+        {
+          "pattern": "^github_[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Readback Snapshot Reference"
+    },
+    "readback_state_fingerprint": {
+      "anyOf": [
+        {
+          "pattern": "^github_[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Readback State Fingerprint"
+    },
+    "resume_cursor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resume Cursor"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ApplyStatus"
+    },
+    "target_login": {
+      "title": "Target Login",
+      "type": "string"
+    }
+  },
+  "required": [
+    "apply_receipt_id",
+    "plan_id",
+    "plan_fingerprint",
+    "target_login",
+    "started_at",
+    "completed_at",
+    "before_state_fingerprint",
+    "operation_receipts",
+    "status",
+    "canonical_fingerprint"
+  ],
+  "title": "ApplyReceipt",
+  "type": "object"
+}

@@ -144,17 +144,26 @@ def test_used_then_apply_and_verify_fail_closed(tmp_path: Path) -> None:
 
     apply_result = runner.invoke(
         cli,
-        ["--state-dir", str(state), "--format", "json", "apply", plan["plan_id"]],
+        [
+            "--state-dir",
+            str(state),
+            "--format",
+            "json",
+            "apply",
+            plan["plan_id"],
+            "--fingerprint",
+            plan["plan_fingerprint"],
+        ],
     )
     assert apply_result.exit_code == 2
-    assert json.loads(apply_result.stderr)["error"]["code"] == "mutation_not_available"
+    assert json.loads(apply_result.stderr)["error"]["code"] == "unsupported_plan_kind"
 
     verify_result = runner.invoke(
         cli,
         ["--state-dir", str(state), "--format", "json", "verify", "app_example"],
     )
     assert verify_result.exit_code == 2
-    assert json.loads(verify_result.stderr)["error"]["code"] == ("apply_receipt_not_supported")
+    assert json.loads(verify_result.stderr)["error"]["code"] == "invalid_identifier"
 
 
 @pytest.mark.parametrize(

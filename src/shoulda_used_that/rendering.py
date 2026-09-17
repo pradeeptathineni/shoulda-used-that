@@ -13,6 +13,7 @@ from rich.console import Console
 from rich.table import Table
 
 from shoulda_used_that.curation import CurationSnapshot
+from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import CheckReceipt
 from shoulda_used_that.project_context import ProjectSnapshot
 from shoulda_used_that.projection import GitHubProjectionPlan
@@ -123,21 +124,21 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         table.add_column("Target")
         table.add_column("Exact detail")
         table.add_column("Memberships preserved")
-        for index, operation in enumerate(value.operations, start=1):
-            target = operation.repository or operation.list_name or "-"
+        for index, projection_operation in enumerate(value.operations, start=1):
+            target = projection_operation.repository or projection_operation.list_name or "-"
             detail = (
-                operation.list_description
-                if operation.kind == "create-list"
-                else operation.list_name
-                if operation.kind == "add-membership"
-                else operation.repository or "-"
+                projection_operation.list_description
+                if projection_operation.kind == "create-list"
+                else projection_operation.list_name
+                if projection_operation.kind == "add-membership"
+                else projection_operation.repository or "-"
             )
             table.add_row(
                 str(index),
-                operation.kind,
+                projection_operation.kind,
                 target,
                 detail or "-",
-                ", ".join(operation.preserved_list_ids) or "none",
+                ", ".join(projection_operation.preserved_list_ids) or "none",
             )
         if not value.operations:
             table.add_row("-", "semantic-no-op", "-", "No additive changes", "all")
@@ -158,6 +159,54 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         console.print(f"forbidden={', '.join(value.forbidden_operation_classes)}")
         if value.capability.operator_command:
             console.print(f"operator-action={value.capability.operator_command}")
+    elif isinstance(value, ApplyReceipt):
+        table = Table(title=f"{value.apply_receipt_id} · {value.status.value}")
+        table.add_column("Attempt")
+        table.add_column("Operation")
+        table.add_column("Outcome")
+        table.add_column("Readback")
+        table.add_column("Error")
+        for apply_operation in value.operation_receipts:
+            table.add_row(
+                str(apply_operation.attempt),
+                apply_operation.request_kind,
+                apply_operation.outcome.value,
+                (
+                    "satisfied"
+                    if apply_operation.readback_satisfied is True
+                    else "not-satisfied"
+                    if apply_operation.readback_satisfied is False
+                    else "pending"
+                ),
+                apply_operation.error_code or "-",
+            )
+        console.print(table)
+        console.print(
+            f"plan={value.plan_id} resume={value.resume_cursor or 'none'} "
+            f"failure={value.failure_code or 'none'}"
+        )
+        console.print(f"result={value.canonical_fingerprint}")
+    elif isinstance(value, VerifyReceipt):
+        table = Table(title=f"{value.verify_receipt_id} · {value.status.value}")
+        table.add_column("Postcondition")
+        table.add_column("Subject")
+        table.add_column("Expected")
+        table.add_column("Actual")
+        table.add_column("State")
+        for condition in value.postconditions:
+            table.add_row(
+                condition.kind,
+                condition.subject,
+                condition.expected,
+                condition.actual or "unavailable",
+                condition.state.value,
+            )
+        console.print(table)
+        console.print(
+            f"identity={value.observed_login or 'unavailable'}:"
+            f"{value.observed_account_node_id or 'unavailable'}"
+        )
+        console.print(f"result={value.canonical_fingerprint}")
     else:
         table = Table(title=value.__class__.__name__)
         table.add_column("Field")
@@ -249,10 +298,10 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                 "|---:|---|---|---|",
             ]
         )
-        for index, operation in enumerate(value.operations, start=1):
-            target = operation.repository or operation.list_name or "-"
-            preserved = ", ".join(operation.preserved_list_ids) or "none"
-            lines.append(f"| {index} | {operation.kind} | `{target}` | `{preserved}` |")
+        for index, projection_operation in enumerate(value.operations, start=1):
+            target = projection_operation.repository or projection_operation.list_name or "-"
+            preserved = ", ".join(projection_operation.preserved_list_ids) or "none"
+            lines.append(f"| {index} | {projection_operation.kind} | `{target}` | `{preserved}` |")
         if not value.operations:
             lines.append("| - | semantic-no-op | - | all |")
         lines.extend(
@@ -272,6 +321,40 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                     f"`{value.capability.operator_command}`",
                 ]
             )
+    elif isinstance(value, ApplyReceipt):
+        lines.extend(
+            [
+                f"- Apply receipt: `{value.apply_receipt_id}`",
+                f"- Plan: `{value.plan_id}`",
+                f"- Status: {value.status.value}",
+                f"- Resume cursor: `{value.resume_cursor or 'none'}`",
+                f"- Fingerprint: `{value.canonical_fingerprint}`",
+                "",
+                "| Operation | Attempt | Outcome | Error |",
+                "|---|---:|---|---|",
+            ]
+        )
+        for apply_operation in value.operation_receipts:
+            lines.append(
+                f"| {apply_operation.request_kind} | {apply_operation.attempt} | "
+                f"{apply_operation.outcome.value} | {apply_operation.error_code or '-'} |"
+            )
+    elif isinstance(value, VerifyReceipt):
+        lines.extend(
+            [
+                f"- Verify receipt: `{value.verify_receipt_id}`",
+                f"- Apply receipt: `{value.apply_receipt_id}`",
+                f"- Status: {value.status.value}",
+                f"- Observed login: `{value.observed_login or 'unavailable'}`",
+                (f"- Observed account node: `{value.observed_account_node_id or 'unavailable'}`"),
+                f"- Fingerprint: `{value.canonical_fingerprint}`",
+                "",
+                "| Postcondition | Subject | State |",
+                "|---|---|---|",
+            ]
+        )
+        for condition in value.postconditions:
+            lines.append(f"| {condition.kind} | `{condition.subject}` | {condition.state.value} |")
     else:
         for key, item in payload.items():
             rendered = (
