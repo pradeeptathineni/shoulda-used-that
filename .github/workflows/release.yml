@@ -50,7 +50,7 @@ jobs:
             --spec-version 1.6 \
             --output-reproducible \
             --output-format JSON \
-            --output-file dist/shoulda-used-that-0.1.0.cdx.json
+            --output-file dist/shoulda-used-that-0.2.0.cdx.json
       - name: Write checksums
         run: uv run python scripts/write_checksums.py dist
       - name: Attest release assets
@@ -64,4 +64,4 @@ jobs:
           gh release create "${GITHUB_REF_NAME}" dist/*
           --verify-tag
           --title "ShouldaUsedThat ${GITHUB_REF_NAME}"
-          --notes-file docs/releases/v0.1.0.md
+          --notes-file docs/releases/v0.2.0.md

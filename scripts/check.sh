@@ -8,13 +8,13 @@ uv run ruff check .
 uv run mypy
 uv run python scripts/generate_schemas.py --check
 uv run python scripts/validate_repository.py
-uv run python scripts/generate_catalog.py --check
-uv run zensical build --clean --strict
-uv run python scripts/verify_site.py
+./scripts/upkeep_catalog.sh
 actionlint
 uv run zizmor --pedantic .github/workflows
 typos
-lychee --no-progress --max-retries 3 README.md 'docs/**/*.md'
+lychee --no-progress --max-retries 3 \
+  --exclude '^https://pradeeptathineni\.github\.io/shoulda-used-that/' \
+  README.md 'docs/**/*.md'
 uv run coverage erase
 uv run coverage run -m pytest
 uv run coverage report

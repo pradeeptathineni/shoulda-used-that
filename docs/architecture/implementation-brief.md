@@ -2,7 +2,7 @@
 
 ShouldaUsedThat is a local-first CLI and library for answering a narrow question: for this need, which existing open-source candidates survive explicit evidence gates, and what should happen next?
 
-## Released boundary
+## `v0.1.0` released boundary
 
 Version `0.1.0` implements five read/reason/record flows:
 
@@ -17,9 +17,9 @@ Version `0.1.0` implements five read/reason/record flows:
 The immutable `v0.1.0` GitHub release was published on 2026-09-17 after the tagged commit passed
 the hosted CI, security, package, checksum, SBOM, and attestation gates.
 
-## `v0.2.0` expansion boundary
+## `v0.2.0` boundary
 
-The next release grows the thin core into a local-first curation control plane. It adds explicit
+Version `0.2.0` grows the thin core into a local-first curation control plane. It adds explicit
 project/SBOM snapshots, deterministic curation profiles and snapshots, read-only public and viewer
 Stars/Lists adapters, sealed additive GitHub projection plans, a narrowly scoped apply/verify
 executor, allowlisted public catalog export, and one-shot material rechecks. The complete public
@@ -44,8 +44,21 @@ Every result preserves its normalized predicate tree, unknown policy, pushdown n
 
 ## Privacy and mutation
 
-Public export is an allowlist of reusable fields. It excludes local paths, state-root paths, credentials, raw private payloads, and personal profile data. GitHub transport shells out only through an argument vector to the installed `gh` CLI, uses existing keyring authentication, and never requests or logs a token. Network mutations are absent from the implementation.
+Public export is an allowlist of reusable fields. It excludes local paths, state-root paths,
+credentials, raw private payloads, and personal profile data. GitHub transport shells out only
+through an argument vector to the installed `gh` CLI, uses existing keyring authentication, and
+never requests or logs a token.
 
-## Explicit exclusions for the released slice
+The `v0.2.0` mutation adapter is intentionally smaller than the read transport. It can create an
+exact public List, star an exact public repository, and add that repository to the union of its
+current and approved memberships only after an exact sealed-plan fingerprint passes identity,
+capability, expiry, cap, drift, TTY, and CI checks. Independent readback is mandatory. There is no
+unstar, removal, delete, rename, privacy-change, private-repository, or scheduled mutation route.
 
-No web UI, hosted service, crawler, scanner, vector index, scheduler, runtime model, generic recommendation score, package-registry publication, automatic code change, star/unstar, or GitHub List mutation belongs in `v0.1.0`.
+## Explicit exclusions
+
+No web application, hosted service, crawler, vulnerability scanner, vector index, daemon,
+scheduling framework, runtime model, generic recommendation score, package-registry publication,
+automatic code change, destructive GitHub mutation, unattended personal mutation, or target
+remediation belongs in `v0.2.0`. The static Pages catalog and deterministic OS/Actions scheduling
+recipes do not change those boundaries.

@@ -22,3 +22,7 @@ project, named need, evidence, contextual decision, adoption role, and reconside
 
 The catalog is generated from an explicitly public profile. It contains no personal notes,
 credentials, local paths, raw API responses, private repositories, or model-authored claims.
+
+Operators can use the [GitHub curation runbook](operations/github-curation.md) for exact approval
+and readback boundaries, or the [read-only scheduling guide](operations/scheduling.md) for safe
+local and repository upkeep.
