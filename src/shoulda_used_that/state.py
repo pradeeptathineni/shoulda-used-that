@@ -14,6 +14,7 @@ from platformdirs import user_data_path
 from pydantic import BaseModel, ValidationError
 
 from shoulda_used_that.canonical import canonical_bytes, digest
+from shoulda_used_that.curation import CurationSnapshot
 from shoulda_used_that.errors import StateError
 from shoulda_used_that.models import (
     AdoptionPlan,
@@ -70,6 +71,8 @@ class StateStore:
             self.profile_root / "baselines",
             self.profile_root / "plans" / "projections",
             self.profile_root / "plans" / "adoptions",
+            self.profile_root / "curations",
+            self.profile_root / "curations" / "latest",
         ):
             self._mkdir(path)
 
@@ -157,6 +160,60 @@ class StateStore:
         return self._read_model(
             self._path("plans", "adoptions", f"{_safe_id(plan_id)}.json"), AdoptionPlan
         )
+
+    def write_curation(self, snapshot: CurationSnapshot) -> bool:
+        self.initialize()
+        created = self._write_immutable(
+            self._path("curations", f"{snapshot.curation_snapshot_id}.json"), snapshot
+        )
+        self._write_pointer(
+            self._path("latest-curation.json"),
+            {
+                "profile_id": snapshot.profile_id,
+                "curation_snapshot_id": snapshot.curation_snapshot_id,
+                "canonical_fingerprint": snapshot.canonical_fingerprint,
+            },
+        )
+        self._write_pointer(
+            self._curation_pointer_path(snapshot.profile_id),
+            {
+                "profile_id": snapshot.profile_id,
+                "curation_snapshot_id": snapshot.curation_snapshot_id,
+                "canonical_fingerprint": snapshot.canonical_fingerprint,
+            },
+        )
+        return created
+
+    def read_curation(self, snapshot_id: str) -> CurationSnapshot:
+        return self._read_model(
+            self._path("curations", f"{_safe_id(snapshot_id)}.json"), CurationSnapshot
+        )
+
+    def latest_curation(self, profile_id: str | None = None) -> CurationSnapshot | None:
+        pointer_path = (
+            self._curation_pointer_path(profile_id)
+            if profile_id is not None
+            else self._path("latest-curation.json")
+        )
+        if not pointer_path.exists():
+            return None
+        pointer = self._read_json(pointer_path)
+        if profile_id is not None and pointer.get("profile_id") != profile_id:
+            raise StateError(
+                code="latest_curation_invalid",
+                message="The profile-specific curation pointer has the wrong profile identity.",
+            )
+        snapshot_id = pointer.get("curation_snapshot_id")
+        if not isinstance(snapshot_id, str):
+            raise StateError(
+                code="latest_curation_invalid",
+                message="The latest-curation pointer is invalid; run 'shoulda curated' again.",
+            )
+        return self.read_curation(snapshot_id)
+
+    def _curation_pointer_path(self, profile_id: str) -> Path:
+        pointer_id = digest(profile_id, prefix="profile")
+        return self._path("curations", "latest", f"{pointer_id}.json")
 
     def resolve_check_for_target(self, target_id: str) -> tuple[CheckReceipt, str]:
         baseline_path = self._path("baselines", f"{_safe_id(target_id)}.json")

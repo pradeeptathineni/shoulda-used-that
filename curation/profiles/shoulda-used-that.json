@@ -1,0 +1,232 @@
+{
+  "schema_version": "2.0",
+  "profile_id": "shoulda-used-that",
+  "title": "ShouldaUsedThat OSS Curation",
+  "description": "The public, evidence-bound catalog of OSS used, trialed, referenced, watched, rejected, or built by ShouldaUsedThat.",
+  "public_owner_identity": "pradeeptathineni/shoulda-used-that",
+  "visibility": "public",
+  "source_specifications": [
+    {
+      "kind": "public-json",
+      "locator": "curation/entries/shoulda-used-that.json",
+      "content_sha256": "c9140a96f7be1645d21c2c6519f90eb88fa036c6cb6cd809ad70b7576f121705",
+      "license": "Apache-2.0",
+      "attribution": "Repository-authored review records; individual entries retain any listed upstream attribution obligations."
+    }
+  ],
+  "collections": [
+    {
+      "slug": "homelab-self-hosting",
+      "title": "Homelab & Self-Hosting",
+      "description": "Local infrastructure, private cloud, networking, storage, media, and operations at home.",
+      "aliases": [
+        "home lab",
+        "self-hosted",
+        "NAS",
+        "Kubernetes at home"
+      ],
+      "semantics": "A durable domain collection for software used to run personally operated infrastructure.",
+      "inclusion_rule": "Include a reviewed repository when operating a homelab or self-hosted service is one of its evidenced primary uses.",
+      "exclusion_rule": "Exclude generic cloud, CI, or developer tooling without a specific self-hosting role.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 200,
+      "max_repositories": 100,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 90
+    },
+    {
+      "slug": "generative-ai-agents",
+      "title": "Generative AI & Agents",
+      "description": "Foundation-model tooling, inference, RAG, agents, evaluation, context, and multimodal generation.",
+      "aliases": [
+        "GenAI",
+        "LLM",
+        "agentic AI",
+        "RAG"
+      ],
+      "semantics": "A durable domain collection for reviewed generative-AI and agent-system components and references.",
+      "inclusion_rule": "Include a reviewed repository when it directly supports a named model, retrieval, agent, context, or evaluation need.",
+      "exclusion_rule": "Exclude hype-only discovery signals and repositories without evidence for a named need.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 200,
+      "max_repositories": 100,
+      "github_list_projection": true,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 60
+    },
+    {
+      "slug": "computational-nature-simulation",
+      "title": "Computational Nature & Simulation",
+      "description": "Artificial life, ecosystems, physics, procedural systems, cellular automata, and scientific simulation.",
+      "aliases": [
+        "nature simulation",
+        "emergent systems",
+        "generative nature"
+      ],
+      "semantics": "A durable domain collection for software that models natural, physical, or emergent systems.",
+      "inclusion_rule": "Include a reviewed repository when simulation of natural or emergent behavior is an evidenced central role.",
+      "exclusion_rule": "Exclude general graphics or numerical tools without a reviewed simulation use.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 200,
+      "max_repositories": 100,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 120
+    },
+    {
+      "slug": "computer-vision-multimodal",
+      "title": "Computer Vision & Multimodal",
+      "description": "Image and video understanding, geometry, perception, and vision-language systems.",
+      "aliases": [
+        "CV",
+        "VLM",
+        "image processing",
+        "3D vision"
+      ],
+      "semantics": "A durable domain collection for reviewed visual perception and multimodal systems.",
+      "inclusion_rule": "Include a reviewed repository when image, video, geometry, or vision-language work is an evidenced primary role.",
+      "exclusion_rule": "Exclude generic model tooling without a reviewed visual or multimodal use.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 200,
+      "max_repositories": 100,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 90
+    },
+    {
+      "slug": "platform-engineering-delivery",
+      "title": "Platform Engineering & Delivery",
+      "description": "CI/CD, infrastructure as code, developer platforms, release engineering, observability, and operations.",
+      "aliases": [
+        "DevOps",
+        "SRE",
+        "cloud native",
+        "GitOps"
+      ],
+      "semantics": "A durable domain collection for building, securing, releasing, and operating software platforms.",
+      "inclusion_rule": "Include a reviewed repository when it has an evidenced delivery, platform, release, or operations role.",
+      "exclusion_rule": "Exclude generic libraries without a reviewed platform or delivery role.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 200,
+      "max_repositories": 100,
+      "github_list_projection": true,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 60
+    },
+    {
+      "slug": "python-engineering",
+      "title": "Python Engineering",
+      "description": "Runtime libraries and development tools used to build and test dependable Python software.",
+      "aliases": [
+        "Python tooling",
+        "Python development"
+      ],
+      "semantics": "A cross-cutting necessity collection for evidenced Python implementation roles.",
+      "inclusion_rule": "Include a reviewed repository when this project uses or recommends it for a named Python engineering need.",
+      "exclusion_rule": "Exclude language-adjacent repositories without a concrete Python role.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 100,
+      "max_repositories": 50,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 90
+    },
+    {
+      "slug": "software-supply-chain",
+      "title": "Software Supply Chain",
+      "description": "Testing, security analysis, dependency evidence, packaging, provenance, and release integrity.",
+      "aliases": [
+        "supply chain security",
+        "release security",
+        "SBOM"
+      ],
+      "semantics": "A cross-cutting necessity collection for evidenced software integrity controls.",
+      "inclusion_rule": "Include a reviewed repository when it supplies a named test, security, packaging, or provenance control.",
+      "exclusion_rule": "Exclude generic security branding without a bounded control used or evaluated here.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 100,
+      "max_repositories": 50,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 60
+    },
+    {
+      "slug": "oss-curation-foundations",
+      "title": "OSS Curation Foundations",
+      "description": "Native surfaces, catalogs, decision records, and presentation tools considered for evidence-backed OSS curation.",
+      "aliases": [
+        "open source curation",
+        "GitHub stars",
+        "prior art"
+      ],
+      "semantics": "The product-specific collection showing the components and prior art behind ShouldaUsedThat.",
+      "inclusion_rule": "Include a reviewed repository when it is used by, evaluated for, or materially informs ShouldaUsedThat's curation workflow.",
+      "exclusion_rule": "Exclude unreviewed discovery results and components without a documented decision effect.",
+      "exact_bound_sources": [
+        "curation/entries/shoulda-used-that.json"
+      ],
+      "max_candidates": 100,
+      "max_repositories": 50,
+      "github_list_projection": false,
+      "public_site_visibility": true,
+      "reconsideration_cadence_days": 60
+    }
+  ],
+  "projection_policy": {
+    "enabled": true,
+    "account": "pradeeptathineni",
+    "selected_collection_slugs": [
+      "generative-ai-agents",
+      "platform-engineering-delivery"
+    ],
+    "max_projected_lists": 2
+  },
+  "allowed_dispositions": [
+    "adopt",
+    "trial",
+    "reference",
+    "learn",
+    "watch",
+    "reject",
+    "build",
+    "inbox"
+  ],
+  "review_policy": {
+    "as_of": "2026-09-17T12:00:00Z",
+    "default_freshness_days": 90
+  },
+  "popularity_treatment": "Popularity is a time-stamped discovery signal only; it never proves suitability, safety, or project fit.",
+  "non_ranking_disclaimer": "This catalog records evidence-bound decisions for named needs and does not claim a universal best-OSS ranking.",
+  "publication_targets": [
+    "github-pages",
+    "repository-docs"
+  ],
+  "mutation_policy": {
+    "additive_only": true,
+    "require_tty": true,
+    "forbid_ci": true,
+    "plan_expiry_hours": 24,
+    "caps": {
+      "total": 20,
+      "create_lists": 2,
+      "star_repositories": 10,
+      "add_memberships": 20
+    }
+  },
+  "canonical_fingerprint": "profile_7432f8a4b4e8040545ec2a929475ad82c292037ba0c0304a814a30ce660b6658"
+}

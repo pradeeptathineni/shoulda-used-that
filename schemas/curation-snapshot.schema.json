@@ -1,0 +1,569 @@
+{
+  "$defs": {
+    "CurationCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "blocked": {
+          "minimum": 0,
+          "title": "Blocked",
+          "type": "integer"
+        },
+        "entries": {
+          "minimum": 0,
+          "title": "Entries",
+          "type": "integer"
+        },
+        "excluded": {
+          "minimum": 0,
+          "title": "Excluded",
+          "type": "integer"
+        },
+        "inbox": {
+          "minimum": 0,
+          "title": "Inbox",
+          "type": "integer"
+        },
+        "partial": {
+          "minimum": 0,
+          "title": "Partial",
+          "type": "integer"
+        },
+        "sources": {
+          "minimum": 0,
+          "title": "Sources",
+          "type": "integer"
+        },
+        "stale": {
+          "minimum": 0,
+          "title": "Stale",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sources",
+        "entries",
+        "excluded",
+        "inbox",
+        "stale",
+        "partial",
+        "blocked"
+      ],
+      "title": "CurationCounts",
+      "type": "object"
+    },
+    "CurationDisposition": {
+      "description": "Primary meaning of one repository in one curation context.",
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build",
+        "inbox"
+      ],
+      "title": "CurationDisposition",
+      "type": "string"
+    },
+    "CurationEntry": {
+      "additionalProperties": false,
+      "description": "One evidence-bound repository meaning in a curation context.",
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archived"
+        },
+        "attribution_obligations": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Attribution Obligations",
+          "type": "array"
+        },
+        "collection_memberships": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Collection Memberships",
+          "type": "array"
+        },
+        "decision_receipt_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Decision Receipt Ids",
+          "type": "array"
+        },
+        "evidence_receipt_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Receipt Ids",
+          "type": "array"
+        },
+        "field_classification": {
+          "const": "public",
+          "default": "public",
+          "title": "Field Classification",
+          "type": "string"
+        },
+        "freshness_state": {
+          "$ref": "#/$defs/FreshnessState"
+        },
+        "last_checked_at": {
+          "format": "date-time",
+          "title": "Last Checked At",
+          "type": "string"
+        },
+        "latest_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Commit"
+        },
+        "latest_release": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Release"
+        },
+        "need": {
+          "minLength": 1,
+          "title": "Need",
+          "type": "string"
+        },
+        "observed_license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed License"
+        },
+        "popularity": {
+          "$ref": "#/$defs/PopularitySnapshot"
+        },
+        "primary_disposition": {
+          "$ref": "#/$defs/CurationDisposition"
+        },
+        "rationale": {
+          "default": "",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "reconsideration_trigger": {
+          "minLength": 1,
+          "title": "Reconsideration Trigger",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "role": {
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_provenance": {
+          "items": {
+            "$ref": "#/$defs/SourceProvenance"
+          },
+          "minItems": 1,
+          "title": "Source Provenance",
+          "type": "array"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "url",
+        "collection_memberships",
+        "primary_disposition",
+        "role",
+        "need",
+        "popularity",
+        "last_checked_at",
+        "freshness_state",
+        "reconsideration_trigger",
+        "source_provenance"
+      ],
+      "title": "CurationEntry",
+      "type": "object"
+    },
+    "CurationSemanticDiff": {
+      "additionalProperties": false,
+      "properties": {
+        "added_exclusions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Added Exclusions",
+          "type": "array"
+        },
+        "added_repositories": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Added Repositories",
+          "type": "array"
+        },
+        "changed_exclusions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Exclusions",
+          "type": "array"
+        },
+        "changed_repositories": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Repositories",
+          "type": "array"
+        },
+        "material": {
+          "default": false,
+          "title": "Material",
+          "type": "boolean"
+        },
+        "previous_snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Snapshot Id"
+        },
+        "profile_changed": {
+          "default": false,
+          "title": "Profile Changed",
+          "type": "boolean"
+        },
+        "removed_exclusions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Removed Exclusions",
+          "type": "array"
+        },
+        "removed_repositories": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Removed Repositories",
+          "type": "array"
+        }
+      },
+      "title": "CurationSemanticDiff",
+      "type": "object"
+    },
+    "CurationSourceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "content_sha256": {
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "entry_count": {
+          "minimum": 0,
+          "title": "Entry Count",
+          "type": "integer"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "locator",
+        "content_sha256",
+        "entry_count"
+      ],
+      "title": "CurationSourceSnapshot",
+      "type": "object"
+    },
+    "ExcludedCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "reason",
+        "source"
+      ],
+      "title": "ExcludedCandidate",
+      "type": "object"
+    },
+    "FreshnessState": {
+      "enum": [
+        "current",
+        "stale",
+        "partial",
+        "blocked"
+      ],
+      "title": "FreshnessState",
+      "type": "string"
+    },
+    "PopularitySnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "stars": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stars"
+        }
+      },
+      "title": "PopularitySnapshot",
+      "type": "object"
+    },
+    "SourceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "content_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Digest"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "locator",
+        "observed_at"
+      ],
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/curation-snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocked_entries": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blocked Entries",
+      "type": "array"
+    },
+    "canonical_fingerprint": {
+      "pattern": "^curation_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "collection_membership_map": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Collection Membership Map",
+      "type": "object"
+    },
+    "compiled_at": {
+      "format": "date-time",
+      "title": "Compiled At",
+      "type": "string"
+    },
+    "compiler_version": {
+      "title": "Compiler Version",
+      "type": "string"
+    },
+    "counts": {
+      "$ref": "#/$defs/CurationCounts"
+    },
+    "curation_snapshot_id": {
+      "title": "Curation Snapshot Id",
+      "type": "string"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/CurationEntry"
+      },
+      "title": "Entries",
+      "type": "array"
+    },
+    "excluded_candidates": {
+      "items": {
+        "$ref": "#/$defs/ExcludedCandidate"
+      },
+      "title": "Excluded Candidates",
+      "type": "array"
+    },
+    "partial_entries": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Partial Entries",
+      "type": "array"
+    },
+    "profile_fingerprint": {
+      "title": "Profile Fingerprint",
+      "type": "string"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantic_diff": {
+      "$ref": "#/$defs/CurationSemanticDiff"
+    },
+    "source_snapshots": {
+      "items": {
+        "$ref": "#/$defs/CurationSourceSnapshot"
+      },
+      "title": "Source Snapshots",
+      "type": "array"
+    },
+    "stale_entries": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Stale Entries",
+      "type": "array"
+    },
+    "unresolved_inbox_entries": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Inbox Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "curation_snapshot_id",
+    "profile_id",
+    "profile_fingerprint",
+    "compiler_version",
+    "compiled_at",
+    "source_snapshots",
+    "entries",
+    "excluded_candidates",
+    "unresolved_inbox_entries",
+    "stale_entries",
+    "partial_entries",
+    "blocked_entries",
+    "collection_membership_map",
+    "counts",
+    "semantic_diff",
+    "canonical_fingerprint"
+  ],
+  "title": "CurationSnapshot",
+  "type": "object"
+}

@@ -9,6 +9,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+from shoulda_used_that.curation import CurationProfile, CurationSnapshot
 from shoulda_used_that.models import (
     AdoptionPlan,
     Candidate,
@@ -29,6 +30,8 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "projection-plan": ProjectionPlan,
     "recheck-receipt": RecheckReceipt,
     "save-receipt": SaveReceipt,
+    "curation-profile": CurationProfile,
+    "curation-snapshot": CurationSnapshot,
 }
 
 

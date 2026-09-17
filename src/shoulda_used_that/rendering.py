@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from rich.console import Console
 from rich.table import Table
 
+from shoulda_used_that.curation import CurationSnapshot
 from shoulda_used_that.models import CheckReceipt
 
 
@@ -62,6 +63,25 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             f"visible={value.counts.visible} excluded={value.counts.excluded} "
             f"result={value.result_set_fingerprint}"
         )
+    elif isinstance(value, CurationSnapshot):
+        table = Table(title=f"{value.curation_snapshot_id} · {value.profile_id}")
+        table.add_column("Repository")
+        table.add_column("Disposition")
+        table.add_column("Collections")
+        table.add_column("Freshness")
+        for entry in value.entries:
+            table.add_row(
+                entry.repository,
+                entry.primary_disposition.value,
+                ", ".join(entry.collection_memberships),
+                entry.freshness_state.value,
+            )
+        console.print(table)
+        console.print(
+            f"entries={value.counts.entries} excluded={value.counts.excluded} "
+            f"inbox={value.counts.inbox} stale={value.counts.stale} "
+            f"result={value.canonical_fingerprint}"
+        )
     else:
         table = Table(title=value.__class__.__name__)
         table.add_column("Field")
@@ -96,6 +116,24 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                 f"| `{candidate.repository}` | {candidate.role} | "
                 f"{candidate.license or 'unknown'} | "
                 f"{'included' if evaluation.included else 'excluded'} |"
+            )
+    elif isinstance(value, CurationSnapshot):
+        lines.extend(
+            [
+                f"- Snapshot: `{value.curation_snapshot_id}`",
+                f"- Profile: `{value.profile_id}`",
+                f"- Canonical fingerprint: `{value.canonical_fingerprint}`",
+                f"- Entries: {value.counts.entries}",
+                f"- Excluded: {value.counts.excluded}",
+                "",
+                "| Repository | Disposition | Collections | Freshness |",
+                "|---|---|---|---|",
+            ]
+        )
+        for entry in value.entries:
+            lines.append(
+                f"| `{entry.repository}` | {entry.primary_disposition.value} | "
+                f"{', '.join(entry.collection_memberships)} | {entry.freshness_state.value} |"
             )
     else:
         for key, item in payload.items():
