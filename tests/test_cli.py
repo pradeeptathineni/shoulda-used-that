@@ -238,7 +238,7 @@ def test_version_and_help_expose_stable_surface() -> None:
     version = runner.invoke(cli, ["--version"])
     help_result = runner.invoke(cli, ["--help"])
     assert version.exit_code == 0
-    assert version.stdout == "shoulda, version 0.1.0\n"
+    assert version.stdout == "shoulda, version 0.2.0\n"
     assert help_result.exit_code == 0
     for command in (
         "checked",

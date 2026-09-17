@@ -14,17 +14,18 @@ not a universal “best OSS” ranking.
 
 ## Status
 
-[`v0.1.0`](https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.1.0)
-is the latest tagged release. The `v0.2.0` release candidate adds deterministic project
-inspection, versioned curation snapshots, an allowlisted public catalog, and verified additive-only
-GitHub projection machinery. No personal star or List change has been made: the first live change
-remains blocked until the maintainer approves the exact sealed account, fingerprint, operations,
-and caps.
+This source tree is version `0.2.0`. Verified distributions are published only through
+[GitHub Releases](https://github.com/pradeeptathineni/shoulda-used-that/releases); PyPI remains
+intentionally unused. This version adds deterministic project inspection, versioned curation
+snapshots, an allowlisted public catalog, and additive-only GitHub projection machinery. No
+personal Star or List change was needed for the release: the first live change remains blocked
+until the maintainer approves the exact newly sealed account, fingerprint, operations, and caps.
 
-Browse the committed [public catalog](docs/curation/index.md), its
-[canonical JSON](docs/curation/catalog.json), [freshness ledger](docs/curation/freshness.md), and
-[source/attribution inventory](docs/curation/sources.md). The same content is the source for the
-GitHub Pages site; it remains complete even when personal GitHub List projection is disabled.
+Browse the [live public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/),
+the committed [Markdown source](docs/curation/index.md), [canonical JSON](docs/curation/catalog.json),
+[freshness ledger](docs/curation/freshness.md), and
+[source/attribution inventory](docs/curation/sources.md). The site remains complete even when
+personal GitHub List projection is disabled.
 
 ## Install for development
 
@@ -138,9 +139,9 @@ The full role, version, boundary, alternative, and removal evidence is in
 - A failed recheck preserves the last-known-good baseline and reports the source failure.
 - Receipts are immutable. Changed judgment creates a new receipt that explicitly supersedes the
   earlier one.
-- `v0.1.0` keeps `apply` and `verify` closed. The `v0.2.0` contract permits only approved,
-  additive `github-curation` plans and independently read-back postconditions; destructive, silent,
-  expired, drifted, non-interactive, or CI execution remains forbidden.
+- `v0.2.0` permits `apply` only for an approved, sealed, additive `github-curation` plan and uses
+  `verify` for independent readback; destructive, silent, expired, drifted, non-interactive, or CI
+  execution remains forbidden.
 
 ## Public evidence
 
@@ -152,6 +153,9 @@ The full role, version, boundary, alternative, and removal evidence is in
 - [Context-engineering receipt](docs/development/context-receipt.md)
 - [Executed SBOM comparison](docs/development/sbom-comparison.md)
 - [Catalog scale validation](docs/development/catalog-scale-validation.md)
+- [GitHub curation operator runbook](docs/operations/github-curation.md)
+- [Read-only upkeep and scheduling](docs/operations/scheduling.md)
+- [v0.2.0 correctness and security review](docs/development/review-v0.2.0.md)
 - [v0.1.0 correctness and security review](docs/development/review-v0.1.0.md)
 - [Contributing and validation](CONTRIBUTING.md)
 - [Security policy and boundaries](SECURITY.md)

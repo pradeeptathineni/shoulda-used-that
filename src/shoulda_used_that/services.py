@@ -1378,7 +1378,7 @@ def used(
 
 
 def validate_unapplied_plan(store: StateStore, plan_id: str) -> AdoptionPlan | ProjectionPlan:
-    """Resolve a sealed plan and prove v0.1.0 cannot execute it."""
+    """Resolve a legacy planning-only adoption or List projection receipt."""
 
     if plan_id.startswith("use_"):
         return store.read_adoption(plan_id)

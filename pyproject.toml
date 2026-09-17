@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shoulda-used-that"
-version = "0.1.0"
+version = "0.2.0"
 description = "A deterministic-first, AI-optional coordinator that discovers, vets, remembers, and revalidates existing OSS before you write more code."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"

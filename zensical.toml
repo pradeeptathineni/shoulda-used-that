@@ -28,13 +28,19 @@ nav = [
     { "Public implementation contract" = "architecture/implementation-brief.md" },
   ] },
   { "Decision receipts" = "decisions/README.md" },
+  { "Operations" = [
+    { "GitHub curation runbook" = "operations/github-curation.md" },
+    { "Read-only upkeep and scheduling" = "operations/scheduling.md" },
+  ] },
   { "Development evidence" = [
     { "Development context receipt" = "development/context-receipt.md" },
+    { "v0.2.0 correctness and security review" = "development/review-v0.2.0.md" },
     { "v0.1.0 correctness and security review" = "development/review-v0.1.0.md" },
     { "Executed SBOM comparison" = "development/sbom-comparison.md" },
     { "Catalog scale validation" = "development/catalog-scale-validation.md" },
   ] },
   { "Releases" = [
+    { "v0.2.0" = "releases/v0.2.0.md" },
     { "v0.1.0" = "releases/v0.1.0.md" },
   ] },
 ]

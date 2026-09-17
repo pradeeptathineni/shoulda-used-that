@@ -3,7 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts.generate_schemas import SCHEMAS, check_schemas, rendered_schemas, write_schemas
-from scripts.validate_repository import ROOT, catalog_workflow_problems, validate
+from scripts.validate_repository import (
+    ROOT,
+    catalog_upkeep_problems,
+    catalog_workflow_problems,
+    validate,
+)
 
 
 def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None:
@@ -28,4 +33,14 @@ def test_catalog_workflow_excludes_personal_mutation_authority() -> None:
     assert catalog_workflow_problems(workflow + "\nGH_TOKEN: ${{ secrets.PERSONAL_PAT }}\n") == [
         "catalog workflow contains forbidden boundary 'secrets.'",
         "catalog workflow contains forbidden boundary 'GH_TOKEN'",
+    ]
+
+
+def test_one_shot_catalog_upkeep_is_read_only() -> None:
+    command = (ROOT / "scripts" / "upkeep_catalog.sh").read_text(encoding="utf-8")
+    assert catalog_upkeep_problems(command) == []
+    assert catalog_upkeep_problems(
+        command + "\ngh api --method PUT /user/starred/example/repo\n"
+    ) == [
+        "catalog upkeep script contains forbidden boundary 'gh '",
     ]

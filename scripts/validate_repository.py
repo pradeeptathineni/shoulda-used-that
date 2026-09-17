@@ -40,17 +40,17 @@ ACTION_PIN = re.compile(r"^\s*-?\s*uses:\s*[^#\s]+@([0-9a-f]{40})(?:\s*#.*)?$")
 CATALOG_WORKFLOW_REQUIRED = (
     'cron: "43 8 * * 4"',
     "permissions: {}",
+    "cancel-in-progress: false",
     "contents: read",
     "timeout-minutes:",
-    "scripts/generate_catalog.py --check",
-    "zensical build --clean --strict",
-    "scripts/verify_site.py",
-    "git diff --exit-code -- docs/curation",
+    "./scripts/upkeep_catalog.sh",
     "github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'",
     "github.event_name == 'push' || github.event_name == 'workflow_dispatch'",
     "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9",
     "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d",
     "actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346",
+    "python3 -m scripts.verify_live_site",
+    "PAGE_URL: ${{ steps.deployment.outputs.page_url }}",
     "id-token: write",
     "pages: write",
 )
@@ -63,6 +63,23 @@ CATALOG_WORKFLOW_FORBIDDEN = (
     "updateUserList",
     "updateUserListsForItem",
     "PUT /user/starred",
+)
+CATALOG_UPKEEP_REQUIRED = (
+    "set -euo pipefail",
+    "uv run --frozen --no-sync python scripts/generate_catalog.py --check",
+    "uv run --frozen --no-sync zensical build --clean --strict",
+    "uv run --frozen --no-sync python scripts/verify_site.py",
+    'catalog_before="$(catalog_fingerprint)"',
+    'catalog_after="$(catalog_fingerprint)"',
+    "git diff --exit-code -- docs/curation",
+)
+CATALOG_UPKEEP_FORBIDDEN = (
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "gh ",
+    "shoulda apply",
+    "curl ",
+    "wget ",
 )
 
 
@@ -96,13 +113,29 @@ def catalog_workflow_problems(text: str) -> list[str]:
     return problems
 
 
+def catalog_upkeep_problems(text: str) -> list[str]:
+    """Require a deterministic local command with no network-mutation authority."""
+
+    problems = [
+        f"catalog upkeep script misses required boundary {value!r}"
+        for value in CATALOG_UPKEEP_REQUIRED
+        if value not in text
+    ]
+    problems.extend(
+        f"catalog upkeep script contains forbidden boundary {value!r}"
+        for value in CATALOG_UPKEEP_FORBIDDEN
+        if value in text
+    )
+    return problems
+
+
 def validate() -> list[str]:
     problems: list[str] = []
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     if project["name"] != "shoulda-used-that":
         problems.append("project distribution name is not shoulda-used-that")
-    if project["version"] != "0.1.0":
-        problems.append("project version is not 0.1.0")
+    if project["version"] != "0.2.0":
+        problems.append("project version is not 0.2.0")
     if project["description"] != EXPECTED_DESCRIPTION:
         problems.append("project description differs from the public contract")
 
@@ -115,6 +148,12 @@ def validate() -> list[str]:
         problems.append("catalog workflow is missing or unsafe")
     else:
         problems.extend(catalog_workflow_problems(catalog_workflow.read_text(encoding="utf-8")))
+
+    catalog_upkeep = ROOT / "scripts" / "upkeep_catalog.sh"
+    if not catalog_upkeep.is_file() or catalog_upkeep.is_symlink():
+        problems.append("catalog upkeep script is missing or unsafe")
+    else:
+        problems.extend(catalog_upkeep_problems(catalog_upkeep.read_text(encoding="utf-8")))
 
     receipt_ids: set[str] = set()
     for path in sorted((ROOT / "docs" / "decisions").glob("*.json")):
