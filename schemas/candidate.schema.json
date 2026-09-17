@@ -1,0 +1,264 @@
+{
+  "$defs": {
+    "EvidenceState": {
+      "enum": [
+        "verified",
+        "claim",
+        "inferred",
+        "unknown",
+        "stale",
+        "error"
+      ],
+      "title": "EvidenceState",
+      "type": "string"
+    },
+    "NetworkBoundary": {
+      "enum": [
+        "local",
+        "public-api",
+        "hosted",
+        "unknown"
+      ],
+      "title": "NetworkBoundary",
+      "type": "string"
+    },
+    "SecurityState": {
+      "enum": [
+        "available",
+        "verified",
+        "unknown",
+        "stale",
+        "error"
+      ],
+      "title": "SecurityState",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/candidate.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Canonical, source-neutral candidate used by filters and receipts.",
+  "properties": {
+    "archived": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Archived"
+    },
+    "conflicts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "disabled": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Disabled"
+    },
+    "ecosystems": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Ecosystems",
+      "type": "array"
+    },
+    "evidence_state": {
+      "$ref": "#/$defs/EvidenceState",
+      "default": "unknown"
+    },
+    "is_starred": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Is Starred"
+    },
+    "language": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Language"
+    },
+    "license": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "License"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "network_boundary": {
+      "$ref": "#/$defs/NetworkBoundary",
+      "default": "unknown"
+    },
+    "platforms": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Platforms",
+      "type": "array"
+    },
+    "pushed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pushed At"
+    },
+    "released_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Released At"
+    },
+    "repository": {
+      "title": "Repository",
+      "type": "string"
+    },
+    "role": {
+      "default": "repository",
+      "title": "Role",
+      "type": "string"
+    },
+    "runtimes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Runtimes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "security_state": {
+      "$ref": "#/$defs/SecurityState",
+      "default": "unknown"
+    },
+    "sources": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "starred_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Starred At"
+    },
+    "stars": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Stars"
+    },
+    "topics": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Topics",
+      "type": "array"
+    },
+    "url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Url"
+    }
+  },
+  "required": [
+    "repository"
+  ],
+  "title": "Candidate",
+  "type": "object"
+}

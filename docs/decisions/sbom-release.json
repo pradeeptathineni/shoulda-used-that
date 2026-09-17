@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_sbom_release_2026_09_16",
+  "need": "Publish a verifiable GitHub release whose artifacts, dependencies, checksums, and provenance match the built wheel.",
+  "artifact_role": "sbom_and_release_chain",
+  "discovery": {"queries": ["CycloneDX Python environment SBOM", "Syft Python environment SBOM", "GitHub artifact attestation", "third-party release service"], "stop_condition": "Two established SBOM contenders and the native host release/provenance path identified."},
+  "contenders": [
+    {"name": "CycloneDX Python", "disposition": "trial", "evidence": ["7.4.0", "Apache-2.0", "Python-environment-specific"]},
+    {"name": "Syft", "disposition": "trial", "evidence": ["multi-ecosystem scanner; artifact accuracy not yet measured"]},
+    {"name": "GitHub release + artifact attestation", "disposition": "adopt", "evidence": ["native repository boundary", "no second credential or service"]},
+    {"name": "extra release/signing service", "disposition": "reject", "evidence": ["no surviving gap before the native path is measured"]}
+  ],
+  "hard_gates": ["clean environment containing built wheel", "inspect dependency set", "SHA256SUMS", "annotated tag", "attestation verified", "no PyPI publication"],
+  "unknowns": ["CycloneDX-versus-Syft measured result pending the built wheel."],
+  "decision_effect": "Compare both generators after build, update this receipt with executed evidence, and release only through GitHub.",
+  "reconsider_when": ["Native attestation is unavailable", "Neither SBOM describes the clean wheel environment accurately"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

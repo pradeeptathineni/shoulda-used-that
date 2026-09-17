@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "Disposition": {
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build"
+      ],
+      "title": "Disposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/decision-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "alternatives": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Alternatives",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/Disposition"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "need": {
+      "minLength": 1,
+      "title": "Need",
+      "type": "string"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "rationale": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rationale",
+      "type": "array"
+    },
+    "reconsider_when": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reconsider When",
+      "type": "array"
+    },
+    "repository": {
+      "title": "Repository",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_check_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Check Id"
+    },
+    "source_result_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Result Fingerprint"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes"
+    },
+    "unknowns": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknowns",
+      "type": "array"
+    }
+  },
+  "required": [
+    "decision_id",
+    "created_at",
+    "profile",
+    "repository",
+    "need",
+    "disposition",
+    "rationale",
+    "evidence_ids",
+    "reconsider_when"
+  ],
+  "title": "DecisionReceipt",
+  "type": "object"
+}

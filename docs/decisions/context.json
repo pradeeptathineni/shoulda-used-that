@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_context_2026_09_16",
+  "need": "Keep development context precise while retaining every product, privacy, evidence, and release obligation.",
+  "artifact_role": "development_context",
+  "discovery": {"queries": ["Codex AGENTS.md and skills", "context engineering", "source-driven development", "Headroom", "Claude-Mem"], "stop_condition": "Native progressive disclosure satisfies the initial measured context need."},
+  "contenders": [
+    {"name": "AGENTS.md + repository skill + task packet", "disposition": "adopt", "evidence": ["official Codex discovery and progressive-disclosure model", "small inspectable repository context"]},
+    {"name": "pinned addyosmani guidance", "disposition": "adopt", "evidence": ["MIT", "complete files inspected at a fixed commit"]},
+    {"name": "Headroom", "disposition": "watch", "evidence": ["no measured context-budget failure", "loss and network boundaries require a benchmark"]},
+    {"name": "Claude-Mem style persistent capture", "disposition": "reject", "evidence": ["unneeded hooks, worker, persistent state, provider/cloud, and vector boundary"]}
+  ],
+  "hard_gates": ["canonical obligations never compressed", "no private capture service", "current primary sources", "task-relevant selection"],
+  "unknowns": ["Long-term public contributor context patterns."],
+  "decision_effect": "Use native progressive disclosure and record context sizes/rework; install no memory or compression system.",
+  "reconsider_when": ["A representative task exceeds a real budget after deterministic selection", "A benchmark proves obligation retention"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

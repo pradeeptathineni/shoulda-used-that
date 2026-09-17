@@ -1,0 +1,43 @@
+name: Scorecard
+
+on:
+  branch_protection_rule:
+  schedule:
+    - cron: "31 10 * * 3"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: scorecard-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analysis:
+    name: OpenSSF Scorecard
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read # Scorecard CI workflow posture checks.
+      checks: read # Scorecard branch and status-check posture checks.
+      contents: read # Repository checkout and metadata checks.
+      issues: read # Scorecard security-policy and maintenance checks.
+      pull-requests: read # Scorecard contribution posture checks.
+      id-token: write # OpenSSF signed public result publication.
+      security-events: write # Generated SARIF upload to code scanning.
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run Scorecard
+        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+      - name: Upload findings to code scanning
+        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
+        with:
+          sarif_file: results.sarif

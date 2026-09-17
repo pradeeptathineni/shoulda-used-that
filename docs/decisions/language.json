@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_language_2026_09_16",
+  "need": "Implement a portable typed CLI and library for evidence records, filtering, local state, and GitHub read adapters.",
+  "artifact_role": "implementation_language",
+  "discovery": {
+    "queries": ["Python CLI typed validation", "Go Cobra", "Rust clap", "TypeScript Commander"],
+    "stop_condition": "One mature contender per relevant ecosystem plus the language already selected by the approved implementation contract."
+  },
+  "contenders": [
+    {"name": "Python 3.12+", "disposition": "adopt", "evidence": ["current host Python 3.12.10", "selected libraries support Python 3.12", "typed JSON and CLI ecosystem match the release"]},
+    {"name": "Go with Cobra", "disposition": "reject", "evidence": ["mature single-binary option", "no single-binary or Go-native service requirement"]},
+    {"name": "Rust with clap", "disposition": "reject", "evidence": ["mature single-binary option", "no systems-performance or Rust integration requirement"]},
+    {"name": "TypeScript with Commander", "disposition": "reject", "evidence": ["mature Node CLI option", "no Node-native runtime or UI requirement"]}
+  ],
+  "hard_gates": ["oldest runtime tested", "newest stable runtime tested", "Linux/macOS/Windows core suite"],
+  "unknowns": ["Future requirements may introduce a justified single-binary distribution need."],
+  "decision_effect": "Use Python >=3.12,<3.15 with PEP 621, src layout, py.typed, uv, and Hatchling.",
+  "reconsider_when": ["A measured install/distribution barrier requires a single binary", "A language-native integration becomes core"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

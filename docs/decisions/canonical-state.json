@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_canonical_state_2026_09_16",
+  "need": "Produce interoperable content identities and immutable local receipts without premature database operations.",
+  "artifact_role": "canonicalization_and_state",
+  "discovery": {"queries": ["RFC 8785 Python", "sorted json", "plain content-addressed files", "SQLite"], "stop_condition": "A maintained standards implementation and sufficient single-writer file design were found."},
+  "contenders": [
+    {"name": "trailofbits/rfc8785.py", "disposition": "adopt", "evidence": ["0.1.4", "Apache-2.0", "active repository", "published RFC boundary"]},
+    {"name": "home-grown sorted JSON", "disposition": "reject", "evidence": ["does not fully implement number and Unicode rules"]},
+    {"name": "plain versioned content-addressed files", "disposition": "adopt", "evidence": ["single-user and single-writer first release", "human-inspectable", "atomic replacement available"]},
+    {"name": "SQLite", "disposition": "watch", "evidence": ["no measured concurrency, query, or volume need"]}
+  ],
+  "hard_gates": ["published RFC vectors", "atomic writes", "path containment", "immutable receipt identities"],
+  "unknowns": ["State volume and concurrent-writer demand after public use."],
+  "decision_effect": "Use rfc8785 behind one adapter and profile-scoped files behind one state store.",
+  "reconsider_when": ["Measured state operations exceed the file design", "Concurrent writers become a supported requirement"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

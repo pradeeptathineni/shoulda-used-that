@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality and contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.12.15
+          enable-cache: false
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync locked environment
+        run: uv sync --all-groups --frozen --python 3.12
+      - name: Verify formatting and lint
+        run: uv run ruff format --check . && uv run ruff check .
+      - name: Verify strict typing
+        run: uv run mypy
+      - name: Verify schemas and repository contracts
+        run: |
+          uv run python scripts/generate_schemas.py --check
+          uv run python scripts/validate_repository.py
+      - name: Run branch-aware coverage gate
+        run: |
+          uv run coverage run -m pytest
+          uv run coverage report
+      - name: Audit locked runtime dependencies
+        run: |
+          uv export --frozen --no-dev --no-emit-project --output-file runtime-requirements.txt
+          uv run pip-audit --require-hashes --requirement runtime-requirements.txt
+
+  test:
+    name: Test (${{ matrix.os }}, Python ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: ubuntu-latest
+            python: "3.13"
+          - os: ubuntu-latest
+            python: "3.14"
+          - os: macos-latest
+            python: "3.12"
+          - os: windows-latest
+            python: "3.12"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.12.15
+          enable-cache: false
+      - name: Install Python
+        env:
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: uv python install "${PYTHON_VERSION}"
+      - name: Sync locked environment
+        env:
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: uv sync --all-groups --frozen --python "${PYTHON_VERSION}"
+      - name: Run tests
+        env:
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: uv run --python "${PYTHON_VERSION}" pytest
+
+  package:
+    name: Build and clean-install package
+    needs: [quality, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.12.15
+          enable-cache: false
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Build standards-based distributions
+        run: uv build --no-sources --clear --python 3.12
+      - name: Install wheel into a clean environment
+        run: |
+          uv venv .package-smoke --python 3.12
+          uv pip install --python .package-smoke/bin/python dist/*.whl
+          .package-smoke/bin/shoulda --version
+          .package-smoke/bin/shoulda --help
+      - name: Upload tested distributions
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-distributions
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7

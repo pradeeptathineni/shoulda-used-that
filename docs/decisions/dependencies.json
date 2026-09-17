@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_dependencies_2026_09_16",
+  "need": "Use maintained libraries for protocol, validation, presentation, querying, and OS-path roles instead of recreating them.",
+  "artifact_role": "runtime_dependency_set",
+  "discovery": {"queries": ["PyPI metadata and canonical GitHub repository for every selected package"], "stop_condition": "One non-overlapping owner per required role."},
+  "contenders": [
+    {"name": "click 8.5.0", "role": "CLI parsing", "license": "BSD-3-Clause", "network_behavior": "none at runtime", "removal_boundary": "src/shoulda_used_that/cli.py"},
+    {"name": "rich 15.0.0", "role": "TTY rendering", "license": "MIT", "network_behavior": "none", "removal_boundary": "human renderer only"},
+    {"name": "pydantic 2.13.5", "role": "typed contracts and JSON Schema", "license": "MIT", "network_behavior": "none", "removal_boundary": "model boundary"},
+    {"name": "jmespath 1.1.0", "role": "advanced local filters", "license": "MIT", "network_behavior": "none", "removal_boundary": "--where evaluator"},
+    {"name": "platformdirs 4.11.9", "role": "OS state roots", "license": "MIT", "network_behavior": "none", "removal_boundary": "default path selection"},
+    {"name": "rfc8785 0.1.4", "role": "RFC 8785 canonical JSON", "license": "Apache-2.0", "network_behavior": "none", "removal_boundary": "canonical adapter"},
+    {"name": "PyYAML 6.0.3", "role": "safe YAML rendering and fixture input", "license": "MIT", "network_behavior": "none", "removal_boundary": "YAML codec"}
+  ],
+  "hard_gates": ["Python 3.12 compatibility", "acceptable OSS license", "active non-archived upstream", "no implicit network or credential behavior"],
+  "unknowns": ["Future major-version compatibility is not implied by the bounded ranges."],
+  "decision_effect": "Pin a reproducible uv lock and keep each dependency behind its role boundary.",
+  "reconsider_when": ["A selected package is archived or changes license", "The custom wrapper becomes larger than a simpler verified alternative"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

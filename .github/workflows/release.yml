@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, attest, and release
+    if: github.repository == 'pradeeptathineni/shoulda-used-that'
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write # GitHub-native artifact attestations.
+      contents: write # Release creation and asset upload.
+      id-token: write # Short-lived attestation identity token.
+    steps:
+      - name: Check out annotated tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.12.15
+          enable-cache: false
+      - name: Install Python and locked release tools
+        run: |
+          uv python install 3.12
+          uv sync --all-groups --frozen --python 3.12
+      - name: Verify release identity
+        run: uv run python scripts/verify_release.py "${GITHUB_REF_NAME}" "${GITHUB_SHA}"
+      - name: Build distributions
+        run: uv build --no-sources --clear --python 3.12
+      - name: Clean-install wheel and generate runtime SBOM
+        run: |
+          uv venv .release-smoke --python 3.12
+          uv pip install --python .release-smoke/bin/python dist/*.whl
+          .release-smoke/bin/shoulda --version
+          uv run cyclonedx-py environment .release-smoke/bin/python \
+            --pyproject pyproject.toml \
+            --mc-type application \
+            --spec-version 1.6 \
+            --output-reproducible \
+            --output-format JSON \
+            --output-file dist/shoulda-used-that-0.1.0.cdx.json
+      - name: Write checksums
+        run: uv run python scripts/write_checksums.py dist
+      - name: Attest release assets
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/*
+      - name: Publish immutable GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}" dist/*
+          --verify-tag
+          --title "ShouldaUsedThat ${GITHUB_REF_NAME}"
+          --notes-file docs/releases/v0.1.0.md

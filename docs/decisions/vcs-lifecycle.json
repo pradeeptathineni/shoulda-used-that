@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_vcs_lifecycle_2026_09_17",
+  "need": "Make repository history and GitHub release operations verifiable evidence of the same reuse and fail-closed discipline the product promises.",
+  "artifact_role": "vcs_and_hosted_release_etiquette",
+  "discovery": {
+    "queries": [
+      "Git coherent commits and annotated tags",
+      "GitHub protected default branch hosted checks",
+      "GitHub release assets and attestations"
+    ],
+    "stop_condition": "Native Git and GitHub mechanisms cover review boundaries, hosted verification, version identity, artifacts, and provenance without another release service."
+  },
+  "contenders": [
+    {
+      "name": "coherent Git commits and staged pushes",
+      "disposition": "adopt",
+      "evidence": [
+        "each commit is independently reviewable",
+        "pushes expose the exact commit to hosted CI before release"
+      ]
+    },
+    {
+      "name": "annotated tag and GitHub release",
+      "disposition": "adopt",
+      "evidence": [
+        "tag carries version identity and release message",
+        "GitHub release binds immutable checksummed assets to the tag"
+      ]
+    },
+    {
+      "name": "one final squash or rewritten public history",
+      "disposition": "reject",
+      "evidence": [
+        "erases the implementation and refinement evidence chain",
+        "unnecessary for a new repository with intentionally scoped commits"
+      ]
+    },
+    {
+      "name": "tag before hosted gates",
+      "disposition": "reject",
+      "evidence": [
+        "would make the release identity precede its required evidence"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "commit contains no private planning or runtime state",
+    "exact pushed release commit passes required hosted checks",
+    "default branch protection is inspected",
+    "v0.1.0 is an annotated tag",
+    "release assets, checksums, SBOM, and attestation are inspected",
+    "no PyPI publication"
+  ],
+  "unknowns": [
+    "Hosted branch-rule and attestation availability remain unknown until configured and exercised."
+  ],
+  "decision_effect": "Create reviewable implementation and hardening commits, push at hosted-validation boundaries, tag only the verified release commit, and never rewrite released public history.",
+  "reconsider_when": [
+    "GitHub cannot provide a required hosted control",
+    "A signed-tag requirement is adopted for a later release",
+    "The repository moves to a reviewed pull-request-only contribution model"
+  ],
+  "observed_at": "2026-09-17T00:00:00Z"
+}

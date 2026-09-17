@@ -1,0 +1,17 @@
+.DS_Store
+.coverage
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+build/
+dist/
+htmlcov/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# Runtime state belongs in an OS data directory, never in this repository.
+.shoulda/
+shoulda-state/

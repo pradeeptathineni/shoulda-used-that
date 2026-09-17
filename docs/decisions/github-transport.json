@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_github_transport_2026_09_16",
+  "need": "Read GitHub stars, search, and exact repositories through existing authenticated official behavior without another credential store.",
+  "artifact_role": "github_auth_and_transport",
+  "discovery": {"queries": ["official gh api", "PyGithub", "direct token HTTP client", "HTML scraping"], "stop_condition": "The installed authenticated official CLI covers all required read endpoints."},
+  "contenders": [
+    {"name": "gh api", "disposition": "adopt", "evidence": ["gh 2.101.0 installed", "active keyring authentication", "REST and GraphQL pagination support"]},
+    {"name": "PyGithub or Octokit", "disposition": "reject", "evidence": ["duplicates transport and authentication ownership"]},
+    {"name": "direct token client", "disposition": "reject", "evidence": ["would require another credential boundary"]},
+    {"name": "HTML scraping", "disposition": "reject", "evidence": ["native APIs exist"]}
+  ],
+  "hard_gates": ["argument vector only", "timeout", "explicit API version and media type", "complete pagination", "typed auth/rate/schema/partial failures", "no token output", "read-only v0.1.0"],
+  "unknowns": ["Conditional response headers exposed by each endpoint are endpoint-specific."],
+  "decision_effect": "Implement a small subprocess adapter and store coordinator-owned content fingerprints; do not use gh --cache as evidence state.",
+  "reconsider_when": ["The official CLI cannot expose a required documented API behavior", "A non-GitHub forge becomes required"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

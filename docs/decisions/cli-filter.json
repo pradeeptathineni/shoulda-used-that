@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_cli_filter_2026_09_16",
+  "need": "Expose typed repeatable common filters and expressive deterministic advanced filters with explainable local re-evaluation.",
+  "artifact_role": "cli_and_query_language",
+  "discovery": {"queries": ["Click repeatable options", "Typer", "JMESPath Python", "custom parser and filter DSL"], "stop_condition": "Established direct parser and established local JSON query language found."},
+  "contenders": [
+    {"name": "Click", "disposition": "adopt", "evidence": ["8.5.0", "BSD-3-Clause", "official docs cover multiple typed options and CliRunner"]},
+    {"name": "Typer over Click", "disposition": "reject", "evidence": ["duplicates the selected parser role without a surviving annotation-driven requirement"]},
+    {"name": "JMESPath", "disposition": "adopt", "evidence": ["1.1.0", "MIT", "local JSON-shaped query evaluation"]},
+    {"name": "custom filter DSL or Python eval", "disposition": "reject", "evidence": ["recreates parsing and creates a security/compatibility surface"]}
+  ],
+  "hard_gates": ["no arbitrary code evaluation", "local deterministic evaluation", "typed errors", "stable schema"],
+  "unknowns": [],
+  "decision_effect": "Click owns command parsing; JMESPath evaluates --where after hard gates and typed flags; coordinator code owns explanation and unknown semantics.",
+  "reconsider_when": ["A measured expression required by real users cannot be represented safely in JMESPath"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

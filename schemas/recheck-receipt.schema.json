@@ -1,0 +1,251 @@
+{
+  "$defs": {
+    "DiffMateriality": {
+      "enum": [
+        "immaterial",
+        "refresh-only",
+        "material-review"
+      ],
+      "title": "DiffMateriality",
+      "type": "string"
+    },
+    "EvidenceState": {
+      "enum": [
+        "verified",
+        "claim",
+        "inferred",
+        "unknown",
+        "stale",
+        "error"
+      ],
+      "title": "EvidenceState",
+      "type": "string"
+    },
+    "FieldDiff": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "default": null,
+          "title": "After"
+        },
+        "before": {
+          "default": null,
+          "title": "Before"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "materiality": {
+          "$ref": "#/$defs/DiffMateriality"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "field",
+        "materiality",
+        "reason"
+      ],
+      "title": "FieldDiff",
+      "type": "object"
+    },
+    "RecheckOutcome": {
+      "enum": [
+        "semantic-no-op",
+        "refresh-only",
+        "material-review-required"
+      ],
+      "title": "RecheckOutcome",
+      "type": "string"
+    },
+    "SourceKind": {
+      "enum": [
+        "fixture",
+        "stars",
+        "github-search",
+        "repository"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "SourceObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_count": {
+          "minimum": 0,
+          "title": "Candidate Count",
+          "type": "integer"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Locator"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "payload_fingerprint": {
+          "title": "Payload Fingerprint",
+          "type": "string"
+        },
+        "query": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query"
+        },
+        "state": {
+          "$ref": "#/$defs/EvidenceState",
+          "default": "verified"
+        },
+        "tool_version": {
+          "title": "Tool Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "observed_at",
+        "tool_version",
+        "payload_fingerprint",
+        "candidate_count"
+      ],
+      "title": "SourceObservation",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/recheck-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checked_at": {
+      "format": "date-time",
+      "title": "Checked At",
+      "type": "string"
+    },
+    "current_fingerprint": {
+      "title": "Current Fingerprint",
+      "type": "string"
+    },
+    "diffs": {
+      "items": {
+        "$ref": "#/$defs/FieldDiff"
+      },
+      "title": "Diffs",
+      "type": "array"
+    },
+    "last_known_good_fingerprint": {
+      "title": "Last Known Good Fingerprint",
+      "type": "string"
+    },
+    "last_known_good_preserved": {
+      "title": "Last Known Good Preserved",
+      "type": "boolean"
+    },
+    "outcome": {
+      "$ref": "#/$defs/RecheckOutcome"
+    },
+    "prior_check_id": {
+      "title": "Prior Check Id",
+      "type": "string"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "recheck_id": {
+      "title": "Recheck Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_errors": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Errors",
+      "type": "array"
+    },
+    "source_observations": {
+      "items": {
+        "$ref": "#/$defs/SourceObservation"
+      },
+      "title": "Source Observations",
+      "type": "array"
+    },
+    "target_id": {
+      "title": "Target Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "recheck_id",
+    "checked_at",
+    "profile",
+    "target_id",
+    "prior_check_id",
+    "outcome",
+    "last_known_good_fingerprint",
+    "current_fingerprint",
+    "last_known_good_preserved",
+    "source_observations",
+    "diffs"
+  ],
+  "title": "RecheckReceipt",
+  "type": "object"
+}

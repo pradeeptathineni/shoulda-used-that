@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_quality_security_2026_09_16",
+  "need": "Verify state, gate, privacy, package, source, workflow, and release behavior with non-overlapping established tools.",
+  "artifact_role": "quality_and_security_stack",
+  "discovery": {"queries": ["Python test property coverage lint type audit", "GitHub Actions workflow security"], "stop_condition": "Each risk has one owner, except complementary workflow syntax and security analyzers."},
+  "contenders": [
+    {"name": "pytest + Hypothesis + coverage.py", "disposition": "adopt", "role": "examples, invariants, branch visibility"},
+    {"name": "Ruff + strict mypy", "disposition": "adopt", "role": "format/lint and typing"},
+    {"name": "pip-audit + CodeQL + dependency review + Scorecard", "disposition": "adopt", "role": "dependency findings, source analysis, PR dependency changes, OSS posture"},
+    {"name": "actionlint 1.7.12 + zizmor 1.30.1", "disposition": "adopt", "role": "workflow correctness and workflow security", "evidence": ["both MIT", "actionlint commit 914e7df21a07ef503a81201c76d2b11c789d3fca", "zizmor commit 99a054ed9283c90abdd2d5b9fb5101d27dde9783"]},
+    {"name": "Black/isort/Flake8/Bandit/multiple type checkers", "disposition": "reject", "role": "duplicated by selected tools"},
+    {"name": "pre-commit local hooks", "disposition": "adopt", "role": "locked local entry point; CI remains authoritative"}
+  ],
+  "hard_gates": ["no scanner-silence security claim", "least workflow permissions", "full action SHA pins", "branch coverage", "meaningful scenario and property assertions"],
+  "unknowns": ["Hosted security feature availability is account-dependent until enabled and inspected."],
+  "decision_effect": "Configure each tool at its narrow boundary and document verified, unavailable, and unmeasured results separately.",
+  "reconsider_when": ["A measured risk is not covered", "A selected tool duplicates or subsumes another without losing evidence"],
+  "observed_at": "2026-09-16T00:00:00Z"
+}

@@ -1,0 +1,809 @@
+{
+  "$defs": {
+    "Candidate": {
+      "additionalProperties": false,
+      "description": "Canonical, source-neutral candidate used by filters and receipts.",
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archived"
+        },
+        "conflicts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "disabled": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disabled"
+        },
+        "ecosystems": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Ecosystems",
+          "type": "array"
+        },
+        "evidence_state": {
+          "$ref": "#/$defs/EvidenceState",
+          "default": "unknown"
+        },
+        "is_starred": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Starred"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "network_boundary": {
+          "$ref": "#/$defs/NetworkBoundary",
+          "default": "unknown"
+        },
+        "platforms": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Platforms",
+          "type": "array"
+        },
+        "pushed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pushed At"
+        },
+        "released_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Released At"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "role": {
+          "default": "repository",
+          "title": "Role",
+          "type": "string"
+        },
+        "runtimes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtimes",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "security_state": {
+          "$ref": "#/$defs/SecurityState",
+          "default": "unknown"
+        },
+        "sources": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "starred_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starred At"
+        },
+        "stars": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stars"
+        },
+        "topics": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Topics",
+          "type": "array"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "repository"
+      ],
+      "title": "Candidate",
+      "type": "object"
+    },
+    "CandidateEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate": {
+          "$ref": "#/$defs/Candidate"
+        },
+        "included": {
+          "title": "Included",
+          "type": "boolean"
+        },
+        "reasons": {
+          "items": {
+            "$ref": "#/$defs/PredicateResult"
+          },
+          "title": "Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "candidate",
+        "included",
+        "reasons"
+      ],
+      "title": "CandidateEvaluation",
+      "type": "object"
+    },
+    "CheckCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "deduplicated": {
+          "minimum": 0,
+          "title": "Deduplicated",
+          "type": "integer"
+        },
+        "excluded": {
+          "minimum": 0,
+          "title": "Excluded",
+          "type": "integer"
+        },
+        "included_before_limit": {
+          "minimum": 0,
+          "title": "Included Before Limit",
+          "type": "integer"
+        },
+        "raw": {
+          "minimum": 0,
+          "title": "Raw",
+          "type": "integer"
+        },
+        "visible": {
+          "minimum": 0,
+          "title": "Visible",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "raw",
+        "deduplicated",
+        "included_before_limit",
+        "visible",
+        "excluded"
+      ],
+      "title": "CheckCounts",
+      "type": "object"
+    },
+    "EvidenceState": {
+      "enum": [
+        "verified",
+        "claim",
+        "inferred",
+        "unknown",
+        "stale",
+        "error"
+      ],
+      "title": "EvidenceState",
+      "type": "string"
+    },
+    "FilterSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "ecosystems": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Ecosystems",
+          "type": "array"
+        },
+        "evidence_states": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/EvidenceState"
+          },
+          "title": "Evidence States",
+          "type": "array"
+        },
+        "languages": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Languages",
+          "type": "array"
+        },
+        "license_allow": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "License Allow",
+          "type": "array"
+        },
+        "license_deny": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "License Deny",
+          "type": "array"
+        },
+        "limit": {
+          "default": 50,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "maintained_within_days": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maintained Within Days"
+        },
+        "min_stars": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Stars"
+        },
+        "network_boundaries": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/NetworkBoundary"
+          },
+          "title": "Network Boundaries",
+          "type": "array"
+        },
+        "not_archived": {
+          "default": false,
+          "title": "Not Archived",
+          "type": "boolean"
+        },
+        "platforms": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Platforms",
+          "type": "array"
+        },
+        "released_within_days": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Released Within Days"
+        },
+        "roles": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "array"
+        },
+        "runtimes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtimes",
+          "type": "array"
+        },
+        "security_states": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SecurityState"
+          },
+          "title": "Security States",
+          "type": "array"
+        },
+        "sort": {
+          "default": [
+            "repo"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Sort",
+          "type": "array"
+        },
+        "starred_within_days": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starred Within Days"
+        },
+        "topics": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Topics",
+          "type": "array"
+        },
+        "where": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Where"
+        }
+      },
+      "title": "FilterSpec",
+      "type": "object"
+    },
+    "NetworkBoundary": {
+      "enum": [
+        "local",
+        "public-api",
+        "hosted",
+        "unknown"
+      ],
+      "title": "NetworkBoundary",
+      "type": "string"
+    },
+    "PredicateResult": {
+      "additionalProperties": false,
+      "properties": {
+        "actual": {
+          "default": null,
+          "title": "Actual"
+        },
+        "category": {
+          "enum": [
+            "hard-gate",
+            "filter"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "expected": {
+          "title": "Expected"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "unknown": {
+          "default": false,
+          "title": "Unknown",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "field",
+        "operation",
+        "expected",
+        "category",
+        "passed",
+        "reason"
+      ],
+      "title": "PredicateResult",
+      "type": "object"
+    },
+    "SecurityState": {
+      "enum": [
+        "available",
+        "verified",
+        "unknown",
+        "stale",
+        "error"
+      ],
+      "title": "SecurityState",
+      "type": "string"
+    },
+    "SourceKind": {
+      "enum": [
+        "fixture",
+        "stars",
+        "github-search",
+        "repository"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "SourceObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_count": {
+          "minimum": 0,
+          "title": "Candidate Count",
+          "type": "integer"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Locator"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "payload_fingerprint": {
+          "title": "Payload Fingerprint",
+          "type": "string"
+        },
+        "query": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query"
+        },
+        "state": {
+          "$ref": "#/$defs/EvidenceState",
+          "default": "verified"
+        },
+        "tool_version": {
+          "title": "Tool Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "observed_at",
+        "tool_version",
+        "payload_fingerprint",
+        "candidate_count"
+      ],
+      "title": "SourceObservation",
+      "type": "object"
+    },
+    "SourceRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Locator"
+        },
+        "query": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "SourceRequest",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/check-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {
+      "title": "Check Id",
+      "type": "string"
+    },
+    "counts": {
+      "$ref": "#/$defs/CheckCounts"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "evaluations": {
+      "items": {
+        "$ref": "#/$defs/CandidateEvaluation"
+      },
+      "title": "Evaluations",
+      "type": "array"
+    },
+    "filter_spec": {
+      "$ref": "#/$defs/FilterSpec"
+    },
+    "need": {
+      "minLength": 1,
+      "title": "Need",
+      "type": "string"
+    },
+    "normalized_predicate_tree": {
+      "additionalProperties": true,
+      "title": "Normalized Predicate Tree",
+      "type": "object"
+    },
+    "normalizer_version": {
+      "title": "Normalizer Version",
+      "type": "string"
+    },
+    "ordering": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Ordering",
+      "type": "array"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "result_repositories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Result Repositories",
+      "type": "array"
+    },
+    "result_set_fingerprint": {
+      "title": "Result Set Fingerprint",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_observations": {
+      "items": {
+        "$ref": "#/$defs/SourceObservation"
+      },
+      "title": "Source Observations",
+      "type": "array"
+    },
+    "source_requests": {
+      "items": {
+        "$ref": "#/$defs/SourceRequest"
+      },
+      "title": "Source Requests",
+      "type": "array"
+    },
+    "source_snapshot_fingerprint": {
+      "title": "Source Snapshot Fingerprint",
+      "type": "string"
+    },
+    "unknown_policy": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Unknown Policy",
+      "type": "object"
+    }
+  },
+  "required": [
+    "check_id",
+    "need",
+    "profile",
+    "created_at",
+    "normalizer_version",
+    "source_requests",
+    "source_observations",
+    "source_snapshot_fingerprint",
+    "filter_spec",
+    "normalized_predicate_tree",
+    "unknown_policy",
+    "evaluations",
+    "result_repositories",
+    "result_set_fingerprint",
+    "ordering",
+    "counts"
+  ],
+  "title": "CheckReceipt",
+  "type": "object"
+}
