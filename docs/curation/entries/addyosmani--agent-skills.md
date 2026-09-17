@@ -4,7 +4,7 @@ description: "Open development guidance and reusable skills for agent-assisted e
 tags:
   - "Reference"
   - "Generative AI \u0026 Agents"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # addyosmani/agent\-skills
 
@@ -23,7 +23,7 @@ tags:
 **Role:** pinned development guidance<br>
 **Need:** Selective context and source\-driven development guidance\.<br>
 **Why:** Two complete MIT\-licensed skills are pinned as guidance and are not runtime dependencies\.<br>
-**Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>, <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>, <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

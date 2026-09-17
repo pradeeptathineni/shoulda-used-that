@@ -3,7 +3,7 @@ title: "pallets/click"
 description: "Composable Python package for creating command-line interfaces."
 tags:
   - "Used here"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Platform Engineering \u0026 Delivery"
   - "Python Engineering"
 ---
@@ -24,7 +24,7 @@ tags:
 **Role:** runtime CLI parser<br>
 **Need:** A mature direct command and option boundary without a custom parser\.<br>
 **Why:** Click owns parsing and help while typed domain validation stays in ShouldaUsedThat\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
 ## Observed facts
 

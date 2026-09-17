@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_membership_apply_scaling_2026_09_17",
+  "need": "Apply a substantial additive GitHub List projection without making an eventually consistent full-account read after every membership write.",
+  "artifact_role": "github_membership_apply_readback",
+  "discovery": {
+    "queries": [
+      "live updateUserListsForItem response identity and complete lists payload",
+      "live UserList items read-after-write behavior during a 242-membership projection",
+      "existing ShouldaUsedThat apply receipts, drift checks, and independent verification"
+    ],
+    "stop_condition": "The live run reproduced stale immediate List reads, while the mutation returned the exact repository identity and complete resulting List-ID set needed for a deterministic acknowledgement."
+  },
+  "contenders": [
+    {
+      "name": "validated mutation response plus mandatory final full replay",
+      "disposition": "adopt",
+      "evidence": [
+        "GitHub echoes the client mutation ID and repository identity",
+        "the response includes the complete resulting List-ID set",
+        "the adapter already rejects any response that differs from the requested union",
+        "a fresh full Star-and-List replay and an independent verify still gate success"
+      ]
+    },
+    {
+      "name": "full account read after every membership mutation",
+      "disposition": "reject",
+      "evidence": [
+        "repeated Star pagination contributes no membership-union evidence",
+        "immediate List reads were observably eventually consistent",
+        "the live run stopped on a stale read despite an exact successful mutation response"
+      ]
+    },
+    {
+      "name": "blind batch writes with no per-operation receipt or final replay",
+      "disposition": "reject",
+      "evidence": [
+        "would weaken exact-plan auditability",
+        "would make partial recovery ambiguous",
+        "would treat transport success as verification"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "current plus target List union is computed before every membership write",
+    "the mutation must echo the exact client mutation ID and repository node ID",
+    "the complete returned List-ID set must equal the requested union",
+    "no observed membership may be omitted from the union",
+    "one immutable receipt remains bound to every sealed operation",
+    "a fresh complete remote replay must satisfy the plan before apply is complete",
+    "independent verify must still reconstruct all postconditions"
+  ],
+  "unknowns": [
+    "GitHub Lists remain a preview surface with unspecified consistency timing.",
+    "Concurrent manual membership edits inside the read-to-write window remain external drift and should be avoided during apply.",
+    "A future dedicated Lists API may offer an atomic add-only operation that removes the set-union race entirely."
+  ],
+  "decision_effect": "Treat GitHub's strictly validated mutation payload as the immediate acknowledgement, materialize only that additive union in local progress state, retain exact operation receipts, and require full remote replay before complete apply and again during verify.",
+  "reconsider_when": [
+    "GitHub removes the complete lists payload from the mutation",
+    "the response no longer reflects the committed membership set",
+    "a dedicated atomic add-only membership API becomes available",
+    "final replay or independent verification exposes a mismatch"
+  ],
+  "observed_at": "2026-09-17T13:05:01Z"
+}

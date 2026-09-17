@@ -30,6 +30,7 @@ from shoulda_used_that.state import StateStore
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PROFILE = ROOT / "curation" / "profiles" / "shoulda-used-that.json"
 PUBLIC_ENTRIES = ROOT / "curation" / "entries" / "shoulda-used-that.json"
+PERSONAL_ENTRIES = ROOT / "curation" / "entries" / "personal-interests.json"
 
 
 def _payload(path: Path) -> dict[str, Any]:
@@ -49,6 +50,7 @@ def _write_profile_tree(
     if mutate_entries is not None:
         mutate_entries(entries)
     entries_path = root / "curation" / "entries" / "shoulda-used-that.json"
+    personal_entries_path = root / "curation" / "entries" / "personal-interests.json"
     profile_path = root / "curation" / "profiles" / "shoulda-used-that.json"
     entries_path.parent.mkdir(parents=True)
     profile_path.parent.mkdir(parents=True)
@@ -56,9 +58,14 @@ def _write_profile_tree(
         json.dumps(entries, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     ).encode()
     entries_path.write_bytes(encoded_entries)
-    profile["source_specifications"][0]["content_sha256"] = hashlib.sha256(
-        encoded_entries
-    ).hexdigest()
+    personal_entries = PERSONAL_ENTRIES.read_bytes()
+    personal_entries_path.write_bytes(personal_entries)
+    source_payloads = {
+        "curation/entries/shoulda-used-that.json": encoded_entries,
+        "curation/entries/personal-interests.json": personal_entries,
+    }
+    for source in profile["source_specifications"]:
+        source["content_sha256"] = hashlib.sha256(source_payloads[source["locator"]]).hexdigest()
     if mutate_profile is not None:
         mutate_profile(profile)
     profile["canonical_fingerprint"] = profile_fingerprint(profile)
@@ -79,8 +86,8 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert first_export == second_export
     assert first_files == second_files
     assert first_export.reproducibility_status == "verified-deterministic"
-    assert len(first_export.exported_records) == 15
-    assert len(first_export.collections) == 8
+    assert len(first_export.exported_records) == 221
+    assert len(first_export.collections) == 12
     assert set(first_export.omitted_private_field_counts.values()) == {0}
     assert {item.repository for item in first_export.license_attribution_inventory} == {
         item.repository for item in first_export.exported_records
@@ -93,7 +100,10 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
     assert b"../entries/pallets--click.md" in first_files["entries/index.md"]
     assert b"DevOps" in first_files["collections/index.md"]
-    assert b"No reviewed entries yet" in first_files["collections/computer-vision-multimodal.md"]
+    assert b"opencv/opencv" in first_files["collections/computer-vision-multimodal.md"]
+    assert b"curated" in first_files["dogfood.md"]
+    assert b"projected" in first_files["dogfood.md"]
+    assert b"verify" in first_files["dogfood.md"]
     combined = b"\n".join(first_files.values())
     assert str(ROOT).encode() not in combined
     assert b"github_pat_" not in combined
@@ -121,6 +131,7 @@ def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
         "collections/oss-curation-foundations.md",
         "collections/platform-engineering-delivery.md",
         "collections/python-engineering.md",
+        "dogfood.md",
         "entries/index.md",
         "entries/pallets--click.md",
         "in-use.md",

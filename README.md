@@ -14,18 +14,24 @@ not a universal “best OSS” ranking.
 
 ## Status
 
-This source tree is version `0.2.0`. Verified distributions are published only through
+This source tree is version `0.2.0` plus unreleased catalog and projection improvements. Verified distributions are published only through
 [GitHub Releases](https://github.com/pradeeptathineni/shoulda-used-that/releases); PyPI remains
 intentionally unused. This version adds deterministic project inspection, versioned curation
-snapshots, an allowlisted public catalog, and additive-only GitHub projection machinery. No
-personal Star or List change was needed for the release: the first live change remains blocked
-until the maintainer approves the exact newly sealed account, fingerprint, operations, and caps.
+snapshots, an allowlisted public catalog, and additive-only GitHub projection machinery. The
+repository now dogfoods that machinery across 221 reviewed records and 12 public Lists: the
+initial furnishing completed 438 exact additive operations and verified 488 postconditions. A
+metadata-only self-freshness reseal then projected a semantic no-op and independently verified
+all 730 current postconditions, again with zero mismatches.
 
 Browse the [live public catalog](https://pradeeptathineni.github.io/shoulda-used-that/curation/),
 the committed [Markdown source](docs/curation/index.md), [canonical JSON](docs/curation/catalog.json),
 [freshness ledger](docs/curation/freshness.md), and
 [source/attribution inventory](docs/curation/sources.md). The site remains complete even when
 personal GitHub List projection is disabled.
+
+See [ShouldaUsedThat use itself](docs/curation/dogfood.md) and the
+[sanitized live projection evidence](docs/operations/live-projection.md) for the public
+catalog-to-GitHub execution chain.
 
 ## Install for development
 
@@ -154,6 +160,7 @@ The full role, version, boundary, alternative, and removal evidence is in
 - [Executed SBOM comparison](docs/development/sbom-comparison.md)
 - [Catalog scale validation](docs/development/catalog-scale-validation.md)
 - [GitHub curation operator runbook](docs/operations/github-curation.md)
+- [Verified live projection](docs/operations/live-projection.md)
 - [Read-only upkeep and scheduling](docs/operations/scheduling.md)
 - [v0.2.0 correctness and security review](docs/development/review-v0.2.0.md)
 - [v0.1.0 correctness and security review](docs/development/review-v0.1.0.md)

@@ -3,7 +3,7 @@ title: "pydantic/pydantic"
 description: "Data validation and settings management using Python type annotations."
 tags:
   - "Used here"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Python Engineering"
 ---
 # pydantic/pydantic
@@ -23,7 +23,7 @@ tags:
 **Role:** runtime typed contracts<br>
 **Need:** Strict versioned records and generated JSON Schema\.<br>
 **Why:** Pydantic validates external records while workflow rules remain explicit services\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
 ## Observed facts
 

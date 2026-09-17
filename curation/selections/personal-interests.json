@@ -1,0 +1,447 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-17T12:15:00Z",
+  "minimum_stars": 1000,
+  "maximum_staleness_days": 730,
+  "decision_receipt_id": "par_personal_oss_curation_2026_09_17",
+  "evidence_receipt": "docs/decisions/personal-oss-curation.json",
+  "collection_priority": [
+    "generative-ai-agents",
+    "rag-search-knowledge",
+    "computer-vision-multimodal",
+    "cloud-infrastructure-iac",
+    "platform-engineering-delivery",
+    "software-supply-chain",
+    "python-engineering",
+    "homelab-self-hosting",
+    "creative-coding-visualization",
+    "nature-physics-simulation",
+    "web-engineering-interfaces",
+    "oss-curation-foundations"
+  ],
+  "collections": {
+    "generative-ai-agents": {
+      "role": "generative-AI and agent-system prior art",
+      "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
+      "reconsideration_trigger": "The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role.",
+      "repositories": [
+        "OpenHands/OpenHands",
+        "Comfy-Org/ComfyUI",
+        "Shubhamsaboo/awesome-llm-apps",
+        "browser-use/browser-use",
+        "confident-ai/deepeval",
+        "crewAIInc/crewAI",
+        "deepset-ai/haystack",
+        "ggml-org/llama.cpp",
+        "huggingface/smolagents",
+        "huggingface/transformers",
+        "langchain-ai/langchain",
+        "langchain-ai/langgraph",
+        "mem0ai/mem0",
+        "microsoft/autogen",
+        "microsoft/semantic-kernel",
+        "modelcontextprotocol/python-sdk",
+        "ollama/ollama",
+        "openai/openai-agents-python",
+        "openinterpreter/openinterpreter",
+        "promptfoo/promptfoo",
+        "pydantic/pydantic-ai",
+        "pytorch/pytorch",
+        "rasbt/LLMs-from-scratch",
+        "run-llama/llama_index",
+        "unslothai/unsloth",
+        "vllm-project/vllm"
+      ]
+    },
+    "rag-search-knowledge": {
+      "role": "retrieval, search, and knowledge-system prior art",
+      "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
+      "reconsideration_trigger": "The project becomes inactive, archived, license-incompatible, or ceases to fit an explicit retrieval or knowledge need.",
+      "repositories": [
+        "chroma-core/chroma",
+        "deepset-ai/haystack",
+        "getzep/graphiti",
+        "infiniflow/ragflow",
+        "khoj-ai/khoj",
+        "langchain-ai/langchain",
+        "microsoft/graphrag",
+        "milvus-io/milvus",
+        "neo4j/neo4j",
+        "opensearch-project/OpenSearch",
+        "pgvector/pgvector",
+        "qdrant/qdrant",
+        "run-llama/llama_index",
+        "typesense/typesense",
+        "vespa-engine/vespa"
+      ]
+    },
+    "computer-vision-multimodal": {
+      "role": "computer-vision and multimodal prior art",
+      "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
+      "reconsideration_trigger": "Maintenance, licensing, model provenance, or benchmark relevance changes materially.",
+      "repositories": [
+        "AUTOMATIC1111/stable-diffusion-webui",
+        "Comfy-Org/ComfyUI",
+        "facebookresearch/detectron2",
+        "facebookresearch/segment-anything",
+        "google-ai-edge/mediapipe",
+        "huggingface/diffusers",
+        "kornia/kornia",
+        "mlfoundations/open_clip",
+        "opencv/opencv",
+        "openai/CLIP",
+        "python-pillow/Pillow",
+        "pytorch/vision",
+        "scikit-image/scikit-image",
+        "ultralytics/ultralytics"
+      ]
+    },
+    "cloud-infrastructure-iac": {
+      "role": "cloud infrastructure and infrastructure-as-code prior art",
+      "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
+      "reconsideration_trigger": "The project is archived, changes license or governance materially, or no longer supports the relevant infrastructure boundary.",
+      "repositories": [
+        "ansible/ansible",
+        "aquasecurity/trivy",
+        "aws/aws-cdk",
+        "aws-cloudformation/aws-cloudformation-templates",
+        "bridgecrewio/checkov",
+        "cloud-custodian/cloud-custodian",
+        "crossplane/crossplane",
+        "gruntwork-io/terragrunt",
+        "helm/helm",
+        "infracost/infracost",
+        "k3s-io/k3s",
+        "kubernetes/kubernetes",
+        "opentofu/opentofu",
+        "pulumi/pulumi",
+        "terraform-aws-modules/terraform-aws-vpc",
+        "terraform-linters/tflint"
+      ]
+    },
+    "platform-engineering-delivery": {
+      "role": "platform engineering and software-delivery prior art",
+      "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
+      "reconsideration_trigger": "The project loses active maintenance, changes its operational boundary, or a native platform capability removes the need.",
+      "repositories": [
+        "actions/runner",
+        "apache/airflow",
+        "argoproj/argo-cd",
+        "backstage/backstage",
+        "casey/just",
+        "podman-container-tools/podman",
+        "dagster-io/dagster",
+        "docker/compose",
+        "fluxcd/flux2",
+        "go-task/task",
+        "grafana/grafana",
+        "grafana/loki",
+        "grafana/tempo",
+        "kubernetes/kubernetes",
+        "moby/moby",
+        "nektos/act",
+        "open-telemetry/opentelemetry-collector",
+        "oras-project/oras",
+        "prometheus/prometheus",
+        "tektoncd/pipeline",
+        "temporalio/temporal"
+      ]
+    },
+    "software-supply-chain": {
+      "role": "software supply-chain and assurance prior art",
+      "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
+      "reconsideration_trigger": "A control is deprecated, archived, compromised, superseded by a stronger standard, or changes its trust boundary.",
+      "repositories": [
+        "CycloneDX/cyclonedx-python",
+        "actions/attest-build-provenance",
+        "anchore/grype",
+        "anchore/syft",
+        "aquasecurity/trivy",
+        "bridgecrewio/checkov",
+        "dependabot/dependabot-core",
+        "dependency-check/DependencyCheck",
+        "gitleaks/gitleaks",
+        "google/osv-scanner",
+        "ossf/scorecard",
+        "pre-commit/pre-commit",
+        "renovatebot/renovate",
+        "reviewdog/reviewdog",
+        "rhysd/actionlint",
+        "semgrep/semgrep",
+        "sigstore/cosign",
+        "slsa-framework/slsa-github-generator",
+        "step-security/harden-runner",
+        "super-linter/super-linter",
+        "trufflesecurity/trufflehog",
+        "zizmorcore/zizmor"
+      ]
+    },
+    "python-engineering": {
+      "role": "Python implementation and developer-tooling prior art",
+      "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
+      "reconsideration_trigger": "Supported Python compatibility, maintenance, license, or the tool's distinct role changes materially.",
+      "repositories": [
+        "HypothesisWorks/hypothesis",
+        "PyCQA/isort",
+        "Textualize/rich",
+        "TheAlgorithms/Python",
+        "astral-sh/ruff",
+        "django/django",
+        "fastapi/fastapi",
+        "fastapi/typer",
+        "numpy/numpy",
+        "pallets/flask",
+        "pandas-dev/pandas",
+        "pre-commit/pre-commit",
+        "psf/black",
+        "pypa/hatch",
+        "pypa/pip",
+        "python/cpython",
+        "python/mypy",
+        "python-poetry/poetry",
+        "scikit-learn/scikit-learn",
+        "scrapy/scrapy",
+        "tox-dev/tox",
+        "vinta/awesome-python"
+      ]
+    },
+    "homelab-self-hosting": {
+      "role": "homelab and self-hosted operations prior art",
+      "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
+      "reconsideration_trigger": "The project becomes inactive, materially changes its self-hosted or license terms, or no longer has a maintainable deployment path.",
+      "repositories": [
+        "AdguardTeam/AdGuardHome",
+        "NginxProxyManager/nginx-proxy-manager",
+        "awesome-selfhosted/awesome-selfhosted",
+        "caddyserver/caddy",
+        "coollabsio/coolify",
+        "dokku/dokku",
+        "go-gitea/gitea",
+        "grafana/grafana",
+        "home-assistant/core",
+        "immich-app/immich",
+        "jellyfin/jellyfin",
+        "k3s-io/k3s",
+        "louislam/uptime-kuma",
+        "netdata/netdata",
+        "nextcloud/server",
+        "nicolargo/glances",
+        "pi-hole/pi-hole",
+        "portainer/portainer",
+        "prometheus/prometheus",
+        "rclone/rclone",
+        "restic/restic",
+        "syncthing/syncthing",
+        "tailscale/tailscale",
+        "traefik/traefik",
+        "usememos/memos"
+      ]
+    },
+    "creative-coding-visualization": {
+      "role": "creative-coding and data-visualization prior art",
+      "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
+      "reconsideration_trigger": "The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it.",
+      "repositories": [
+        "3b1b/manim",
+        "BabylonJS/Babylon.js",
+        "vega/altair",
+        "apache/echarts",
+        "bokeh/bokeh",
+        "d3/d3",
+        "manimcommunity/manim",
+        "matplotlib/matplotlib",
+        "mrdoob/three.js",
+        "observablehq/plot",
+        "pixijs/pixijs",
+        "plotly/plotly.js",
+        "processing/p5.js",
+        "processing/processing4",
+        "williamngan/pts",
+        "nature-of-code/noc-examples-processing",
+        "vega/vega",
+        "vega/vega-lite",
+        "visgl/deck.gl"
+      ]
+    },
+    "nature-physics-simulation": {
+      "role": "nature, physics, and simulation prior art",
+      "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
+      "reconsideration_trigger": "The engine or reference becomes inactive, incompatible, archived, or no longer fits the intended simulation scale.",
+      "repositories": [
+        "Farama-Foundation/Gymnasium",
+        "bevyengine/bevy",
+        "bulletphysics/bullet3",
+        "erincatto/box2d",
+        "godotengine/godot",
+        "google-deepmind/mujoco",
+        "google/brax",
+        "numba/numba",
+        "numpy/numpy",
+        "mesa/mesa",
+        "scipy/scipy",
+        "nature-of-code/noc-examples-processing",
+        "viblo/pymunk"
+      ]
+    },
+    "web-engineering-interfaces": {
+      "role": "web engineering and interface-system prior art",
+      "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
+      "reconsideration_trigger": "Maintenance, browser support, runtime compatibility, licensing, or the intended interface boundary changes materially.",
+      "repositories": [
+        "angular/angular",
+        "bigskysoftware/htmx",
+        "denoland/deno",
+        "django/django",
+        "expressjs/express",
+        "react/react",
+        "fastapi/fastapi",
+        "microsoft/TypeScript",
+        "nodejs/node",
+        "oven-sh/bun",
+        "pallets/flask",
+        "phoenixframework/phoenix",
+        "rails/rails",
+        "remix-run/react-router",
+        "sveltejs/svelte",
+        "tailwindlabs/tailwindcss",
+        "vercel/next.js",
+        "vitejs/vite",
+        "vuejs/core"
+      ]
+    },
+    "oss-curation-foundations": {
+      "role": "OSS discovery, comparison, and learning prior art",
+      "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
+      "reconsideration_trigger": "The catalog becomes stale, loses transparent methodology, changes license, or no longer supplies evidence useful to a named decision.",
+      "repositories": [
+        "analysis-tools-dev/static-analysis",
+        "awesome-selfhosted/awesome-selfhosted",
+        "binhnguyennus/awesome-scalability",
+        "cncf/landscape",
+        "donnemartin/system-design-primer",
+        "mkdocs/mkdocs",
+        "ossf/criticality_score",
+        "ossf/scorecard",
+        "practical-tutorials/project-based-learning",
+        "sindresorhus/awesome",
+        "squidfunk/mkdocs-material",
+        "trimstray/the-book-of-secret-knowledge",
+        "vinta/awesome-python"
+      ]
+    }
+  },
+  "disposition_overrides": {
+    "3b1b/manim": "learn",
+    "Shubhamsaboo/awesome-llm-apps": "learn",
+    "TheAlgorithms/Python": "learn",
+    "binhnguyennus/awesome-scalability": "learn",
+    "donnemartin/system-design-primer": "learn",
+    "practical-tutorials/project-based-learning": "learn",
+    "rasbt/LLMs-from-scratch": "learn",
+    "nature-of-code/noc-examples-processing": "learn"
+  },
+  "license_overrides": {
+    "HypothesisWorks/hypothesis": {
+      "spdx_id": "MPL-2.0",
+      "locator": "https://github.com/HypothesisWorks/hypothesis/blob/master/LICENSE.txt"
+    },
+    "awesome-selfhosted/awesome-selfhosted": {
+      "spdx_id": "CC-BY-SA-3.0",
+      "locator": "https://github.com/awesome-selfhosted/awesome-selfhosted/blob/master/LICENSE"
+    },
+    "bigskysoftware/htmx": {
+      "spdx_id": "0BSD",
+      "locator": "https://github.com/bigskysoftware/htmx/blob/master/LICENSE"
+    },
+    "bulletphysics/bullet3": {
+      "spdx_id": "Zlib",
+      "locator": "https://github.com/bulletphysics/bullet3/blob/master/LICENSE.txt"
+    },
+    "donnemartin/system-design-primer": {
+      "spdx_id": "CC-BY-4.0",
+      "locator": "https://github.com/donnemartin/system-design-primer/blob/master/LICENSE.txt"
+    },
+    "matplotlib/matplotlib": {
+      "spdx_id": "PSF-2.0",
+      "locator": "https://matplotlib.org/stable/project/license.html"
+    },
+    "mlfoundations/open_clip": {
+      "spdx_id": "MIT",
+      "locator": "https://github.com/mlfoundations/open_clip/blob/main/LICENSE"
+    },
+    "nicolargo/glances": {
+      "spdx_id": "LGPL-3.0-only",
+      "locator": "https://github.com/nicolargo/glances/blob/master/COPYING"
+    },
+    "nodejs/node": {
+      "spdx_id": "MIT",
+      "locator": "https://github.com/nodejs/node/blob/main/LICENSE"
+    },
+    "numpy/numpy": {
+      "spdx_id": "BSD-3-Clause",
+      "locator": "https://github.com/numpy/numpy/blob/main/LICENSE.txt"
+    },
+    "oven-sh/bun": {
+      "spdx_id": "MIT",
+      "locator": "https://github.com/oven-sh/bun/blob/main/LICENSE.md"
+    },
+    "pgvector/pgvector": {
+      "spdx_id": "PostgreSQL",
+      "locator": "https://github.com/pgvector/pgvector/blob/master/LICENSE"
+    },
+    "pi-hole/pi-hole": {
+      "spdx_id": "EUPL-1.2",
+      "locator": "https://github.com/pi-hole/pi-hole/blob/master/LICENSE"
+    },
+    "processing/processing4": {
+      "spdx_id": "GPL-2.0-only AND LGPL-2.1-or-later",
+      "locator": "https://github.com/processing/processing4/blob/main/LICENSE.md"
+    },
+    "python-pillow/Pillow": {
+      "spdx_id": "HPND",
+      "locator": "https://github.com/python-pillow/Pillow/blob/main/LICENSE"
+    },
+    "python/cpython": {
+      "spdx_id": "PSF-2.0",
+      "locator": "https://github.com/python/cpython/blob/main/LICENSE"
+    },
+    "python/mypy": {
+      "spdx_id": "MIT",
+      "locator": "https://github.com/python/mypy/blob/master/LICENSE"
+    },
+    "pytorch/pytorch": {
+      "spdx_id": "BSD-3-Clause",
+      "locator": "https://github.com/pytorch/pytorch/blob/main/LICENSE"
+    },
+    "rasbt/LLMs-from-scratch": {
+      "spdx_id": "Apache-2.0",
+      "locator": "https://github.com/rasbt/LLMs-from-scratch/blob/main/LICENSE.txt"
+    },
+    "scikit-image/scikit-image": {
+      "spdx_id": "BSD-3-Clause",
+      "locator": "https://github.com/scikit-image/scikit-image/blob/main/LICENSE.txt"
+    },
+    "vinta/awesome-python": {
+      "spdx_id": "CC-BY-4.0",
+      "locator": "https://github.com/vinta/awesome-python/blob/master/LICENSE"
+    }
+  },
+  "gate_exceptions": {
+    "CycloneDX/cyclonedx-python": {
+      "waive": ["popularity"],
+      "reason": "Official CycloneDX Python tooling is a standards implementation with direct supply-chain relevance despite a sub-1,000 star count."
+    },
+    "processing/processing4": {
+      "waive": ["popularity"],
+      "reason": "Processing is the foundation-backed canonical creative-coding environment and a direct stated personal interest."
+    },
+    "nature-of-code/noc-examples-processing": {
+      "waive": ["freshness"],
+      "reason": "This stable MIT-licensed example corpus is the canonical Processing companion to a directly stated creative-simulation interest."
+    },
+    "slsa-framework/slsa-github-generator": {
+      "waive": ["popularity"],
+      "reason": "The official SLSA GitHub generator implements a named provenance standard and is included for that bounded control role."
+    }
+  }
+}

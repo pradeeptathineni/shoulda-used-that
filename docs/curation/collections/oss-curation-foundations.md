@@ -1,25 +1,25 @@
 ---
-title: "OSS Curation Foundations"
-description: "Native surfaces, catalogs, decision records, and presentation tools considered for evidence-backed OSS curation."
+title: "OSS Curation \u0026 Prior Art"
+description: "Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools."
 tags:
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "GitHub stars"
   - "open source curation"
   - "prior art"
 ---
-# OSS Curation Foundations
+# OSS Curation &amp; Prior Art
 
-<p class="collection-deck">Native surfaces, catalogs, decision records, and presentation tools considered for evidence-backed OSS curation.</p>
+<p class="collection-deck">Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools.</p>
 
 **Aliases:** GitHub stars, open source curation, prior art<br>
-**GitHub List eligibility:** site only<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
 **Review cadence:** 60 days
 
 ## Meaning
 
-The product\-specific collection showing the components and prior art behind ShouldaUsedThat\.
+The product\-specific collection showing the components, sources, and prior art behind evidence\-backed OSS consideration\.
 
-- **Include:** Include a reviewed repository when it is used by, evaluated for, or materially informs ShouldaUsedThat&#x27;s curation workflow\.
+- **Include:** Include a reviewed repository when it is used by, evaluated for, or materially informs OSS discovery or ShouldaUsedThat&#x27;s workflow\.
 - **Exclude:** Exclude unreviewed discovery results and components without a documented decision effect\.
 
 ## Reviewed entries
@@ -41,6 +41,20 @@ The product\-specific collection showing the components and prior art behind Sho
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/analysis-tools-dev--static-analysis.md">analysis-tools-dev/static-analysis</a></h3>
+  <p>⚙️ A curated list of static analysis (SAST) tools and linters for all programming languages, config files, build tools, and more. The focus is on tools which improve code quality.</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/awesome-selfhosted--awesome-selfhosted.md">awesome-selfhosted/awesome-selfhosted</a></h3>
+  <p>A list of Free Software network services and web applications which can be hosted on your own servers</p>
+  <p class="catalog-card__role"><strong>Role</strong> homelab and self-hosted operations prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
   <h3><a href="../entries/best-of-lists--best-of.md">best-of-lists/best-of</a></h3>
   <p>Curated best-of lists backed by structured project metadata.</p>
   <p class="catalog-card__role"><strong>Role</strong> attributed discovery source</p>
@@ -54,11 +68,32 @@ The product\-specific collection showing the components and prior art behind Sho
   <p class="catalog-card__need"><strong>Need</strong> Avoid a generator that can turn enrichment failure into candidate disappearance.</p>
 </article>
 <article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--learn">Learn</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/binhnguyennus--awesome-scalability.md">binhnguyennus/awesome-scalability</a></h3>
+  <p>The Patterns of Scalable, Reliable, and Performant Large-Scale Systems</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--reject">Rejected / deferred</span> <span class="freshness-chip freshness-chip--current">current</span></div>
   <h3><a href="../entries/boffti--stardash.md">boffti/stardash</a></h3>
   <p>Dashboard for exploring and organizing GitHub stars.</p>
   <p class="catalog-card__role"><strong>Role</strong> hosted star dashboard runtime</p>
   <p class="catalog-card__need"><strong>Need</strong> Keep the local-first curation core free of a hosted backend and analytics surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/cncf--landscape.md">cncf/landscape</a></h3>
+  <p>🌄 The Cloud Native Interactive Landscape filters and sorts hundreds of projects and products, and shows details including GitHub stars, funding, first and last commits, contributor counts and headquarters location.</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--learn">Learn</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/donnemartin--system-design-primer.md">donnemartin/system-design-primer</a></h3>
+  <p>Learn how to design large-scale systems. Prep for the system design interview.  Includes Anki flashcards.</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--watch">Watch</span> <span class="freshness-chip freshness-chip--current">current</span></div>
@@ -75,11 +110,39 @@ The product\-specific collection showing the components and prior art behind Sho
   <p class="catalog-card__need"><strong>Need</strong> Safe local expressions over a documented candidate view.</p>
 </article>
 <article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/mkdocs--mkdocs.md">mkdocs/mkdocs</a></h3>
+  <p>Project documentation with Markdown.</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/ossf--criticality_score.md">ossf/criticality_score</a></h3>
+  <p>Gives criticality score for an open source project</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/ossf--scorecard.md">ossf/scorecard</a></h3>
+  <p>OpenSSF Scorecard - Security health metrics for Open Source</p>
+  <p class="catalog-card__role"><strong>Role</strong> software supply-chain and assurance prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.</p>
+</article>
+<article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--adopt">Used here</span> <span class="freshness-chip freshness-chip--current">current</span></div>
   <h3><a href="../entries/pallets--click.md">pallets/click</a></h3>
   <p>Composable Python package for creating command-line interfaces.</p>
   <p class="catalog-card__role"><strong>Role</strong> runtime CLI parser</p>
   <p class="catalog-card__need"><strong>Need</strong> A mature direct command and option boundary without a custom parser.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--learn">Learn</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/practical-tutorials--project-based-learning.md">practical-tutorials/project-based-learning</a></h3>
+  <p>Curated list of project-based tutorials</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--build">Built here</span> <span class="freshness-chip freshness-chip--current">current</span></div>
@@ -96,11 +159,39 @@ The product\-specific collection showing the components and prior art behind Sho
   <p class="catalog-card__need"><strong>Need</strong> Strict versioned records and generated JSON Schema.</p>
 </article>
 <article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/sindresorhus--awesome.md">sindresorhus/awesome</a></h3>
+  <p>😎 Awesome lists about all kinds of interesting topics [NOTE: Pull requests are temporarily disabled until I have a chance to catch up with the existing ones]</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/squidfunk--mkdocs-material.md">squidfunk/mkdocs-material</a></h3>
+  <p>Documentation that simply works</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--adopt">Used here</span> <span class="freshness-chip freshness-chip--current">current</span></div>
   <h3><a href="../entries/trailofbits--rfc8785.py.md">trailofbits/rfc8785.py</a></h3>
   <p>Python implementation of the RFC 8785 JSON Canonicalization Scheme.</p>
   <p class="catalog-card__role"><strong>Role</strong> runtime canonical JSON</p>
   <p class="catalog-card__need"><strong>Need</strong> Interoperable content identity for immutable receipts.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/trimstray--the-book-of-secret-knowledge.md">trimstray/the-book-of-secret-knowledge</a></h3>
+  <p>A collection of inspiring lists, manuals, cheatsheets, blogs, hacks, one-liners, cli/web tools and more.</p>
+  <p class="catalog-card__role"><strong>Role</strong> OSS discovery, comparison, and learning prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.</p>
+</article>
+<article class="catalog-card">
+  <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
+  <h3><a href="../entries/vinta--awesome-python.md">vinta/awesome-python</a></h3>
+  <p>The definitive list that answers &quot;I want to do X in Python, which tool should I use?&quot;</p>
+  <p class="catalog-card__role"><strong>Role</strong> Python implementation and developer-tooling prior art</p>
+  <p class="catalog-card__need"><strong>Need</strong> Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.</p>
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--trial">Trialing</span> <span class="freshness-chip freshness-chip--current">current</span></div>

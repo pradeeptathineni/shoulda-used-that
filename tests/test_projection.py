@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -12,9 +13,12 @@ from pydantic import ValidationError
 from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.cli import cli
 from shoulda_used_that.curation import (
+    CurationCounts,
+    CurationSemanticDiff,
     CurationSnapshot,
     MutationPolicy,
     OperationCaps,
+    ProjectionPolicy,
     _snapshot_semantic,
     compile_profile,
     validate_curation_snapshot,
@@ -31,6 +35,7 @@ from shoulda_used_that.github_lists import (
 )
 from shoulda_used_that.projection import (
     FORBIDDEN_OPERATION_CLASSES,
+    PROJECTABLE_DISPOSITIONS,
     GitHubProjectionOperation,
     GitHubProjectionPlan,
     build_projection_plan,
@@ -43,6 +48,112 @@ from shoulda_used_that.state import StateStore
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PROFILE = ROOT / "curation" / "profiles" / "shoulda-used-that.json"
 NOW = datetime(2026, 9, 17, 12, tzinfo=UTC)
+PROJECTION_REPOSITORIES = (
+    "actions/runner",
+    "addyosmani/agent-skills",
+    "astral-sh/uv",
+    "browser-use/browser-use",
+    "ollama/ollama",
+    "pallets/click",
+)
+PROJECTION_COLLECTIONS = (
+    "generative-ai-agents",
+    "platform-engineering-delivery",
+)
+
+
+@lru_cache(maxsize=1)
+def _projection_snapshot() -> CurationSnapshot:
+    """Keep projection mechanics tests bounded as the public catalog grows."""
+
+    source = compile_profile(PUBLIC_PROFILE)
+    collections = tuple(
+        collection
+        for collection in source.collection_definitions
+        if collection.slug in PROJECTION_COLLECTIONS
+    )
+    entries = tuple(
+        sorted(
+            (
+                entry.model_copy(
+                    update={
+                        "collection_memberships": tuple(
+                            slug
+                            for slug in PROJECTION_COLLECTIONS
+                            if slug in entry.collection_memberships
+                        )
+                    }
+                )
+                for entry in source.entries
+                if entry.repository in PROJECTION_REPOSITORIES
+            ),
+            key=lambda entry: entry.repository,
+        )
+    )
+    projection_policy = ProjectionPolicy(
+        enabled=True,
+        account="pradeeptathineni",
+        selected_collection_slugs=PROJECTION_COLLECTIONS,
+        max_projected_lists=len(PROJECTION_COLLECTIONS),
+    )
+    mutation_policy = MutationPolicy(
+        plan_expiry_hours=24,
+        caps=OperationCaps(
+            total=20,
+            create_lists=2,
+            star_repositories=10,
+            add_memberships=20,
+        ),
+    )
+    membership_map = {
+        slug: tuple(entry.repository for entry in entries if slug in entry.collection_memberships)
+        for slug in sorted(PROJECTION_COLLECTIONS)
+    }
+    counts = CurationCounts(
+        sources=len(source.source_snapshots),
+        entries=len(entries),
+        excluded=0,
+        inbox=0,
+        stale=0,
+        partial=0,
+        blocked=0,
+    )
+    semantic = _snapshot_semantic(
+        profile_fingerprint=source.profile_fingerprint,
+        compiler_version=source.compiler_version,
+        compiled_at=source.compiled_at,
+        collections=collections,
+        projection_policy=projection_policy,
+        mutation_policy=mutation_policy,
+        source_snapshots=source.source_snapshots,
+        entries=entries,
+        exclusions=(),
+        membership_map=membership_map,
+        counts=counts,
+    )
+    fixture = source.model_copy(
+        update={
+            "curation_snapshot_id": short_id(semantic, prefix="cur"),
+            "collection_definitions": collections,
+            "projection_policy": projection_policy,
+            "mutation_policy": mutation_policy,
+            "entries": entries,
+            "excluded_candidates": (),
+            "unresolved_inbox_entries": (),
+            "stale_entries": (),
+            "partial_entries": (),
+            "blocked_entries": (),
+            "collection_membership_map": membership_map,
+            "counts": counts,
+            "semantic_diff": CurationSemanticDiff(
+                added_repositories=tuple(entry.repository for entry in entries),
+                material=True,
+            ),
+            "canonical_fingerprint": digest(semantic, prefix="curation"),
+        }
+    )
+    validate_curation_snapshot(fixture)
+    return fixture
 
 
 class ReadOnlyProjectionClient:
@@ -173,7 +284,7 @@ def _github_state(
     archived_repository: str | None = None,
     extra_repository: str | None = None,
 ) -> GitHubCurationState:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     repositories = [
         GitHubRelevantRepository(
             node_id=_node(repository),
@@ -217,7 +328,7 @@ def _github_state(
 
 
 def _satisfied_lists() -> tuple[GitHubListState, ...]:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     collections = {item.slug: item for item in snapshot.collection_definitions}
     return tuple(
         GitHubListState(
@@ -262,7 +373,7 @@ def _reseal_with_caps(snapshot: CurationSnapshot, caps: OperationCaps) -> Curati
 
 
 def test_additive_projection_is_deterministic_bounded_and_explicit() -> None:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     state = _github_state()
 
     first = build_projection_plan(
@@ -282,14 +393,26 @@ def test_additive_projection_is_deterministic_bounded_and_explicit() -> None:
 
     assert first == second
     assert first.model_dump_json() == second.model_dump_json()
+    projected_repositories = desired_projection_repositories(snapshot)
+    selected = set(snapshot.projection_policy.selected_collection_slugs)
+    expected_memberships = sum(
+        entry.primary_disposition in PROJECTABLE_DISPOSITIONS
+        and bool(selected.intersection(entry.collection_memberships))
+        for entry in snapshot.entries
+        for _ in selected.intersection(entry.collection_memberships)
+    )
+    expected_lists = len(selected)
+    expected_repositories = len(projected_repositories)
     assert [item.kind for item in first.operations] == (
-        ["create-list"] * 2 + ["star-repository"] * 6 + ["add-membership"] * 6
+        ["create-list"] * expected_lists
+        + ["star-repository"] * expected_repositories
+        + ["add-membership"] * expected_memberships
     )
     assert first.operation_counts.model_dump() == {
-        "create_lists": 2,
-        "star_repositories": 6,
-        "add_memberships": 6,
-        "total": 14,
+        "create_lists": expected_lists,
+        "star_repositories": expected_repositories,
+        "add_memberships": expected_memberships,
+        "total": expected_lists + expected_repositories + expected_memberships,
     }
     assert first.apply_ready is True
     assert first.mutation_state == "sealed-unapplied"
@@ -303,7 +426,7 @@ def test_additive_projection_is_deterministic_bounded_and_explicit() -> None:
 
 
 def test_projection_preserves_unrelated_memberships_and_replays_as_noop() -> None:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     repository = desired_projection_repositories(snapshot)[0]
     unrelated = GitHubListState(
         node_id="L_unrelated",
@@ -345,7 +468,7 @@ def test_projection_preserves_unrelated_memberships_and_replays_as_noop() -> Non
 
 def test_missing_scope_seals_preview_but_never_marks_it_apply_ready() -> None:
     plan = build_projection_plan(
-        compile_profile(PUBLIC_PROFILE),
+        _projection_snapshot(),
         _github_state(),
         _capability(GitHubCapabilityState.MISSING_SCOPE),
         account="pradeeptathineni",
@@ -414,7 +537,7 @@ def test_list_conflicts_ambiguity_and_unknown_union_types_fail_closed(
 ) -> None:
     with pytest.raises(StateError) as raised:
         build_projection_plan(
-            compile_profile(PUBLIC_PROFILE),
+            _projection_snapshot(),
             _github_state(lists=lists),
             _capability(),
             account="pradeeptathineni",
@@ -442,7 +565,7 @@ def test_private_archived_and_out_of_scope_repositories_block(
 ) -> None:
     with pytest.raises(StateError) as raised:
         build_projection_plan(
-            compile_profile(PUBLIC_PROFILE),
+            _projection_snapshot(),
             state,
             _capability(),
             account="pradeeptathineni",
@@ -452,7 +575,7 @@ def test_private_archived_and_out_of_scope_repositories_block(
 
 
 def test_account_identity_cap_and_curation_drift_cannot_be_bypassed() -> None:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     with pytest.raises(StateError) as account:
         build_projection_plan(
             snapshot,
@@ -490,7 +613,7 @@ def test_plan_fingerprint_state_storage_and_human_renderings_are_coherent(
     tmp_path: Path,
 ) -> None:
     plan = build_projection_plan(
-        compile_profile(PUBLIC_PROFILE),
+        _projection_snapshot(),
         _github_state(),
         _capability(),
         account="pradeeptathineni",
@@ -520,7 +643,7 @@ def test_plan_fingerprint_state_storage_and_human_renderings_are_coherent(
 
 def test_projected_service_reads_and_seals_without_any_mutation(tmp_path: Path) -> None:
     store = StateStore(tmp_path / "state")
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     store.write_curation(snapshot)
     client = ReadOnlyProjectionClient()
 
@@ -542,7 +665,9 @@ def test_projected_service_reads_and_seals_without_any_mutation(tmp_path: Path) 
         "read-stars",
     ]
     assert client.calls.count("graphql-lists") == 1
-    assert len([item for item in client.calls if item.startswith("read-repository:")]) == 6
+    assert len([item for item in client.calls if item.startswith("read-repository:")]) == len(
+        desired_projection_repositories(snapshot)
+    )
     assert all("create" not in item and "update" not in item for item in client.calls)
 
     untouched = ReadOnlyProjectionClient()
@@ -563,7 +688,7 @@ def test_projected_cli_emits_the_sealed_machine_record(
 ) -> None:
     state_root = tmp_path / "state"
     store = StateStore(state_root)
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     store.write_curation(snapshot)
     client = ReadOnlyProjectionClient()
     monkeypatch.setattr("shoulda_used_that.services.GhClient", lambda: client)
@@ -629,7 +754,7 @@ def test_projection_operation_shapes_fail_closed(payload: dict[str, Any]) -> Non
 )
 def test_projection_plan_coherence_is_revalidated(mutation: str, message: str) -> None:
     plan = build_projection_plan(
-        compile_profile(PUBLIC_PROFILE),
+        _projection_snapshot(),
         _github_state(),
         _capability(),
         account="pradeeptathineni",
@@ -651,7 +776,7 @@ def test_projection_plan_coherence_is_revalidated(mutation: str, message: str) -
 
 
 def test_projection_identity_and_capability_mismatches_are_typed() -> None:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     state = _github_state()
     wrong_login = _capability().model_copy(update={"login": "someone-else"})
     with pytest.raises(StateError) as login:
@@ -690,7 +815,7 @@ def test_projection_identity_and_capability_mismatches_are_typed() -> None:
 
 
 def test_noop_and_missing_scope_human_renderings_are_actionable() -> None:
-    snapshot = compile_profile(PUBLIC_PROFILE)
+    snapshot = _projection_snapshot()
     noop = build_projection_plan(
         snapshot,
         _github_state(starred=True, lists=_satisfied_lists()),

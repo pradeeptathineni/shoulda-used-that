@@ -3,7 +3,7 @@ title: "pradeeptathineni/shoulda-used-that"
 description: "Evidence-bound coordinator for discovering, evaluating, and revisiting OSS choices."
 tags:
   - "Built here"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Platform Engineering \u0026 Delivery"
 ---
 # pradeeptathineni/shoulda\-used\-that
@@ -23,14 +23,14 @@ tags:
 **Role:** deterministic evidence and curation coordinator<br>
 **Need:** Own the residual project plus need plus evidence plus decision plus freshness relationship\.<br>
 **Why:** Existing systems remain authoritative for transport, inventory, discovery, security, and rendering; the small cross\-context receipt layer remains unique\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
 
 ## Observed facts
 
 - **License:** Apache-2.0
 - **Archived:** false
-- **Latest release:** v0\.1\.0
-- **Latest commit:** <code>b7fd3df7478032c9f00c5b5e0c85c3287780ad6b</code>
+- **Latest release:** v0\.2\.0
+- **Latest commit:** <code>a845fdfdb916021c34a496e8c43595c8590686ef</code>
 - **Popularity:** No public star count is claimed by this snapshot.
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 

@@ -3,7 +3,7 @@ title: "jmespath/jmespath.py"
 description: "Python implementation of the JMESPath query language for JSON documents."
 tags:
   - "Used here"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Python Engineering"
 ---
 # jmespath/jmespath\.py
@@ -23,7 +23,7 @@ tags:
 **Role:** runtime advanced filter language<br>
 **Need:** Safe local expressions over a documented candidate view\.<br>
 **Why:** JMESPath avoids a custom DSL or arbitrary Python evaluation\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
 ## Observed facts
 

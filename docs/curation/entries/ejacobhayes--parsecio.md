@@ -3,7 +3,7 @@ title: "ejacobhayes/parsecio"
 description: "Static dashboard experiment for organizing starred repositories."
 tags:
   - "Watch"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # ejacobhayes/parsecio
 
@@ -22,7 +22,7 @@ tags:
 **Role:** static zero\-dependency catalog prior art<br>
 **Need:** Watch a lightweight public catalog approach without adopting an immature contract\.<br>
 **Why:** The static approach is relevant, but stable releases and an auditable export contract are not yet established\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

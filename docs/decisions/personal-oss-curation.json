@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_personal_oss_curation_2026_09_17",
+  "need": "Furnish Pradeep Tathineni's public GitHub stars, Lists, profile, and ShouldaUsedThat catalog with strong existing OSS that should be considered before another implementation is started.",
+  "artifact_role": "personal_interest_oss_curation",
+  "discovery": {
+    "queries": [
+      "CNCF Cloud Native Landscape and project directory: https://github.com/cncf/landscape",
+      "LF AI & Data Landscape: https://landscape.lfai.foundation/",
+      "OpenSSF Scorecard and Criticality Score methodology: https://openssf.org/scorecard/ and https://openssf.org/projects/criticality-score/",
+      "Awesome Selfhosted eligibility and repository-health methodology: https://awesomeselfhosted.app/methodology/",
+      "Processing Foundation projects and Vega visualization ecosystem: https://www.processingfoundation.org/ and https://vega.github.io/",
+      "best-of-lists structured OSS catalogs: https://github.com/best-of-lists/best-of",
+      "live GitHub repository identity, license, archive, activity, release, and popularity metadata"
+    ],
+    "stop_condition": "Every stated interest had a coherent collection with established prior art, every projected repository passed the public metadata gates or carried a documented narrow exception, and adding more candidates would primarily duplicate roles rather than improve useful coverage."
+  },
+  "contenders": [
+    {
+      "name": "cross-source reviewed catalog with live GitHub gates",
+      "disposition": "adopt",
+      "evidence": [
+        "foundation and ecosystem catalogs provide domain-specific discovery",
+        "live GitHub metadata confirms exact identity, public visibility, archive state, activity, license signal, and dated popularity",
+        "human-authored collection intent preserves meaning and allows useful overlap"
+      ]
+    },
+    {
+      "name": "GitHub stars or trending rank alone",
+      "disposition": "reject",
+      "evidence": [
+        "popularity can be gamed or stale",
+        "one rank cannot establish fit for a named need",
+        "stars do not prove adoption, security, or maintenance"
+      ]
+    },
+    {
+      "name": "one flat mega-list",
+      "disposition": "reject",
+      "evidence": [
+        "it hides why a repository matters",
+        "it prevents meaningful multi-domain membership",
+        "it makes the public star surface difficult to browse"
+      ]
+    },
+    {
+      "name": "model-generated recommendations without receipts",
+      "disposition": "reject",
+      "evidence": [
+        "not replayable",
+        "can invent identities or overstate current project health",
+        "would make model judgment authoritative"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "exact public non-fork repository identity",
+    "not archived or disabled",
+    "non-empty project description",
+    "declared SPDX license signal unless a narrow written exception is reviewed",
+    "at least 1,000 stars unless a narrow written exception is reviewed",
+    "default-branch activity within 730 days unless a narrow written exception is reviewed",
+    "direct fit to at least one named personal interest and collection rule"
+  ],
+  "unknowns": [
+    "GitHub stars and recent pushes are discovery and maintenance signals, not security or suitability proof.",
+    "A foundation landscape or curated directory can contain projects with very different maturity and governance.",
+    "Repository-level license metadata can omit model, data, plugin, hosted-service, or downstream artifact restrictions.",
+    "Personal fit remains contextual; list membership means consider this before building, not adopt this automatically."
+  ],
+  "decision_effect": "Maintain a human-readable personal-interest selection, enrich it through a read-only deterministic GitHub metadata refresh, compile it with the existing evidence catalog, and project the reviewed reference, learning, trial, adoption, and build dispositions into additive GitHub Stars and public Lists. Preserve multi-list membership where one repository genuinely serves several needs.",
+  "reconsider_when": [
+    "a repository becomes archived, disabled, inactive, or materially changes license",
+    "the account owner's public interests change",
+    "a stronger maintained contender covers the same role with a clearer boundary",
+    "a discovery source changes methodology or attribution terms",
+    "GitHub changes the Lists preview schema or public visibility model"
+  ],
+  "observed_at": "2026-09-17T12:15:00Z"
+}

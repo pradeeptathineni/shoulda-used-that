@@ -18,5 +18,7 @@ These receipts dogfood the product's decision vocabulary before or alongside imp
 | [`project-inventory.json`](project-inventory.json) | Prefer supplied standards-based SBOMs and bounded explicit inspection; reject a universal manifest parser |
 | [`zensical-site.json`](zensical-site.json) | Trial exact Zensical 0.0.62 as a removable static view adapter for the public catalog |
 | [`pages-workflow.json`](pages-workflow.json) | Verify public inputs on pull requests and schedules, then deploy only a verified main-branch artifact with official pinned Pages actions |
+| [`personal-oss-curation.json`](personal-oss-curation.json) | Use cross-source discovery, explicit quality gates, and human-authored interest boundaries to furnish the public catalog and native GitHub Lists |
+| [`membership-apply-scaling.json`](membership-apply-scaling.json) | Use the exact validated membership-mutation result for immediate progress, while retaining operation receipts, final full replay, and independent verification |
 
 Claims are distinct from behavior inspected locally or executed in CI. Dated popularity appears only as discovery evidence and never controls a disposition.

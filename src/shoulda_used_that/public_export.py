@@ -533,6 +533,7 @@ def _render_files(
     files: dict[str, bytes] = {
         "catalog.json": canonical_bytes(catalog_payload) + b"\n",
         "index.md": _index_markdown(profile, snapshot, collections, records).encode(),
+        "dogfood.md": _dogfood_markdown(profile, snapshot, collections, records).encode(),
         "in-use.md": _in_use_markdown(profile, records).encode(),
         "considered.md": _considered_markdown(profile, records, excluded).encode(),
         "freshness.md": _freshness_markdown(profile, snapshot, records).encode(),
@@ -604,6 +605,7 @@ def _index_markdown(
   <div class="catalog-actions">
     <a class="md-button md-button--primary" href="in-use.md">See what is used</a>
     <a class="md-button" href="collections/index.md">Browse collections</a>
+    <a class="md-button" href="dogfood.md">See Shoulda use itself</a>
   </div>
 </div>
 
@@ -626,6 +628,88 @@ Search understands repository names, roles, needs, disposition labels, collectio
 - [Digest and reproducibility manifest](manifest.json)
 - [Sources and attribution](sources.md)
 - [Freshness and reconsideration](freshness.md)
+"""
+    )
+
+
+def _dogfood_markdown(
+    profile: CurationProfile,
+    snapshot: CurationSnapshot,
+    collections: tuple[PublicCollection, ...],
+    records: tuple[PublicCatalogRecord, ...],
+) -> str:
+    selected = set(snapshot.projection_policy.selected_collection_slugs)
+    projected_collections = tuple(item for item in collections if item.slug in selected)
+    projectable_dispositions = {
+        CurationDisposition.ADOPT,
+        CurationDisposition.BUILD,
+        CurationDisposition.LEARN,
+        CurationDisposition.REFERENCE,
+        CurationDisposition.TRIAL,
+    }
+    projectable = tuple(
+        record
+        for record in records
+        if record.disposition in projectable_dispositions
+        and selected.intersection(record.collections)
+    )
+    memberships = sum(
+        collection.slug in record.collections
+        for collection in projected_collections
+        for record in projectable
+    )
+    account = profile.public_owner_identity.split("/", 1)[0]
+    list_rows = "\n".join(
+        "<tr>"
+        f'<th scope="row"><a href="https://github.com/stars/{quote(account)}/lists/{_github_list_slug(collection.title)}">{html.escape(collection.title)}</a></th>'
+        f"<td>{sum(collection.slug in record.collections for record in projectable)}</td>"
+        f"<td>{html.escape(collection.description)}</td>"
+        "</tr>"
+        for collection in projected_collections
+    )
+    return (
+        _frontmatter(
+            "ShouldaUsedThat uses itself",
+            "The catalog, additive GitHub projection, independent readback, and public export form one dogfood chain.",
+            ("dogfood", "GitHub Lists", "verification"),
+        )
+        + f"""# ShouldaUsedThat uses itself
+
+This repository is both the tool and a public execution of its central claim: **look for strong existing OSS before building another implementation, then preserve the evidence and decision boundary**.
+
+## The executed shape
+
+1. A human-readable [interest selection](https://github.com/{html.escape(profile.public_owner_identity)}/blob/main/curation/selections/personal-interests.json) states the domains and exact repositories.
+2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
+3. `curated` compiles those public inputs with the repository's own dependency and prior-art receipts into immutable canonical JSON.
+4. `projected` reads the current GitHub account and seals only additive Star and List operations.
+5. `apply` rechecks identity, capability, drift, expiry, and operation caps before each allowed write.
+6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
+7. `exported` builds this allowlisted catalog and its deterministic manifest.
+
+The current public snapshot contains **{len(records)} reviewed repositories**, **{len(projected_collections)} projected Lists**, **{len(projectable)} projectable repositories**, and **{memberships} intentional repository-to-List memberships**. Its canonical curation fingerprint is `{snapshot.canonical_fingerprint}`.
+
+## Native GitHub projection
+
+The GitHub views are deliberately lossy navigation surfaces. The catalog remains authoritative for rationale, provenance, freshness, rejection, and reconsideration.
+
+<div class="table-scroll" role="region" aria-label="Projected GitHub Lists" tabindex="0">
+<table>
+  <caption>Public Lists generated from the reviewed profile</caption>
+  <thead><tr><th scope="col">GitHub List</th><th scope="col">Reviewed repositories</th><th scope="col">Meaning</th></tr></thead>
+  <tbody>
+{list_rows}
+  </tbody>
+</table>
+</div>
+
+See the [sanitized live projection evidence](../operations/live-projection.md) for the last applied and independently verified public result. Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside the repository.
+
+## What this proves—and what it does not
+
+- It proves the repository can compile a substantial reviewed catalog, preserve meaningful multi-list membership, execute its bounded additive projection, and verify public postconditions.
+- It does not claim that stars equal adoption, that popularity equals quality, or that one list is a universal ranking.
+- It does not silently unstar, remove memberships, rename or delete Lists, expose private repositories, or grant scheduled jobs personal mutation authority.
 """
     )
 
@@ -1024,6 +1108,10 @@ def _freshness_chip(state: FreshnessState) -> str:
 
 def _repository_slug(repository: str) -> str:
     return repository.replace("/", "--")
+
+
+def _github_list_slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
 
 
 def _evidence_anchor(locator: str, *, depth: int) -> str:

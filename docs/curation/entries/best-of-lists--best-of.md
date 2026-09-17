@@ -3,7 +3,7 @@ title: "best-of-lists/best-of"
 description: "Curated best-of lists backed by structured project metadata."
 tags:
   - "Reference"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
 ---
 # best\-of\-lists/best\-of
 
@@ -22,7 +22,7 @@ tags:
 **Role:** attributed discovery source<br>
 **Need:** Human\-curated public seeds and refreshed metadata without treating rank as fit\.<br>
 **Why:** Published data is useful provenance; generic score and presence never prove suitability\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
 ## Observed facts
 

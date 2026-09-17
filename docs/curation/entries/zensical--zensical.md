@@ -3,7 +3,7 @@ title: "zensical/zensical"
 description: "Static site generator for modern, searchable project documentation."
 tags:
   - "Trialing"
-  - "OSS Curation Foundations"
+  - "OSS Curation \u0026 Prior Art"
   - "Platform Engineering \u0026 Delivery"
 ---
 # zensical/zensical
@@ -23,7 +23,7 @@ tags:
 **Role:** development\-only static catalog view adapter<br>
 **Need:** Responsive Markdown rendering, tags, and private client\-side search without a custom frontend\.<br>
 **Why:** The exact pre\-1\.0 version is removable and must prove deterministic, accessible, no\-runtime\-network output\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation Foundations</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
 
 ## Observed facts
 

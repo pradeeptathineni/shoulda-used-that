@@ -25,6 +25,7 @@ from shoulda_used_that.state import StateStore
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PROFILE = ROOT / "curation" / "profiles" / "shoulda-used-that.json"
 PUBLIC_ENTRIES = ROOT / "curation" / "entries" / "shoulda-used-that.json"
+PERSONAL_ENTRIES = ROOT / "curation" / "entries" / "personal-interests.json"
 
 
 def _payload(path: Path) -> dict[str, Any]:
@@ -42,6 +43,7 @@ def _write_tree(
     profile_payload = deepcopy(profile or _payload(PUBLIC_PROFILE))
     entries_payload = deepcopy(entries or _payload(PUBLIC_ENTRIES))
     entries_path = root / "curation" / "entries" / "shoulda-used-that.json"
+    personal_entries_path = root / "curation" / "entries" / "personal-interests.json"
     profile_path = root / "curation" / "profiles" / "shoulda-used-that.json"
     entries_path.parent.mkdir(parents=True)
     profile_path.parent.mkdir(parents=True)
@@ -49,9 +51,14 @@ def _write_tree(
         json.dumps(entries_payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     ).encode()
     entries_path.write_bytes(encoded_entries)
-    profile_payload["source_specifications"][0]["content_sha256"] = hashlib.sha256(
-        encoded_entries
-    ).hexdigest()
+    personal_entries = PERSONAL_ENTRIES.read_bytes()
+    personal_entries_path.write_bytes(personal_entries)
+    source_payloads = {
+        "curation/entries/shoulda-used-that.json": encoded_entries,
+        "curation/entries/personal-interests.json": personal_entries,
+    }
+    for source in profile_payload["source_specifications"]:
+        source["content_sha256"] = hashlib.sha256(source_payloads[source["locator"]]).hexdigest()
     profile_payload["canonical_fingerprint"] = profile_fingerprint(profile_payload)
     profile_path.write_text(
         json.dumps(profile_payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
@@ -68,8 +75,8 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert second == first
     assert first.profile_fingerprint == profile.canonical_fingerprint
     assert first.counts.model_dump() == {
-        "sources": 1,
-        "entries": 15,
+        "sources": 2,
+        "entries": 221,
         "excluded": 1,
         "inbox": 0,
         "stale": 0,
@@ -82,14 +89,24 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert first.entries == tuple(sorted(first.entries, key=lambda item: item.repository))
     assert profile.projection_policy.selected_collection_slugs == (
         "generative-ai-agents",
+        "rag-search-knowledge",
+        "computer-vision-multimodal",
+        "cloud-infrastructure-iac",
         "platform-engineering-delivery",
+        "software-supply-chain",
+        "python-engineering",
+        "homelab-self-hosting",
+        "creative-coding-visualization",
+        "nature-physics-simulation",
+        "web-engineering-interfaces",
+        "oss-curation-foundations",
     )
     first_five = tuple(collection.slug for collection in profile.collections[:5])
     assert first_five == (
-        "homelab-self-hosting",
         "generative-ai-agents",
-        "computational-nature-simulation",
+        "rag-search-knowledge",
         "computer-vision-multimodal",
+        "cloud-infrastructure-iac",
         "platform-engineering-delivery",
     )
     searchable = {
@@ -97,7 +114,16 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
         for collection in profile.collections
         for value in (collection.title, *collection.aliases)
     }
-    assert {"devops", "genai", "home lab", "vlm", "nature simulation"} <= searchable
+    assert {
+        "devops",
+        "genai",
+        "home lab",
+        "vlm",
+        "nature simulation",
+        "terraform",
+        "vector search",
+        "web development",
+    } <= searchable
 
 
 def test_curation_state_is_immutable_idempotent_and_profile_scoped(tmp_path: Path) -> None:
@@ -229,7 +255,7 @@ def test_invalid_entry_relationships_are_typed(tmp_path: Path, mutation: str, co
     [
         lambda payload: payload["collections"][1]["aliases"].append("DevOps"),
         lambda payload: payload["projection_policy"].update({"account": None}),
-        lambda payload: payload["collections"][0].update({"max_repositories": 201}),
+        lambda payload: payload["collections"][0].update({"max_repositories": 301}),
         lambda payload: payload["collections"][0]["exact_bound_sources"].append(
             "curation/entries/missing.json"
         ),
@@ -267,7 +293,7 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
         [*base, "--format", "json", "curated", str(PUBLIC_PROFILE)],
     )
     assert machine.exit_code == 0, machine.output
-    assert json.loads(machine.stdout)["counts"]["entries"] == 15
+    assert json.loads(machine.stdout)["counts"]["entries"] == 221
 
     human = runner.invoke(
         cli,
@@ -275,7 +301,7 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
     )
     assert human.exit_code == 0, human.output
     assert "pradeeptathineni/shoulda-used-that" in human.stdout
-    assert "entries=15 excluded=1 inbox=0 stale=0" in human.stdout
+    assert "entries=221 excluded=1 inbox=0 stale=0" in human.stdout
     assert "canonical_fingerprint" not in human.stdout
 
     markdown = render(compile_profile(PUBLIC_PROFILE), OutputFormat.MARKDOWN)
