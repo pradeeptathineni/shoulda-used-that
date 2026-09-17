@@ -76,7 +76,7 @@ jobs:
           fail-on-severity: moderate
 
   docs:
-    name: Writing, spelling, and links
+    name: Spelling and links
     runs-on: ubuntu-latest
     permissions:
       contents: read
