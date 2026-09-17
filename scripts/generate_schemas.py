@@ -10,6 +10,7 @@ from pathlib import Path
 from pydantic import BaseModel
 
 from shoulda_used_that.curation import CurationProfile, CurationSnapshot
+from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
     AdoptionPlan,
     Candidate,
@@ -36,6 +37,8 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "curation-snapshot": CurationSnapshot,
     "project-snapshot": ProjectSnapshot,
     "github-projection-plan": GitHubProjectionPlan,
+    "apply-receipt": ApplyReceipt,
+    "verify-receipt": VerifyReceipt,
 }
 
 

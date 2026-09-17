@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "VerifyConditionState": {
+      "enum": [
+        "verified",
+        "mismatch",
+        "unavailable"
+      ],
+      "title": "VerifyConditionState",
+      "type": "string"
+    },
+    "VerifyPostcondition": {
+      "additionalProperties": false,
+      "properties": {
+        "actual": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Actual"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "expected": {
+          "title": "Expected",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "target-identity",
+            "target-state-integrity",
+            "public-list",
+            "star",
+            "membership",
+            "preserved-membership",
+            "capability"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/VerifyConditionState"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "subject",
+        "expected",
+        "state"
+      ],
+      "title": "VerifyPostcondition",
+      "type": "object"
+    },
+    "VerifyStatus": {
+      "enum": [
+        "verified",
+        "partial",
+        "failed"
+      ],
+      "title": "VerifyStatus",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/verify-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "apply_fingerprint": {
+      "pattern": "^apply_[0-9a-f]{64}$",
+      "title": "Apply Fingerprint",
+      "type": "string"
+    },
+    "apply_receipt_id": {
+      "pattern": "^app_[0-9a-f]{24}$",
+      "title": "Apply Receipt Id",
+      "type": "string"
+    },
+    "canonical_fingerprint": {
+      "pattern": "^verify_[0-9a-f]{64}$",
+      "title": "Canonical Fingerprint",
+      "type": "string"
+    },
+    "mismatches": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Mismatches",
+      "type": "array"
+    },
+    "observed_account_node_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Observed Account Node Id"
+    },
+    "observed_login": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Observed Login"
+    },
+    "observed_state_fingerprint": {
+      "anyOf": [
+        {
+          "pattern": "^github_[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed State Fingerprint"
+    },
+    "plan_id": {
+      "pattern": "^gcp_[0-9a-f]{24}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "postconditions": {
+      "items": {
+        "$ref": "#/$defs/VerifyPostcondition"
+      },
+      "title": "Postconditions",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/VerifyStatus"
+    },
+    "target_login": {
+      "title": "Target Login",
+      "type": "string"
+    },
+    "verified_at": {
+      "format": "date-time",
+      "title": "Verified At",
+      "type": "string"
+    },
+    "verify_receipt_id": {
+      "pattern": "^vfy_[0-9a-f]{24}$",
+      "title": "Verify Receipt Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "verify_receipt_id",
+    "apply_receipt_id",
+    "apply_fingerprint",
+    "plan_id",
+    "target_login",
+    "observed_login",
+    "observed_account_node_id",
+    "verified_at",
+    "postconditions",
+    "mismatches",
+    "status",
+    "canonical_fingerprint"
+  ],
+  "title": "VerifyReceipt",
+  "type": "object"
+}

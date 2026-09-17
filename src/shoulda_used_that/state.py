@@ -16,6 +16,12 @@ from pydantic import BaseModel, ValidationError
 from shoulda_used_that.canonical import canonical_bytes, digest
 from shoulda_used_that.curation import CurationSnapshot
 from shoulda_used_that.errors import StateError
+from shoulda_used_that.github_apply import (
+    ApplyOperationReceipt,
+    ApplyReceipt,
+    VerifyReceipt,
+)
+from shoulda_used_that.github_lists import GitHubCurationState
 from shoulda_used_that.models import (
     AdoptionPlan,
     CheckReceipt,
@@ -74,6 +80,10 @@ class StateStore:
             self.profile_root / "plans" / "projections",
             self.profile_root / "plans" / "adoptions",
             self.profile_root / "plans" / "github-curation",
+            self.profile_root / "github-states",
+            self.profile_root / "applies" / "operations",
+            self.profile_root / "applies" / "latest",
+            self.profile_root / "verifications",
             self.profile_root / "curations",
             self.profile_root / "curations" / "latest",
             self.profile_root / "projects",
@@ -176,6 +186,85 @@ class StateStore:
         return self._read_model(
             self._path("plans", "github-curation", f"{_safe_id(plan_id)}.json"),
             GitHubProjectionPlan,
+        )
+
+    def write_github_state(self, state: GitHubCurationState) -> bool:
+        self.initialize()
+        path = self._path("github-states", f"{state.state_fingerprint}.json")
+        if path.exists():
+            # observed_at is intentionally excluded from the material state
+            # fingerprint. Preserve the first immutable observation when a
+            # later read is a semantic no-op.
+            self._read_model(path, GitHubCurationState)
+            return False
+        return self._write_immutable(path, state)
+
+    def read_github_state(self, state_fingerprint: str) -> GitHubCurationState:
+        return self._read_model(
+            self._path("github-states", f"{_safe_id(state_fingerprint)}.json"),
+            GitHubCurationState,
+        )
+
+    def write_apply_operation(self, receipt: ApplyOperationReceipt) -> bool:
+        self.initialize()
+        return self._write_immutable(
+            self._path("applies", "operations", f"{receipt.operation_receipt_id}.json"),
+            receipt,
+        )
+
+    def write_apply(self, receipt: ApplyReceipt) -> bool:
+        self.initialize()
+        created = self._write_immutable(
+            self._path("applies", f"{receipt.apply_receipt_id}.json"), receipt
+        )
+        self._write_pointer(
+            self._latest_apply_path(receipt.plan_id),
+            {
+                "plan_id": receipt.plan_id,
+                "apply_receipt_id": receipt.apply_receipt_id,
+                "canonical_fingerprint": receipt.canonical_fingerprint,
+            },
+        )
+        return created
+
+    def read_apply(self, apply_receipt_id: str) -> ApplyReceipt:
+        return self._read_model(
+            self._path("applies", f"{_safe_id(apply_receipt_id)}.json"),
+            ApplyReceipt,
+        )
+
+    def latest_apply(self, plan_id: str) -> ApplyReceipt | None:
+        pointer_path = self._latest_apply_path(plan_id)
+        if not pointer_path.exists():
+            return None
+        pointer = self._read_json(pointer_path)
+        if pointer.get("plan_id") != plan_id:
+            raise StateError(
+                code="latest_apply_invalid",
+                message="The plan-specific apply pointer has the wrong plan identity.",
+            )
+        apply_receipt_id = pointer.get("apply_receipt_id")
+        if not isinstance(apply_receipt_id, str):
+            raise StateError(
+                code="latest_apply_invalid",
+                message="The latest apply pointer is invalid.",
+            )
+        return self.read_apply(apply_receipt_id)
+
+    def _latest_apply_path(self, plan_id: str) -> Path:
+        plan_identity = digest(_safe_id(plan_id), prefix="plan")
+        return self._path("applies", "latest", f"{plan_identity}.json")
+
+    def write_verify(self, receipt: VerifyReceipt) -> bool:
+        self.initialize()
+        return self._write_immutable(
+            self._path("verifications", f"{receipt.verify_receipt_id}.json"), receipt
+        )
+
+    def read_verify(self, verify_receipt_id: str) -> VerifyReceipt:
+        return self._read_model(
+            self._path("verifications", f"{_safe_id(verify_receipt_id)}.json"),
+            VerifyReceipt,
         )
 
     def write_curation(self, snapshot: CurationSnapshot) -> bool:
