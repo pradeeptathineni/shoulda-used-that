@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import stat
 from dataclasses import dataclass
 from datetime import datetime
@@ -23,6 +24,7 @@ from shoulda_used_that.models import (
     SourceKind,
     SourceObservation,
     SourceRequest,
+    normalize_repository,
     utc_now,
 )
 
@@ -95,27 +97,47 @@ def merge_batches(batches: tuple[SourceBatch, ...]) -> tuple[tuple[Candidate, ..
 def _load_fixture(request: SourceRequest, observed_at: datetime) -> SourceBatch:
     path = Path(request.locator or "")
     try:
-        mode = path.lstat().st_mode
+        initial_stat = path.lstat()
     except OSError as exc:
         raise SourceError(
             code="fixture_unreadable",
             message=f"Fixture cannot be read: {path}: {exc}",
             details={"path": str(path)},
         ) from exc
-    if stat.S_ISLNK(mode) or not stat.S_ISREG(mode):
+    if stat.S_ISLNK(initial_stat.st_mode) or not stat.S_ISREG(initial_stat.st_mode):
         raise SourceError(
             code="fixture_not_regular_file",
             message=f"Fixture must be a regular non-symlink file: {path}",
             details={"path": str(path)},
         )
-    size = path.stat().st_size
-    if size > MAX_FIXTURE_BYTES:
+    try:
+        with path.open("rb") as stream:
+            opened_stat = os.fstat(stream.fileno())
+            same_file = (initial_stat.st_dev, initial_stat.st_ino) == (
+                opened_stat.st_dev,
+                opened_stat.st_ino,
+            )
+            if not stat.S_ISREG(opened_stat.st_mode) or not same_file:
+                raise SourceError(
+                    code="fixture_changed_during_read",
+                    message=f"Fixture identity changed while it was opened: {path}",
+                    details={"path": str(path)},
+                )
+            raw = stream.read(MAX_FIXTURE_BYTES + 1)
+    except SourceError:
+        raise
+    except OSError as exc:
+        raise SourceError(
+            code="fixture_unreadable",
+            message=f"Fixture cannot be read: {path}: {exc}",
+            details={"path": str(path)},
+        ) from exc
+    if len(raw) > MAX_FIXTURE_BYTES:
         raise SourceError(
             code="fixture_too_large",
             message=f"Fixture exceeds the {MAX_FIXTURE_BYTES}-byte safety limit: {path}",
-            details={"path": str(path), "size": size},
+            details={"path": str(path), "size": len(raw)},
         )
-    raw = path.read_bytes()
     try:
         if path.suffix.casefold() in {".yaml", ".yml"}:
             payload = yaml.safe_load(raw)
@@ -192,11 +214,19 @@ def _load_search(request: SourceRequest, github: GhClient, observed_at: datetime
 def _load_repository(
     request: SourceRequest, github: GhClient, observed_at: datetime
 ) -> SourceBatch:
-    result = github.repository(request.locator or "")
-    candidate = _github_candidate(result.payload, source_id=f"github:repo:{request.locator}")
+    try:
+        repository = normalize_repository(request.locator or "")
+    except ValueError as exc:
+        raise SourceError(
+            code="repository_invalid",
+            message="--repo must use an owner/name GitHub identity.",
+            details={"repository": request.locator},
+        ) from exc
+    result = github.repository(repository)
+    candidate = _github_candidate(result.payload, source_id=f"github:repo:{repository}")
     observation = SourceObservation(
         kind=request.kind,
-        locator=request.locator,
+        locator=repository,
         observed_at=observed_at,
         tool_version=f"gh/{result.tool_version}",
         payload_fingerprint=digest(result.payload, prefix="payload"),
@@ -221,24 +251,31 @@ def _github_candidate(
     license_id = license_data.get("spdx_id") if isinstance(license_data, dict) else None
     if license_id in {"NOASSERTION", "OTHER"}:
         license_id = None
-    return Candidate(
-        repository=item["full_name"],
-        role="repository",
-        description=item.get("description"),
-        language=item.get("language"),
-        topics=item.get("topics") or (),
-        license=license_id,
-        archived=item.get("archived"),
-        disabled=item.get("disabled"),
-        pushed_at=item.get("pushed_at"),
-        starred_at=starred_at,
-        is_starred=is_starred,
-        evidence_state=EvidenceState.VERIFIED,
-        network_boundary=NetworkBoundary.PUBLIC_API,
-        stars=item.get("stargazers_count"),
-        url=item.get("html_url"),
-        sources=(source_id,),
-    )
+    try:
+        return Candidate(
+            repository=item["full_name"],
+            role="repository",
+            description=item.get("description"),
+            language=item.get("language"),
+            topics=item.get("topics") or (),
+            license=license_id,
+            archived=item.get("archived"),
+            disabled=item.get("disabled"),
+            pushed_at=item.get("pushed_at"),
+            starred_at=starred_at,
+            is_starred=is_starred,
+            evidence_state=EvidenceState.VERIFIED,
+            network_boundary=NetworkBoundary.PUBLIC_API,
+            stars=item.get("stargazers_count"),
+            url=item.get("html_url"),
+            sources=(source_id,),
+        )
+    except ValidationError as exc:
+        raise SourceError(
+            code="github_repository_schema_invalid",
+            message="GitHub repository evidence did not match the canonical candidate schema.",
+            details={"repository": item.get("full_name")},
+        ) from exc
 
 
 def _validate_candidates(items: list[Any], *, source_id: str) -> tuple[Candidate, ...]:
@@ -249,10 +286,16 @@ def _validate_candidates(items: list[Any], *, source_id: str) -> tuple[Candidate
                 code="fixture_candidate_invalid",
                 message=f"Fixture candidate {index} must be an object.",
             )
-        prepared = dict(item)
-        prepared["sources"] = tuple({*prepared.get("sources", ()), source_id})
         try:
-            candidates.append(Candidate.model_validate(prepared))
+            candidate = Candidate.model_validate(item)
+            candidates.append(
+                Candidate.model_validate(
+                    {
+                        **candidate.model_dump(mode="python"),
+                        "sources": (*candidate.sources, source_id),
+                    }
+                )
+            )
         except ValidationError as exc:
             raise SourceError(
                 code="fixture_candidate_invalid",

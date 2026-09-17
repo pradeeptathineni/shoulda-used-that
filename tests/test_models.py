@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from shoulda_used_that.models import (
     Candidate,
     FilterSpec,
+    SaveReceipt,
     SourceKind,
     SourceObservation,
     normalize_repository,
@@ -20,6 +21,7 @@ from shoulda_used_that.models import (
         ("Owner/Repo", "owner/repo"),
         ("Owner/Repo.git", "owner/repo"),
         ("https://github.com/Owner/Repo", "owner/repo"),
+        ("https://github.com/Owner/Repo.git/", "owner/repo"),
     ],
 )
 def test_repository_identity_is_canonical(raw: str, expected: str) -> None:
@@ -43,6 +45,8 @@ def test_candidate_normalizes_sets_and_rejects_extra_fields() -> None:
     assert candidate.platforms == ("linux",)
     with pytest.raises(ValidationError, match="Extra inputs"):
         Candidate(repository="a/b", secret="nope")  # type: ignore[call-arg]
+    with pytest.raises(ValidationError, match="iterable of strings"):
+        Candidate(repository="a/b", topics=42)  # type: ignore[arg-type]
 
 
 def test_naive_candidate_and_observation_times_are_rejected() -> None:
@@ -57,6 +61,15 @@ def test_naive_candidate_and_observation_times_are_rejected() -> None:
             payload_fingerprint="payload_abc",
             candidate_count=0,
         )
+    with pytest.raises(ValidationError, match="created_at must include a timezone"):
+        SaveReceipt(
+            save_id="save_example",
+            created_at=naive,
+            profile="default",
+            repositories=(),
+            created=(),
+            already_saved=(),
+        )
 
 
 def test_filter_spec_repeated_values_preserve_order_and_license_overlap_fails() -> None:
@@ -64,6 +77,8 @@ def test_filter_spec_repeated_values_preserve_order_and_license_overlap_fails() 
     assert spec.languages == ("Python", "Go")
     with pytest.raises(ValidationError, match="both allowed and denied"):
         FilterSpec(license_allow=("MIT",), license_deny=("mit",))
+    with pytest.raises(ValidationError, match="iterable of strings"):
+        FilterSpec(languages=42)  # type: ignore[arg-type]
 
 
 def test_filter_view_has_stable_public_aliases(candidate: Candidate) -> None:

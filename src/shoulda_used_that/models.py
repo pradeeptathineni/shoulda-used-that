@@ -22,9 +22,10 @@ def utc_now() -> datetime:
 def normalize_repository(value: str) -> str:
     """Return the canonical lowercase owner/repository identity."""
 
-    normalized = value.removesuffix(".git").strip("/")
+    normalized = value.strip().strip("/")
     if normalized.startswith("https://github.com/"):
         normalized = normalized.removeprefix("https://github.com/")
+    normalized = normalized.strip("/").removesuffix(".git")
     if not REPOSITORY_PATTERN.fullmatch(normalized):
         raise ValueError("repository must use owner/name GitHub identity")
     return normalized.lower()
@@ -34,6 +35,13 @@ class FrozenModel(BaseModel):
     """Strict immutable base for receipt data."""
 
     model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    @model_validator(mode="after")
+    def timestamps_are_aware(self) -> FrozenModel:
+        for name, value in self.__dict__.items():
+            if isinstance(value, datetime) and value.utcoffset() is None:
+                raise ValueError(f"{name} must include a timezone")
+        return self
 
 
 class EvidenceState(StrEnum):
@@ -131,16 +139,13 @@ class Candidate(FrozenModel):
             return ()
         if isinstance(value, str):
             value = [value]
+        try:
+            items = list(value)
+        except TypeError as exc:
+            raise ValueError("set-like fields must be a string or iterable of strings") from exc
         return tuple(
-            sorted({str(item).strip() for item in value if str(item).strip()}, key=str.casefold)
+            sorted({str(item).strip() for item in items if str(item).strip()}, key=str.casefold)
         )
-
-    @field_validator("pushed_at", "released_at", "starred_at")
-    @classmethod
-    def require_timezone(cls, value: datetime | None) -> datetime | None:
-        if value is not None and value.tzinfo is None:
-            raise ValueError("timestamps must include a timezone")
-        return value
 
     def filter_view(self) -> dict[str, Any]:
         """Return the stable public shape exposed to JMESPath."""
@@ -181,13 +186,6 @@ class SourceObservation(FrozenModel):
     state: EvidenceState = EvidenceState.VERIFIED
     error_code: str | None = None
     error_message: str | None = None
-
-    @field_validator("observed_at")
-    @classmethod
-    def observed_is_aware(cls, value: datetime) -> datetime:
-        if value.tzinfo is None:
-            raise ValueError("observed_at must include a timezone")
-        return value
 
     def identity_view(self) -> dict[str, Any]:
         """Exclude fetch time and error prose from semantic source identity."""
@@ -244,7 +242,11 @@ class FilterSpec(FrozenModel):
             return ()
         if isinstance(value, str):
             value = [value]
-        normalized = [str(item).strip() for item in value if str(item).strip()]
+        try:
+            items = list(value)
+        except TypeError as exc:
+            raise ValueError("filter values must be a string or iterable of strings") from exc
+        normalized = [str(item).strip() for item in items if str(item).strip()]
         return tuple(dict.fromkeys(normalized))
 
     @model_validator(mode="after")

@@ -107,6 +107,8 @@ and can be isolated with `--state-dir` and `--profile`.
 - [Facet-by-facet reuse gate](docs/architecture/dogfood-reuse-audit.md)
 - [Prior-art and decision receipts](docs/decisions/README.md)
 - [Context-engineering receipt](docs/development/context-receipt.md)
+- [Executed SBOM comparison](docs/development/sbom-comparison.md)
+- [v0.1.0 correctness and security review](docs/development/review-v0.1.0.md)
 - [Contributing and validation](CONTRIBUTING.md)
 - [Security policy and boundaries](SECURITY.md)
 

@@ -172,6 +172,23 @@ def saved(
             )
 
     timestamp = created_at or utc_now()
+    projection = None
+    if list_name:
+        if check is None:
+            raise StateError(
+                code="projection_requires_check",
+                message="A List projection must be bound to --all or --from <check_id>.",
+            )
+        # Construct and validate the complete plan before any saved item is
+        # written, so invalid projection input cannot leave partial state.
+        projection = _projection_plan(
+            store,
+            check=check,
+            candidates=tuple(candidates[repository] for repository in normalized),
+            list_name=list_name,
+            created_at=timestamp,
+        )
+
     created: list[str] = []
     already: list[str] = []
     for repository in normalized:
@@ -190,20 +207,7 @@ def saved(
         store.write_saved_item(item)
         created.append(repository)
 
-    projection = None
-    if list_name:
-        if check is None:
-            raise StateError(
-                code="projection_requires_check",
-                message="A List projection must be bound to --all or --from <check_id>.",
-            )
-        projection = _projection_plan(
-            store,
-            check=check,
-            candidates=tuple(candidates[repository] for repository in normalized),
-            list_name=list_name,
-            created_at=timestamp,
-        )
+    if projection:
         store.write_projection(projection)
 
     seed = {
@@ -259,6 +263,16 @@ def remembered(
         )
     candidate = Candidate(repository=repository)
     check = store.read_check(from_check_id) if from_check_id else None
+    if check and candidate.repository not in {
+        evaluation.candidate.repository for evaluation in check.evaluations
+    }:
+        raise StateError(
+            code="decision_outside_check_scope",
+            message=(
+                "A decision bound with --from must concern a candidate observed in that check."
+            ),
+            details={"repository": candidate.repository, "check_id": check.check_id},
+        )
     automatic_evidence = (
         tuple(observation.payload_fingerprint for observation in check.source_observations)
         if check
@@ -374,7 +388,7 @@ def rechecked(
             outcome = RecheckOutcome.REFRESH_ONLY
         else:
             outcome = RecheckOutcome.SEMANTIC_NOOP
-        lkg_preserved = False
+        lkg_preserved = outcome is RecheckOutcome.MATERIAL_REVIEW_REQUIRED
         source_fingerprint = _source_identity_from_observations(tuple(observations))
         snapshot_seed = {
             "need": prior.need,
@@ -397,7 +411,8 @@ def rechecked(
             }
         )
         store.write_check_snapshot(snapshot)
-        store.update_baseline(logical_target, snapshot.check_id)
+        if not lkg_preserved:
+            store.update_baseline(logical_target, snapshot.check_id)
 
     seed = {
         "target": logical_target,

@@ -186,6 +186,33 @@ def test_unused_source_arguments_are_typed_errors(
     assert json.loads(result.stderr)["error"]["code"] == code
 
 
+@pytest.mark.parametrize(
+    ("source", "code"),
+    [
+        ("fixture", "fixture_required"),
+        ("github-search", "query_required"),
+        ("repository", "repository_required"),
+    ],
+)
+def test_selected_sources_require_locators(tmp_path: Path, source: str, code: str) -> None:
+    result = CliRunner().invoke(
+        cli,
+        [
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--format",
+            "json",
+            "checked",
+            "test",
+            "--source",
+            source,
+        ],
+    )
+
+    assert result.exit_code == 2
+    assert json.loads(result.stderr)["error"]["code"] == code
+
+
 def test_invalid_duration_and_input_have_machine_error(tmp_path: Path, fixture_path: Path) -> None:
     args = _checked_args(tmp_path / "state", fixture_path)
     index = args.index("52w")

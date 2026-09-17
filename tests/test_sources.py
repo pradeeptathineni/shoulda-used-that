@@ -143,6 +143,38 @@ def test_fixture_safety_and_schema_failures(
     assert large.value.code == "fixture_too_large"
 
 
+def test_fixture_identity_change_between_stat_and_open_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    watched = tmp_path / "watched.json"
+    replacement = tmp_path / "replacement.json"
+    watched.write_text("[]", encoding="utf-8")
+    replacement.write_text("[]", encoding="utf-8")
+    original_open = Path.open
+
+    def swapped_open(path: Path, *args: Any, **kwargs: Any) -> Any:
+        target = replacement if path == watched else path
+        return original_open(target, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", swapped_open)
+    with pytest.raises(SourceError) as changed:
+        load_sources((SourceRequest(kind=SourceKind.FIXTURE, locator=str(watched)),))
+    assert changed.value.code == "fixture_changed_during_read"
+
+
+def test_fixture_string_source_is_preserved_as_one_value(tmp_path: Path) -> None:
+    path = tmp_path / "sources.json"
+    path.write_text(
+        json.dumps([{"repository": "fixture-labs/a", "sources": "manual"}]),
+        encoding="utf-8",
+    )
+
+    batch = load_sources((SourceRequest(kind=SourceKind.FIXTURE, locator=str(path)),))[0]
+
+    assert "manual" in batch.candidates[0].sources
+    assert len(batch.candidates[0].sources) == 2
+
+
 def test_github_sources_normalize_typed_candidates() -> None:
     requests = (
         SourceRequest(kind=SourceKind.STARS),
@@ -171,6 +203,12 @@ def test_github_source_schema_failures() -> None:
         def repository(self, repository: str) -> GhResult:
             return GhResult({}, "x", repository, False)
 
+    class InvalidRepoField(FakeGitHub):
+        def repository(self, repository: str) -> GhResult:
+            payload = _github_item(repository, "MIT")
+            payload["pushed_at"] = "not-a-timestamp"
+            return GhResult(payload, "x", repository, False)
+
     with pytest.raises(SourceError) as star_error:
         load_sources(
             (SourceRequest(kind=SourceKind.STARS),),
@@ -183,6 +221,18 @@ def test_github_source_schema_failures() -> None:
             github=BadRepo(),  # type: ignore[arg-type]
         )
     assert repo_error.value.code == "github_repository_schema_invalid"
+    with pytest.raises(SourceError) as field_error:
+        load_sources(
+            (SourceRequest(kind=SourceKind.REPOSITORY, locator="a/b"),),
+            github=InvalidRepoField(),  # type: ignore[arg-type]
+        )
+    assert field_error.value.code == "github_repository_schema_invalid"
+    with pytest.raises(SourceError) as invalid_repository:
+        load_sources(
+            (SourceRequest(kind=SourceKind.REPOSITORY, locator="--paginate"),),
+            github=FakeGitHub(),  # type: ignore[arg-type]
+        )
+    assert invalid_repository.value.code == "repository_invalid"
 
 
 def test_merge_is_deterministic_and_preserves_conflicts() -> None:

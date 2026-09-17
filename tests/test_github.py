@@ -48,11 +48,12 @@ def test_repository_uses_fixed_argument_vector_headers_and_minimal_environment(
     monkeypatch.setenv("GH_TOKEN", "must-not-be-forwarded")
     client = GhClient(timeout_seconds=4, cwd=tmp_path)
 
-    result = client.repository("fixture-labs/repo")
+    result = client.repository("https://github.com/Fixture-Labs/Repo.git/")
 
     assert result.payload["full_name"] == "fixture-labs/repo"
     api_args, kwargs = captured[-1]
     assert api_args[:5] == ("gh", "api", "--method", "GET", "--header")
+    assert "repos/fixture-labs/repo" in api_args
     assert f"X-GitHub-Api-Version: {API_VERSION}" in api_args
     assert "GH_TOKEN" not in kwargs["env"]
     assert kwargs["shell"] is False if "shell" in kwargs else True
@@ -110,6 +111,25 @@ def test_api_failures_are_typed_and_redacted(
 
     assert raised.value.code == code
     assert "secret" not in raised.value.message
+
+
+def test_fine_grained_token_is_redacted_from_transport_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[tuple[tuple[str, ...], dict[str, Any]]] = []
+    token = "github_pat_never_expose_this"
+    monkeypatch.setattr(
+        "shoulda_used_that.github.subprocess.run",
+        _runner([_completed(("gh",), code=1, err=f"HTTP 500 {token}")], captured),
+    )
+    client = GhClient()
+    client._tool_version = "2.test"
+
+    with pytest.raises(GitHubError) as raised:
+        client.repository("a/b")
+
+    assert token not in raised.value.message
+    assert "[REDACTED]" in raised.value.message
 
 
 def test_invalid_json_and_schema_never_return_partial_data(

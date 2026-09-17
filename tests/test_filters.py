@@ -85,6 +85,31 @@ def test_unknown_and_negative_hard_facts_fail_closed() -> None:
     assert any(reason.category == "hard-gate" for reason in failed["fixtures/archived"])
 
 
+def test_hard_gate_explanations_precede_soft_filters() -> None:
+    spec = FilterSpec(
+        languages=("Python",),
+        topics=("receipts",),
+        license_allow=("Apache-2.0",),
+        not_archived=True,
+        evidence_states=("verified",),
+    )
+    evaluations, _, _, _ = evaluate_candidates(
+        [_candidate("ordered")], spec, observed_at=NOW, raw_count=1
+    )
+
+    categories = [reason.category for reason in evaluations[0].reasons]
+    first_filter = categories.index("filter")
+    assert all(category == "hard-gate" for category in categories[:first_filter])
+    assert all(category == "filter" for category in categories[first_filter:])
+    assert [item["field"] for item in normalized_predicate_tree(spec)["predicates"]] == [
+        "license_allow",
+        "not_archived",
+        "language",
+        "topic",
+        "evidence_state",
+    ]
+
+
 def test_deny_policy_and_freshness_gates() -> None:
     candidates = [
         _candidate("good"),

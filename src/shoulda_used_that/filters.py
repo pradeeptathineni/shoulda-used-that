@@ -38,32 +38,39 @@ def normalized_predicate_tree(spec: FilterSpec) -> dict[str, Any]:
     """Return the public normalized AND/OR tree stored in a check receipt."""
 
     predicates: list[dict[str, Any]] = []
-    repeated = {
-        "role": spec.roles,
-        "language": spec.languages,
-        "ecosystem": spec.ecosystems,
-        "topic": spec.topics,
-        "license_allow": spec.license_allow,
-        "license_deny": spec.license_deny,
-        "platform": spec.platforms,
-        "runtime": spec.runtimes,
-        "evidence_state": tuple(value.value for value in spec.evidence_states),
-        "network_boundary": tuple(value.value for value in spec.network_boundaries),
-        "security_state": tuple(value.value for value in spec.security_states),
-    }
-    for field, values in repeated.items():
-        if values:
-            predicates.append({"field": field, "operator": "or", "values": list(values)})
-    scalar = {
-        "not_archived": spec.not_archived or None,
-        "maintained_within_days": spec.maintained_within_days,
-        "released_within_days": spec.released_within_days,
-        "starred_within_days": spec.starred_within_days,
-        "min_stars": spec.min_stars,
-        "where": spec.where,
-    }
-    for field, value in scalar.items():
-        if value is not None:
+    # Preserve execution precedence in the public tree: explicit exclusions,
+    # hard gates, typed filters, and finally the advanced expression.
+    ordered: tuple[tuple[str, Sequence[Any] | Any, str], ...] = (
+        ("license_deny", spec.license_deny, "or"),
+        ("role", spec.roles, "or"),
+        ("license_allow", spec.license_allow, "or"),
+        ("not_archived", spec.not_archived or None, "value"),
+        ("maintained_within_days", spec.maintained_within_days, "value"),
+        ("released_within_days", spec.released_within_days, "value"),
+        ("platform", spec.platforms, "or"),
+        ("runtime", spec.runtimes, "or"),
+        (
+            "network_boundary",
+            tuple(value.value for value in spec.network_boundaries),
+            "or",
+        ),
+        ("security_state", tuple(value.value for value in spec.security_states), "or"),
+        ("language", spec.languages, "or"),
+        ("ecosystem", spec.ecosystems, "or"),
+        ("topic", spec.topics, "or"),
+        ("starred_within_days", spec.starred_within_days, "value"),
+        ("evidence_state", tuple(value.value for value in spec.evidence_states), "or"),
+        ("min_stars", spec.min_stars, "value"),
+        ("where", spec.where, "value"),
+    )
+    for field, value, operator in ordered:
+        if value is None or value == ():
+            continue
+        if operator == "or":
+            values = value
+            if values:
+                predicates.append({"field": field, "operator": "or", "values": list(values)})
+        else:
             predicates.append({"field": field, "operator": "value", "value": value})
     return {
         "operator": "and",
@@ -184,17 +191,8 @@ def evaluate_candidates(
 def _evaluate_typed(
     candidate: Candidate, spec: FilterSpec, *, observed_at: datetime
 ) -> Iterable[PredicateResult]:
-    if spec.roles:
-        yield _scalar_membership(
-            "role", candidate.role, spec.roles, category="hard-gate", unknown=False
-        )
-    if spec.languages:
-        yield _scalar_membership("language", candidate.language, spec.languages, category="filter")
-    if spec.ecosystems:
-        yield _set_membership("ecosystem", candidate.ecosystems, spec.ecosystems, category="filter")
-    if spec.topics:
-        yield _set_membership("topic", candidate.topics, spec.topics, category="filter")
-
+    # Explicit exclusions and hard gates are emitted before any soft filter so
+    # explanations preserve the same precedence as the decision contract.
     if spec.license_deny:
         denied = _fold(spec.license_deny)
         actual = candidate.license
@@ -215,6 +213,10 @@ def _evaluate_typed(
                 if not passed
                 else "license is not denied"
             ),
+        )
+    if spec.roles:
+        yield _scalar_membership(
+            "role", candidate.role, spec.roles, category="hard-gate", unknown=False
         )
     if spec.license_allow:
         yield _scalar_membership(
@@ -256,26 +258,10 @@ def _evaluate_typed(
         spec.released_within_days,
         observed_at,
     )
-    yield from _freshness_predicate(
-        "starred_within_days",
-        candidate.starred_at,
-        spec.starred_within_days,
-        observed_at,
-        category="filter",
-    )
-
     if spec.platforms:
         yield _set_membership("platform", candidate.platforms, spec.platforms, category="hard-gate")
     if spec.runtimes:
         yield _set_membership("runtime", candidate.runtimes, spec.runtimes, category="hard-gate")
-    if spec.evidence_states:
-        yield _scalar_membership(
-            "evidence_state",
-            candidate.evidence_state,
-            spec.evidence_states,
-            category="filter",
-            unknown=candidate.evidence_state is EvidenceState.UNKNOWN,
-        )
     if spec.network_boundaries:
         yield _scalar_membership(
             "network_boundary",
@@ -291,6 +277,28 @@ def _evaluate_typed(
             spec.security_states,
             category="hard-gate",
             unknown=candidate.security_state is SecurityState.UNKNOWN,
+        )
+
+    if spec.languages:
+        yield _scalar_membership("language", candidate.language, spec.languages, category="filter")
+    if spec.ecosystems:
+        yield _set_membership("ecosystem", candidate.ecosystems, spec.ecosystems, category="filter")
+    if spec.topics:
+        yield _set_membership("topic", candidate.topics, spec.topics, category="filter")
+    yield from _freshness_predicate(
+        "starred_within_days",
+        candidate.starred_at,
+        spec.starred_within_days,
+        observed_at,
+        category="filter",
+    )
+    if spec.evidence_states:
+        yield _scalar_membership(
+            "evidence_state",
+            candidate.evidence_state,
+            spec.evidence_states,
+            category="filter",
+            unknown=candidate.evidence_state is EvidenceState.UNKNOWN,
         )
     if spec.min_stars is not None:
         unknown = candidate.stars is None

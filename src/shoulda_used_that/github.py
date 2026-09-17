@@ -17,11 +17,14 @@ from shoulda_used_that.errors import (
     GitHubRateLimitError,
     GitHubSchemaError,
 )
+from shoulda_used_that.models import normalize_repository
 
 API_VERSION = "2022-11-28"
 DEFAULT_ACCEPT = "application/vnd.github+json"
 STAR_ACCEPT = "application/vnd.github.star+json"
-TOKEN_PATTERN = re.compile(r"(?i)(gh[pousr]_[A-Za-z0-9_]+|bearer\s+\S+|token:\s*\S+)")
+TOKEN_PATTERN = re.compile(
+    r"(?i)(github_pat_[A-Za-z0-9_]+|gh[pousr]_[A-Za-z0-9_]+|bearer\s+\S+|token:\s*\S+)"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,7 +66,8 @@ class GhClient:
         return self._tool_version
 
     def repository(self, repository: str) -> GhResult:
-        return self._api_json(f"repos/{repository}")
+        canonical = normalize_repository(repository)
+        return self._api_json(f"repos/{canonical}")
 
     def starred(self) -> GhResult:
         result = self._api_json("user/starred", accept=STAR_ACCEPT, paginate=True)

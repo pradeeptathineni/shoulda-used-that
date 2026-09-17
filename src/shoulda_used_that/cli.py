@@ -353,12 +353,25 @@ def _source_requests(
     requests: list[SourceRequest] = []
     for kind in selected:
         if kind is SourceKind.FIXTURE:
+            if not fixture:
+                raise ShouldaError(
+                    "fixture_required", "--source fixture requires at least one --fixture path."
+                )
             requests.extend(SourceRequest(kind=kind, locator=str(path)) for path in fixture)
         elif kind is SourceKind.STARS:
             requests.append(SourceRequest(kind=kind))
         elif kind is SourceKind.GITHUB_SEARCH:
+            if not query:
+                raise ShouldaError(
+                    "query_required", "--source github-search requires at least one --query value."
+                )
             requests.extend(SourceRequest(kind=kind, query=value) for value in query)
         elif kind is SourceKind.REPOSITORY:
+            if not repo:
+                raise ShouldaError(
+                    "repository_required",
+                    "--source repository requires at least one --repo owner/name.",
+                )
             requests.extend(SourceRequest(kind=kind, locator=value) for value in repo)
     if fixture and SourceKind.FIXTURE not in selected:
         raise ShouldaError("unused_fixture", "--fixture requires --source fixture.")

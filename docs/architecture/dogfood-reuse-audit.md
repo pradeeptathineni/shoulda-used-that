@@ -17,7 +17,7 @@ This dated gate records the selected owner for each implementation role. The mac
 | Static quality | Ruff and strict mypy | No overlapping formatter/linter/type checker |
 | Security | pip-audit, CodeQL, dependency review, actionlint, zizmor, Scorecard | Separate dependency, source, workflow, and posture roles |
 | Docs | executed examples, typos, lychee | No documentation framework |
-| Release | GitHub release, checksum, inspected SBOM, GitHub attestation | No PyPI or second release service |
+| Release | CycloneDX Python SBOM, GitHub release, checksum, GitHub attestation | Syft measured and rejected for this Python environment; no PyPI or second release service |
 | VCS lifecycle | Git and GitHub native commits, protected `main`, annotated tag, release | Coherent public commits; push before hosted validation; never rewrite released history |
 
 The implementation deliberately excludes Typer, Poetry, tox, Nox, Black, isort, Flake8, Bandit, Pyright, PyGithub, Octokit, agent frameworks, memory systems, embeddings, and extra release services because their roles are absent or already owned.

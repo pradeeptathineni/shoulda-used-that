@@ -133,9 +133,10 @@ def test_save_scope_errors_fail_before_side_effects(tmp_path: Path, fixture_path
     assert outside.value.code == "save_outside_check_scope"
     assert store.saved_item("fixture-labs/query-needle") is None
 
+    standalone = StateStore(tmp_path / "standalone")
     with pytest.raises(StateError) as plan_without_check:
         saved(
-            StateStore(tmp_path / "standalone"),
+            standalone,
             repositories=("fixture-labs/a",),
             save_all=False,
             from_check_id=None,
@@ -143,6 +144,21 @@ def test_save_scope_errors_fail_before_side_effects(tmp_path: Path, fixture_path
             list_name="Nope",
         )
     assert plan_without_check.value.code == "projection_requires_check"
+    assert standalone.saved_item("fixture-labs/a") is None
+
+    validation_store = StateStore(tmp_path / "plan-validation")
+    validation_check = _checked(validation_store, fixture_path, limit=1)
+    selected = validation_check.result_repositories[0]
+    with pytest.raises(ValueError, match="at most 100"):
+        saved(
+            validation_store,
+            repositories=(selected,),
+            save_all=False,
+            from_check_id=validation_check.check_id,
+            disposition=None,
+            list_name="x" * 101,
+        )
+    assert validation_store.saved_item(selected) is None
 
 
 def test_remembered_binds_evidence_and_supersedes_explicitly(
@@ -180,6 +196,19 @@ def test_remembered_binds_evidence_and_supersedes_explicitly(
     assert check.source_observations[0].payload_fingerprint in first.evidence_ids
     assert second.supersedes == first.decision_id
     assert store.read_decision(second.decision_id) == second
+
+    with pytest.raises(StateError) as outside:
+        remembered(
+            store,
+            repository="fixture-labs/not-observed",
+            need="unrelated",
+            disposition=Disposition.REJECT,
+            rationale=("No evidence",),
+            evidence_ids=(),
+            reconsider_when=("evidence appears",),
+            from_check_id=check.check_id,
+        )
+    assert outside.value.code == "decision_outside_check_scope"
 
     with pytest.raises(StateError) as mismatch:
         remembered(
@@ -272,7 +301,18 @@ def test_recheck_classifies_refresh_and_material_changes(
         checked_at=LATER.replace(minute=1),
     )
     assert material.outcome is RecheckOutcome.MATERIAL_REVIEW_REQUIRED
+    assert material.last_known_good_preserved is True
     assert any(item.field == "license" for item in material.diffs)
+
+    repeated = rechecked(
+        store,
+        target_id=check.check_id,
+        checked_at=LATER.replace(minute=2),
+    )
+    assert repeated.outcome is RecheckOutcome.MATERIAL_REVIEW_REQUIRED
+    assert repeated.prior_check_id == material.prior_check_id
+    assert repeated.last_known_good_fingerprint == material.last_known_good_fingerprint
+    assert any(item.field == "license" for item in repeated.diffs)
 
 
 def test_used_is_plan_only_and_replayable(tmp_path: Path) -> None:
