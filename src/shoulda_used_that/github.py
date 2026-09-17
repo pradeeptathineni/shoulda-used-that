@@ -8,20 +8,24 @@ import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+from urllib.parse import quote, urlparse
 
 from shoulda_used_that.errors import (
     GitHubAuthError,
     GitHubError,
+    GitHubNotFoundError,
     GitHubPartialError,
     GitHubRateLimitError,
     GitHubSchemaError,
 )
 from shoulda_used_that.models import normalize_repository
 
-API_VERSION = "2022-11-28"
+API_VERSION = "2026-03-10"
 DEFAULT_ACCEPT = "application/vnd.github+json"
 STAR_ACCEPT = "application/vnd.github.star+json"
+MAX_API_RESPONSE_BYTES = 20 * 1024 * 1024
+MAX_SBOM_RESPONSE_BYTES = 10 * 1024 * 1024
 TOKEN_PATTERN = re.compile(
     r"(?i)(github_pat_[A-Za-z0-9_]+|gh[pousr]_[A-Za-z0-9_]+|bearer\s+\S+|token:\s*\S+)"
 )
@@ -33,6 +37,14 @@ class GhResult:
     tool_version: str
     endpoint: str
     paginated: bool
+
+
+@dataclass(frozen=True, slots=True)
+class GhSbomResult:
+    state: Literal["available", "pending"]
+    payload: dict[str, Any] | None
+    report_id: str
+    tool_version: str
 
 
 class GhClient:
@@ -69,6 +81,68 @@ class GhClient:
         canonical = normalize_repository(repository)
         return self._api_json(f"repos/{canonical}")
 
+    def repository_languages(self, repository: str) -> GhResult:
+        canonical = normalize_repository(repository)
+        return self._api_json(f"repos/{canonical}/languages")
+
+    def repository_commit(self, repository: str, reference: str) -> GhResult:
+        canonical = normalize_repository(repository)
+        if not reference.strip():
+            raise ValueError("repository commit reference cannot be empty")
+        encoded_reference = quote(reference.strip(), safe="")
+        return self._api_json(f"repos/{canonical}/commits/{encoded_reference}")
+
+    def dependency_sbom(self, repository: str) -> GhSbomResult:
+        """Start and fetch GitHub's current asynchronous dependency-graph report."""
+
+        canonical = normalize_repository(repository)
+        prefix = f"/repos/{canonical}/dependency-graph/sbom/fetch-report/"
+        generated = self._api_json(f"repos/{canonical}/dependency-graph/sbom/generate-report")
+        generated_payload = _require_dict(generated.payload, "SBOM report response")
+        report_url = generated_payload.get("sbom_url")
+        if not isinstance(report_url, str):
+            raise GitHubSchemaError(
+                code="github_sbom_schema_mismatch",
+                message="GitHub's SBOM report response omitted sbom_url.",
+            )
+        parsed = urlparse(report_url)
+        if parsed.scheme != "https" or parsed.netloc != "api.github.com":
+            raise GitHubSchemaError(
+                code="github_sbom_url_unsafe",
+                message="GitHub returned an SBOM report URL outside api.github.com.",
+            )
+        if not parsed.path.casefold().startswith(prefix.casefold()):
+            raise GitHubSchemaError(
+                code="github_sbom_url_mismatch",
+                message="GitHub returned an SBOM report URL for a different repository.",
+            )
+        report_id = parsed.path[len(prefix) :]
+        if not re.fullmatch(r"[0-9a-fA-F-]{36}", report_id):
+            raise GitHubSchemaError(
+                code="github_sbom_report_id_invalid",
+                message="GitHub returned an invalid asynchronous SBOM report identifier.",
+            )
+        fetched = self._api_json(
+            parsed.path.lstrip("/"), maximum_output_bytes=MAX_SBOM_RESPONSE_BYTES
+        )
+        payload = _require_dict(fetched.payload, "SBOM report document")
+        if isinstance(payload.get("spdxVersion"), str):
+            return GhSbomResult("available", payload, report_id, fetched.tool_version)
+        message = payload.get("message")
+        if isinstance(message, str) and any(
+            marker in message.casefold() for marker in ("pending", "progress", "generating")
+        ):
+            return GhSbomResult("pending", None, report_id, fetched.tool_version)
+        if isinstance(message, str) and "fail" in message.casefold():
+            raise GitHubError(
+                code="github_sbom_generation_failed",
+                message="GitHub reported that dependency-graph SBOM generation failed.",
+            )
+        raise GitHubSchemaError(
+            code="github_sbom_schema_mismatch",
+            message="GitHub's completed SBOM report was not an SPDX document.",
+        )
+
     def starred(self) -> GhResult:
         result = self._api_json("user/starred", accept=STAR_ACCEPT, paginate=True)
         pages = _require_list(result.payload, "starred repository pages")
@@ -96,6 +170,7 @@ class GhClient:
         paginate: bool = False,
         fields: dict[str, str] | None = None,
         etag: str | None = None,
+        maximum_output_bytes: int = MAX_API_RESPONSE_BYTES,
     ) -> GhResult:
         tool_version = self._tool_version or self.check_environment()
         args = [
@@ -120,6 +195,15 @@ class GhClient:
             self._raise_api_failure(endpoint, completed)
         if etag and not completed.stdout.strip():
             return GhResult({"not_modified": True}, tool_version, endpoint, paginate)
+        if len(completed.stdout.encode("utf-8")) > maximum_output_bytes:
+            raise GitHubSchemaError(
+                code="github_response_too_large",
+                message=(
+                    f"GitHub response for {endpoint} exceeded the "
+                    f"{maximum_output_bytes}-byte safety limit."
+                ),
+                details={"endpoint": endpoint, "maximum_bytes": maximum_output_bytes},
+            )
         try:
             payload = json.loads(completed.stdout)
         except json.JSONDecodeError as exc:
@@ -169,6 +253,12 @@ class GhClient:
             raise GitHubRateLimitError(
                 code="github_rate_limited",
                 message=f"GitHub rate-limited the read for {endpoint}.",
+                details=details,
+            )
+        if "http 404" in lowered or "not found" in lowered:
+            raise GitHubNotFoundError(
+                code="github_not_found",
+                message=f"GitHub did not expose the requested resource at {endpoint}.",
                 details=details,
             )
         if "http 401" in lowered or "bad credentials" in lowered or "authentication" in lowered:

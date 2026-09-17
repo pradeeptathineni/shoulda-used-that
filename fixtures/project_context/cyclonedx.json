@@ -1,0 +1,49 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-17T12:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "fixture-web-project",
+      "version": "1.0.0"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "example-package",
+      "version": "2.0.0",
+      "purl": "pkg:npm/example-package@2.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "components": [
+        {
+          "type": "library",
+          "name": "nested-package",
+          "version": "1.2.3",
+          "purl": "pkg:npm/nested-package@1.2.3",
+          "licenses": [
+            {
+              "expression": "Apache-2.0 OR MIT"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:npm/example-package@2.0.0",
+      "dependsOn": [
+        "pkg:npm/nested-package@1.2.3"
+      ]
+    }
+  ]
+}

@@ -25,6 +25,7 @@ from shoulda_used_that.models import (
     SavedItem,
     SaveReceipt,
 )
+from shoulda_used_that.project_context import ProjectSnapshot
 
 PROFILE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
 ModelT = TypeVar("ModelT", bound=BaseModel)
@@ -73,6 +74,8 @@ class StateStore:
             self.profile_root / "plans" / "adoptions",
             self.profile_root / "curations",
             self.profile_root / "curations" / "latest",
+            self.profile_root / "projects",
+            self.profile_root / "projects" / "latest",
         ):
             self._mkdir(path)
 
@@ -214,6 +217,48 @@ class StateStore:
     def _curation_pointer_path(self, profile_id: str) -> Path:
         pointer_id = digest(profile_id, prefix="profile")
         return self._path("curations", "latest", f"{pointer_id}.json")
+
+    def write_project(self, snapshot: ProjectSnapshot) -> bool:
+        self.initialize()
+        created = self._write_immutable(
+            self._path("projects", f"{snapshot.project_snapshot_id}.json"), snapshot
+        )
+        pointer = {
+            "project_snapshot_id": snapshot.project_snapshot_id,
+            "target_identity": snapshot.target_identity,
+            "canonical_fingerprint": snapshot.canonical_fingerprint,
+        }
+        self._write_pointer(self._path("latest-project.json"), pointer)
+        identity = digest(snapshot.target_identity, prefix="target")
+        self._write_pointer(self._path("projects", "latest", f"{identity}.json"), pointer)
+        return created
+
+    def read_project(self, snapshot_id: str) -> ProjectSnapshot:
+        return self._read_model(
+            self._path("projects", f"{_safe_id(snapshot_id)}.json"), ProjectSnapshot
+        )
+
+    def latest_project(self, target_identity: str | None = None) -> ProjectSnapshot | None:
+        if target_identity is None:
+            pointer_path = self._path("latest-project.json")
+        else:
+            identity = digest(target_identity, prefix="target")
+            pointer_path = self._path("projects", "latest", f"{identity}.json")
+        if not pointer_path.exists():
+            return None
+        pointer = self._read_json(pointer_path)
+        if target_identity is not None and pointer.get("target_identity") != target_identity:
+            raise StateError(
+                code="latest_project_invalid",
+                message="The project pointer has the wrong target identity.",
+            )
+        snapshot_id = pointer.get("project_snapshot_id")
+        if not isinstance(snapshot_id, str):
+            raise StateError(
+                code="latest_project_invalid",
+                message="The latest-project pointer is invalid; run 'shoulda inspected' again.",
+            )
+        return self.read_project(snapshot_id)
 
     def resolve_check_for_target(self, target_id: str) -> tuple[CheckReceipt, str]:
         baseline_path = self._path("baselines", f"{_safe_id(target_id)}.json")

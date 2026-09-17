@@ -19,6 +19,7 @@ from shoulda_used_that.models import (
     RecheckReceipt,
     SaveReceipt,
 )
+from shoulda_used_that.project_context import ProjectSnapshot
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "schemas"
@@ -32,6 +33,7 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "save-receipt": SaveReceipt,
     "curation-profile": CurationProfile,
     "curation-snapshot": CurationSnapshot,
+    "project-snapshot": ProjectSnapshot,
 }
 
 

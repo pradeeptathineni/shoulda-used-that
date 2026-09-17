@@ -34,6 +34,7 @@ def test_all_renderings_are_derived_from_validated_model(
     assert receipt.result_repositories[0] in table
     assert "all predicates passed" in table
     assert "\x1b[" not in table
+    assert table.count(receipt.result_repositories[0]) == 1
 
 
 def test_public_exports_are_allowlists_without_private_values(
