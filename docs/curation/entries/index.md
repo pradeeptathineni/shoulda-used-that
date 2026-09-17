@@ -7,6 +7,9 @@ tags:
 ---
 # Catalog entries
 
+Use site search when you know a repository name, technology, or phrase. If you are still naming the
+problem, [browse collections](../collections/index.md) instead.
+
 Every card is a contextual decision, not a universal endorsement. This catalog records evidence\-bound decisions for named needs and does not claim a universal best\-OSS ranking or automatic adoption recommendation\.
 
 <div class="catalog-grid">
@@ -1464,7 +1467,7 @@ Every card is a contextual decision, not a universal endorsement. This catalog r
   <h3><a href="../entries/vale-cli--vale.md">vale-cli/vale</a></h3>
   <p>Markup-aware prose linter with project-owned styles and offline execution.</p>
   <p class="catalog-card__role"><strong>Role</strong> deterministic public-writing lint</p>
-  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler in the most visible public entrypoints without building a prose engine or making a model authoritative.</p>
+  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler across public prose without building a prose engine or making an editorial model authoritative.</p>
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>

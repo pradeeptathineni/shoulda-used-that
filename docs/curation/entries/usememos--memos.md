@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/usememos/memos){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** homelab and self\-hosted operations prior art<br>
 **Need:** Compare widely used self\-hosted services, networking, storage, monitoring, and deployment tools before operating a home service\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 63,125 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** homelab and self\-hosted operations prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/homelab-self-hosting.md">Homelab &amp; Self-Hosting</a>
+
+## Reconsider when
+
+The project becomes inactive, materially changes its self\-hosted or license terms, or no longer has a maintainable deployment path\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 
 - <a href="https://api.github.com/repos/usememos/memos">https://api.github.com/repos/usememos/memos</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project becomes inactive, materially changes its self\-hosted or license terms, or no longer has a maintainable deployment path\.
 
 ## Attribution
 

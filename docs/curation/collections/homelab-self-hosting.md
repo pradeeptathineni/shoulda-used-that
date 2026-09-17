@@ -12,16 +12,12 @@ tags:
 
 <p class="collection-deck">Private cloud, networking, storage, media, monitoring, and personally operated services.</p>
 
-**Aliases:** Kubernetes at home, NAS, home lab, self\-hosted<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 90 days
-
-## Meaning
+## Use this collection when
 
 A durable domain collection for software used to run personally operated infrastructure and services\.
 
-- **Include:** Include a reviewed repository when operating a homelab or self\-hosted service is one of its evidenced primary uses\.
-- **Exclude:** Exclude hosted\-only products and generic cloud tools without a specific self\-hosting role\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -202,3 +198,12 @@ A durable domain collection for software used to run personally operated infrast
   <p class="catalog-card__need"><strong>Need</strong> Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** Kubernetes at home, NAS, home lab, self\-hosted<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 90 days
+
+- **Include:** Include a reviewed repository when operating a homelab or self\-hosted service is one of its evidenced primary uses\.
+- **Exclude:** Exclude hosted\-only products and generic cloud tools without a specific self\-hosting role\.

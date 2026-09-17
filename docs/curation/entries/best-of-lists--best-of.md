@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/best-of-lists/best-of){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** attributed discovery source<br>
 **Need:** Human\-curated public seeds and refreshed metadata without treating rank as fit\.<br>
 **Why:** Published data is useful provenance; generic score and presence never prove suitability\.<br>
+**Role:** attributed discovery source<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+License, published data shape, or attribution terms change\.
 
 ## Observed facts
 
@@ -40,10 +44,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-License, published data shape, or attribution terms change\.
 
 ## Attribution
 

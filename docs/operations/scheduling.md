@@ -131,7 +131,7 @@ GitHub schedules are not a real-time guarantee: runs may be delayed during load,
 latest default-branch commit, and can be disabled after repository inactivity. No schedule should
 be treated as proof that evidence is current; the dated catalog receipt remains authoritative.
 
-## Personal curation remains manual in `v0.2.0`
+## Personal curation remains manual in `v0.3.0`
 
 Authenticated Stars/Lists reads and projection planning use the existing keyring-backed `gh`
 session and can be run manually from the [GitHub curation runbook](github-curation.md). They are not

@@ -237,9 +237,12 @@ def test_version_and_help_expose_stable_surface() -> None:
     runner = CliRunner()
     version = runner.invoke(cli, ["--version"])
     help_result = runner.invoke(cli, ["--help"])
+    checked_help = runner.invoke(cli, ["checked", "--help"])
     assert version.exit_code == 0
-    assert version.stdout == "shoulda, version 0.2.0\n"
+    assert version.stdout == "shoulda, version 0.3.0\n"
     assert help_result.exit_code == 0
+    assert "Start here: checked finds options" in help_result.stdout
+    assert "Find candidates for a need and record the exact visible result." in help_result.stdout
     for command in (
         "checked",
         "curated",
@@ -254,3 +257,6 @@ def test_version_and_help_expose_stable_surface() -> None:
         "verify",
     ):
         assert command in help_result.stdout
+    assert checked_help.exit_code == 0
+    assert "Explicit discovery source" in checked_help.stdout
+    assert "Show why candidates passed or were removed" in checked_help.stdout

@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/donnemartin/system-design-primer){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Kept for educational value without an integration claim\.<br>
-**Role:** OSS discovery, comparison, and learning prior art<br>
 **Need:** Consult maintained catalogs, learning maps, and repository\-evaluation tools before inventing another component or curation surface\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 370,475 stars, a recent default\-branch push, and CC\-BY\-4\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** OSS discovery, comparison, and learning prior art<br>
+**Status meaning:** Kept for educational value without an integration claim\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+The catalog becomes stale, loses transparent methodology, changes license, or no longer supplies evidence useful to a named decision\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 - <a href="https://api.github.com/repos/donnemartin/system-design-primer">https://api.github.com/repos/donnemartin/system-design-primer</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="https://github.com/donnemartin/system-design-primer/blob/master/LICENSE.txt">https://github.com/donnemartin/system-design-primer/blob/master/LICENSE.txt</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The catalog becomes stale, loses transparent methodology, changes license, or no longer supplies evidence useful to a named decision\.
 
 ## Attribution
 

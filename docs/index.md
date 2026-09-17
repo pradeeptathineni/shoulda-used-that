@@ -1,6 +1,6 @@
 ---
 title: ShouldaUsedThat
-description: Find and vet existing open source before building from scratch.
+description: Find existing open source before building from scratch, then keep the evidence behind the choice.
 hide:
   - toc
 ---
@@ -8,35 +8,46 @@ hide:
 # Check before you build
 
 Start with the need, not a blank file. ShouldaUsedThat helps you find existing open-source options,
-inspect why they may fit, and keep the evidence that could change the decision later.
+see why they may fit, and keep the evidence that could change the decision later.
 
 <div class="home-actions" markdown>
 
-[Find existing OSS](curation/index.md){ .md-button .md-button--primary }
-[See the product use itself](curation/dogfood.md){ .md-button }
-[Understand the safety boundary](architecture/implementation-brief.md){ .md-button }
+[Browse by need](curation/index.md){ .md-button .md-button--primary }
+[Try the CLI](getting-started.md){ .md-button }
+[See the project use itself](curation/dogfood.md){ .md-button }
 
 </div>
 
-## What you can learn here
+## A useful entry answers four questions
 
-- **What already exists** for a concrete engineering or personal-interest area.
-- **How each option is being treated:** used, trialing, reference, learning, watch, or rejected.
-- **Why the choice may fit**, what evidence supports it, and what would trigger another look.
-- **Which tools this repository actually uses** instead of quietly rebuilding their jobs.
+1. **What need does this serve?** The catalog is organized around jobs, not a generic popularity
+   contest.
+2. **Why is it here?** Each entry states the contextual rationale and decision status.
+3. **How fresh is the evidence?** Observed facts are dated instead of presented as permanent.
+4. **What would change the decision?** Every reviewed choice carries a reconsideration trigger.
 
-## The repository uses the same process
+Open the [catalog overview](curation/index.md) to choose a collection, or search for a repository,
+technology, or need. Start with [what this project actually uses](curation/in-use.md) if you want a
+concrete example of decisions backed by repository evidence.
 
-The repository generates this site and its own GitHub Lists from the same reviewed public profile.
-Every GitHub change goes through an exact additive plan and an independent readback. The
-[dogfood page](curation/dogfood.md) shows the command-level chain. The
-[live evidence](operations/live-projection.md) says what was actually verified without publishing
-private account state.
+## The short version of the workflow
 
-The catalog comes from an explicitly public profile. A star is a bookmark, not adoption evidence.
-“Reviewed” means the stated metadata and fit checks passed; it does not claim a code or security
-audit. Canonical JSON and immutable receipts remain authoritative beneath the website.
+```text
+find options → keep the exact result → record the choice → revisit when evidence changes
+  checked           saved               remembered              rechecked
+```
 
-Operators can use the [GitHub curation runbook](operations/github-curation.md) for exact approval
-and readback boundaries, or the [read-only scheduling guide](operations/scheduling.md) for safe
-local and repository upkeep.
+The local workflow is deterministic and keeps its state outside the repository. A planning-only
+`used` record can describe an adoption without editing the target. The [getting-started guide](getting-started.md)
+walks through each step with a public fixture and no GitHub login.
+
+## Claims stay bounded
+
+A star is a bookmark. “Reviewed” means the stated metadata and fit checks passed or a visible,
+narrow exception was recorded; it does not mean code audit, security approval, adoption, or a
+universal rank. Canonical JSON and immutable receipts sit beneath the readable pages.
+
+ShouldaUsedThat builds this site and its public GitHub Lists from the same profile. The
+[self-use story](curation/dogfood.md) explains the result in plain language. Exact approval and
+readback controls live in the [operator runbook](operations/github-curation.md), where readers who
+need that depth can find them without carrying the machinery through the first visit.

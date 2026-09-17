@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/pradeeptathineni/shoulda-used-that){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** The residual capability this repository deliberately owns\.<br>
-**Role:** deterministic evidence and curation coordinator<br>
 **Need:** Own the residual project plus need plus evidence plus decision plus freshness relationship\.<br>
 **Why:** Existing systems remain authoritative for transport, inventory, discovery, security, and rendering; the small cross\-context receipt layer remains unique\.<br>
+**Role:** deterministic evidence and curation coordinator<br>
+**Status meaning:** The residual capability this repository deliberately owns\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+
+## Reconsider when
+
+An established component supplies the complete residual under the same privacy and mutation guarantees\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 ### Source provenance
 
 - <a href="../../architecture/curation-v0.2.md">docs/architecture/curation-v0.2.md</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-An established component supplies the complete residual under the same privacy and mutation guarantees\.
 
 ## Attribution
 

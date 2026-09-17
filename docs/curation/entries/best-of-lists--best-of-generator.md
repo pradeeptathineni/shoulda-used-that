@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/best-of-lists/best-of-generator){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Considered and not selected for this context; the reason is evidence\-bound\.<br>
-**Role:** catalog generator runtime<br>
 **Need:** Avoid a generator that can turn enrichment failure into candidate disappearance\.<br>
 **Why:** GPL and content boundaries plus observed last\-known\-good failures make embedding unjustified\.<br>
+**Role:** catalog generator runtime<br>
+**Status meaning:** Considered and not selected for this context; the reason is evidence\-bound\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+License documentation and fail\-closed last\-known\-good behavior are resolved upstream\.
 
 ## Observed facts
 
@@ -40,10 +44,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-License documentation and fail\-closed last\-known\-good behavior are resolved upstream\.
 
 ## Attribution
 

@@ -9,22 +9,31 @@ tags:
 
 <div class="catalog-hero">
   <p class="catalog-kicker">Check before you build</p>
-  <p class="catalog-lead">Find open-source options by the need they serve, then inspect the evidence and decision behind each one.</p>
+  <p class="catalog-lead">Name the job. Find credible open-source options. See why each one is here and what could change the decision.</p>
   <div class="catalog-actions">
-    <a class="md-button md-button--primary" href="entries/index.md">Search all entries</a>
-    <a class="md-button" href="in-use.md">See what is used here</a>
-    <a class="md-button" href="dogfood.md">See Shoulda use itself</a>
+    <a class="md-button md-button--primary" href="collections/index.md">Browse by need</a>
+    <a class="md-button" href="entries/index.md">Find a repository</a>
+    <a class="md-button" href="in-use.md">See a worked example</a>
   </div>
 </div>
 
 !!! info "What reviewed means"
     Each entry passed its stated metadata and fit checks or carries a visible exception. This is not a code audit, security approval, adoption claim, or universal ranking. A GitHub star is only a bookmark.
 
-## Catalog at a glance
+## How to read an entry
 
-This export contains **222 reviewed records** across **12 public collections**. **222 records** were inside the profile's **90-day review window** at **2026-09-17T16:00 UTC**. “Current” refers to each record's last review timestamp, not a code audit, security result, or guarantee of active maintenance. Counts describe this bounded snapshot; they are not popularity scores.
+Start with **Need** and **Why it is here**. The status says how this repository treats the option:
+used here, trialing, reference, learning, watch, rejected, built here, or inbox. Then check the
+evidence date and **Reconsider when** trigger before relying on the choice.
 
-Start with a collection below, use site search for a repository or need, or open the [complete entry index](entries/index.md). The overview stays short; individual entries retain rationale, provenance, freshness, and reconsideration triggers.
+## Choose a need
+
+These **12 collections** contain **222 reviewed records**. Open the domain
+closest to your problem, or use site search for a repository, technology, or phrase.
+
+**222 records** were inside the profile's **90-day
+review window** at **2026-09-17T16:00 UTC**. “Current” describes the review
+date, not a security result or guarantee of active maintenance.
 
 <div class="catalog-grid">
 <article class="catalog-card collection-card">
@@ -101,7 +110,13 @@ Start with a collection below, use site search for a repository or need, or open
 </article>
 </div>
 
-## Portable evidence
+## Want to see the method on itself?
+
+Read [what ShouldaUsedThat uses](in-use.md) for concrete choices, or follow the
+[catalog-to-GitHub self-use story](dogfood.md). The complete [entry index](entries/index.md) is
+available when you already know what you want.
+
+## Download or audit the evidence
 
 - [Canonical public JSON](catalog.json)
 - [Digest and reproducibility manifest](manifest.json)

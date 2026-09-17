@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/k3s-io/k3s){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** cloud infrastructure and infrastructure\-as\-code prior art<br>
 **Need:** Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 33,976 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** cloud infrastructure and infrastructure\-as\-code prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/cloud-infrastructure-iac.md">Cloud Infrastructure &amp; IaC</a>, <a href="../collections/homelab-self-hosting.md">Homelab &amp; Self-Hosting</a>
+
+## Reconsider when
+
+The project is archived, changes license or governance materially, or no longer supports the relevant infrastructure boundary\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 
 - <a href="https://api.github.com/repos/k3s-io/k3s">https://api.github.com/repos/k3s-io/k3s</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project is archived, changes license or governance materially, or no longer supports the relevant infrastructure boundary\.
 
 ## Attribution
 

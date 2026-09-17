@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/AmintaCCCP/GithubStarsManager){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** star\-manager UX prior art<br>
 **Need:** Learn from mature star search and organization without inheriting its runtime boundary\.<br>
 **Why:** The interface is useful prior art; credential, provider, plugin, and release\-provenance concerns keep it out of the runtime\.<br>
+**Role:** star\-manager UX prior art<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+Credential storage, outbound boundaries, and verifiable release provenance are independently resolved\.
 
 ## Observed facts
 
@@ -40,10 +44,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-Credential storage, outbound boundaries, and verifiable release provenance are independently resolved\.
 
 ## Attribution
 

@@ -7,7 +7,9 @@ tags:
 ---
 # What ShouldaUsedThat uses
 
-“Used here” means repository or configuration evidence confirms a named role. It does not turn a local choice into a universal recommendation.
+This is the catalog's clearest worked example: every item below owns a named job in this repository,
+and repository or configuration evidence confirms that use. It answers “what did this project use
+instead of rebuilding?”—not “what should every project use?”
 
 <div class="table-scroll" role="region" aria-label="Toolchain role inventory" tabindex="0">
 <table>
@@ -18,7 +20,7 @@ tags:
 <tr><th scope="row">Development</th><td>uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale</td><td><a href="../architecture/dogfood-reuse-audit.md">decision evidence</a></td></tr>
 <tr><th scope="row">CI</th><td>GitHub Actions, checkout, setup-uv, and tested distribution artifacts</td><td><a href="../architecture/dogfood-reuse-audit.md">decision evidence</a></td></tr>
 <tr><th scope="row">Security</th><td>pip-audit, CodeQL, dependency review, actionlint, zizmor, and Scorecard</td><td><a href="../decisions/quality-security.json">decision evidence</a></td></tr>
-<tr><th scope="row">Docs</th><td>Generated Markdown/JSON, Vale, typos, lychee, and the bounded Zensical trial</td><td><a href="../decisions/public-writing.json">decision evidence</a></td></tr>
+<tr><th scope="row">Docs</th><td>Generated Markdown/JSON, First Reader, local ZeroSlop checks, Vale, typos, lychee, and Zensical</td><td><a href="../decisions/public-writing-v0.3.json">decision evidence</a></td></tr>
 <tr><th scope="row">Release</th><td>Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations</td><td><a href="../decisions/sbom-release.json">decision evidence</a></td></tr>
   </tbody>
 </table>
@@ -88,7 +90,7 @@ tags:
   <h3><a href="entries/vale-cli--vale.md">vale-cli/vale</a></h3>
   <p>Markup-aware prose linter with project-owned styles and offline execution.</p>
   <p class="catalog-card__role"><strong>Role</strong> deterministic public-writing lint</p>
-  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler in the most visible public entrypoints without building a prose engine or making a model authoritative.</p>
+  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler across public prose without building a prose engine or making an editorial model authoritative.</p>
 </article>
 </div>
 

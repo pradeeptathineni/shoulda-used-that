@@ -1,6 +1,6 @@
 # GitHub curation operator runbook
 
-This runbook is for the only live mutation kind supported in `v0.2.0`: an explicitly approved,
+This runbook is for the only live mutation kind supported in `v0.3.0`: an explicitly approved,
 sealed `github-curation` plan. It never authorizes a Star or List change by itself.
 
 ## Safety model

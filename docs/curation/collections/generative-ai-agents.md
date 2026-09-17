@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Foundation-model tooling, inference, RAG, agents, evaluation, context, and multimodal generation.</p>
 
-**Aliases:** GenAI, LLM, agentic AI<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 A durable domain collection for reviewed generative\-AI and agent\-system components and references\.
 
-- **Include:** Include a reviewed repository when it directly supports a named model, agent, context, memory, inference, or evaluation need\.
-- **Exclude:** Exclude hype\-only discovery signals, closed model artifacts, and repositories without evidence for a named need\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -215,3 +211,12 @@ A durable domain collection for reviewed generative\-AI and agent\-system compon
   <p class="catalog-card__need"><strong>Need</strong> Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** GenAI, LLM, agentic AI<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository when it directly supports a named model, agent, context, memory, inference, or evaluation need\.
+- **Exclude:** Exclude hype\-only discovery signals, closed model artifacts, and repositories without evidence for a named need\.

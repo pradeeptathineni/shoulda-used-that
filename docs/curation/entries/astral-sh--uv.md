@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/astral-sh/uv){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** development environment, lock, and execution<br>
 **Need:** One reproducible Python environment and lock owner\.<br>
 **Why:** uv owns the environment and lock without layering Poetry, tox, or Nox\.<br>
+**Role:** development environment, lock, and execution<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+
+## Reconsider when
+
+The lock or cross\-platform execution contract stops being reproducible\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 ### Source provenance
 
 - <a href="../../architecture/dogfood-reuse-audit.md">docs/architecture/dogfood-reuse-audit.md</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-The lock or cross\-platform execution contract stops being reproducible\.
 
 ## Attribution
 

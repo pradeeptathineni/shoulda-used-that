@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/nature-of-code/noc-examples-processing){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Kept for educational value without an integration claim\.<br>
-**Role:** creative\-coding and data\-visualization prior art<br>
 **Need:** Compare established visual, generative, interactive, animation, and declarative\-visualization tools before building a custom rendering layer\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 2,577 stars, a recent default\-branch push, and MIT licensing; the reviewed exception was: This stable MIT\-licensed example corpus is the canonical Processing companion to a directly stated creative\-simulation interest\.\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** creative\-coding and data\-visualization prior art<br>
+**Status meaning:** Kept for educational value without an integration claim\.<br>
 **Collections:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>, <a href="../collections/nature-physics-simulation.md">Nature, Physics &amp; Simulation</a>
+
+## Reconsider when
+
+The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 
 - <a href="https://api.github.com/repos/nature-of-code/noc-examples-processing">https://api.github.com/repos/nature-of-code/noc-examples-processing</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it\.
 
 ## Attribution
 

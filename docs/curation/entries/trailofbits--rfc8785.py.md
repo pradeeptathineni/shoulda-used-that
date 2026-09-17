@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/trailofbits/rfc8785.py){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** runtime canonical JSON<br>
 **Need:** Interoperable content identity for immutable receipts\.<br>
 **Why:** A standards implementation avoids incomplete sorted\-JSON identity rules\.<br>
+**Role:** runtime canonical JSON<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+
+## Reconsider when
+
+Published RFC vectors fail or compatibility changes\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/canonical-state.json">docs/decisions/canonical-state.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-Published RFC vectors fail or compatibility changes\.
 
 ## Attribution
 

@@ -4,7 +4,7 @@
 
 - Keep the core deterministic and runtime-AI-free. Facts, gates, hashes, state transitions, and mutation plans must not depend on a model.
 - Never write coordinator state into another repository. Runtime state belongs under `platformdirs` or an explicit `--state-dir`.
-- Live GitHub behavior remains read-only for every read/reason/record command. In `v0.2.0`, `apply` may execute only an explicitly approved, unexpired `github-curation` plan whose full fingerprint and exact account match. It may add stars, create Lists, and add memberships; it must never unstar, remove membership, delete/rename a List, change privacy, run in CI, or edit a target.
+- Live GitHub behavior remains read-only for every read/reason/record command. In `v0.3.0`, `apply` may execute only an explicitly approved, unexpired `github-curation` plan whose full fingerprint and exact account match. It may add stars, create Lists, and add memberships; it must never unstar, remove membership, delete/rename a List, change privacy, run in CI, or edit a target.
 - Use only public or synthetic fixtures. Do not use the maintainer's other projects as guidance, fixtures, or hidden test inputs.
 - JSON is authoritative for hashed state. YAML, Markdown, and terminal tables are renderings.
 - Add a public prior-art receipt before or alongside a production dependency or substantial custom module.

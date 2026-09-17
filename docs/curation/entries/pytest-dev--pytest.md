@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/pytest-dev/pytest){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Confirmed by repository evidence for the named role\.<br>
-**Role:** development test runner<br>
 **Need:** Readable scenario and contract tests across supported Python versions\.<br>
 **Why:** pytest is the single test runner; property and coverage tools have distinct roles\.<br>
+**Role:** development test runner<br>
+**Status meaning:** Confirmed by repository evidence for the named role\.<br>
 **Collections:** <a href="../collections/python-engineering.md">Python Engineering</a>, <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
+
+## Reconsider when
+
+Supported Python compatibility or plugin behavior becomes unsuitable\.
 
 ## Observed facts
 
@@ -41,10 +45,6 @@ tags:
 ### Source provenance
 
 - <a href="../../decisions/quality-security.json">docs/decisions/quality-security.json</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-Supported Python compatibility or plugin behavior becomes unsuitable\.
 
 ## Attribution
 

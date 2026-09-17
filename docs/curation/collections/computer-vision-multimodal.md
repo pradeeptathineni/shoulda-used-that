@@ -12,16 +12,12 @@ tags:
 
 <p class="collection-deck">Image and video understanding, generation, geometry, perception, and vision-language systems.</p>
 
-**Aliases:** 3D vision, CV, VLM, image processing<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 90 days
-
-## Meaning
+## Use this collection when
 
 A durable domain collection for reviewed visual perception, generation, and multimodal systems\.
 
-- **Include:** Include a reviewed repository when image, video, geometry, or vision\-language work is an evidenced primary role\.
-- **Exclude:** Exclude generic model tooling without a reviewed visual or multimodal use\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -125,3 +121,12 @@ A durable domain collection for reviewed visual perception, generation, and mult
   <p class="catalog-card__need"><strong>Need</strong> Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** 3D vision, CV, VLM, image processing<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 90 days
+
+- **Include:** Include a reviewed repository when image, video, geometry, or vision\-language work is an evidenced primary role\.
+- **Exclude:** Exclude generic model tooling without a reviewed visual or multimodal use\.

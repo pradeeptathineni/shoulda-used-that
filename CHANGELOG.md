@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-17
+
 ### Added
 
 - A 206-repository personal-interest selection compiled into a 222-record catalog spanning 12
@@ -15,6 +17,8 @@ All notable changes to this project are documented here. The format is based on 
   GitHub repository metadata and reseals the profile.
 - A Vale-based offline public-writing gate, context-free first-reader review policy, and explicit
   boundaries for optional AI-pattern diagnostics.
+- A reader-first getting-started guide, outcome-oriented CLI help, and an explicit verified-wheel
+  installation path.
 
 ### Changed
 
@@ -27,6 +31,12 @@ All notable changes to this project are documented here. The format is based on 
   generated rationales state the exact metadata-and-fit review boundary.
 - Projection and apply orchestration now separate validation and live-capability phases, with a
   Ruff complexity ceiling preventing further branch growth.
+- Public entrypoints now lead with browsing, a no-authentication check, or verified installation;
+  operator mechanics remain directly linked one layer deeper.
+- Catalog collections and entries now introduce the reader's need, rationale, status meaning, and
+  reconsideration trigger before provenance detail.
+- The release workflow derives its SBOM name and release-notes path from the verified tag instead
+  of embedding one release version.
 
 ### Verified
 
@@ -78,6 +88,7 @@ All notable changes to this project are documented here. The format is based on 
 - Profile-scoped external state, immutable decisions, last-known-good revalidation, and read-only projection plans.
 - Public reuse receipts, schemas, synthetic fixtures, packaging, CI, security checks, SBOM, and release provenance.
 
-[Unreleased]: https://github.com/pradeeptathineni/shoulda-used-that/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/pradeeptathineni/shoulda-used-that/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.3.0
 [0.2.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.2.0
 [0.1.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.1.0

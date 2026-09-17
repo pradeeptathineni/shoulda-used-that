@@ -833,5 +833,5 @@ def test_noop_and_missing_scope_human_renderings_are_actionable() -> None:
         account="pradeeptathineni",
         created_at=NOW,
     )
-    assert "operator-action=gh auth refresh" in render(missing_scope, OutputFormat.TABLE)
+    assert "Operator action required: gh auth refresh" in render(missing_scope, OutputFormat.TABLE)
     assert "Operator action required" in render(missing_scope, OutputFormat.MARKDOWN)

@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Catalogs, decision records, learning maps, native surfaces, and OSS evaluation tools.</p>
 
-**Aliases:** GitHub stars, open source curation, prior art<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 The product\-specific collection showing the components, sources, and prior art behind evidence\-backed OSS consideration\.
 
-- **Include:** Include a reviewed repository when it is used by, evaluated for, or materially informs OSS discovery or ShouldaUsedThat&#x27;s workflow\.
-- **Exclude:** Exclude unreviewed discovery results and components without a documented decision effect\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -191,7 +187,7 @@ The product\-specific collection showing the components, sources, and prior art 
   <h3><a href="../entries/vale-cli--vale.md">vale-cli/vale</a></h3>
   <p>Markup-aware prose linter with project-owned styles and offline execution.</p>
   <p class="catalog-card__role"><strong>Role</strong> deterministic public-writing lint</p>
-  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler in the most visible public entrypoints without building a prose engine or making a model authoritative.</p>
+  <p class="catalog-card__need"><strong>Need</strong> Catch repeated hype and filler across public prose without building a prose engine or making an editorial model authoritative.</p>
 </article>
 <article class="catalog-card">
   <div class="catalog-card__meta"><span class="status-chip status-chip--reference">Reference</span> <span class="freshness-chip freshness-chip--current">current</span></div>
@@ -208,3 +204,12 @@ The product\-specific collection showing the components, sources, and prior art 
   <p class="catalog-card__need"><strong>Need</strong> Responsive Markdown rendering, tags, and private client-side search without a custom frontend.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** GitHub stars, open source curation, prior art<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository when it is used by, evaluated for, or materially informs OSS discovery or ShouldaUsedThat&#x27;s workflow\.
+- **Exclude:** Exclude unreviewed discovery results and components without a documented decision effect\.

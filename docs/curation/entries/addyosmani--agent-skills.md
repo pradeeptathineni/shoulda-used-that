@@ -17,13 +17,17 @@ tags:
 
 [Open repository](https://github.com/addyosmani/agent-skills){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Role:** pinned development guidance<br>
 **Need:** Selective context and source\-driven development guidance\.<br>
 **Why:** Two complete MIT\-licensed skills are pinned as guidance and are not runtime dependencies\.<br>
+**Role:** pinned development guidance<br>
+**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
 **Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>, <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+
+## Reconsider when
+
+A later pinned revision is fully reviewed and materially improves the workflow\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 ### Source provenance
 
 - <a href="../../development/context-receipt.md">docs/development/context-receipt.md</a> — observed `2026-09-17T12:00:00+00:00`
-
-## Reconsider when
-
-A later pinned revision is fully reviewed and materially improves the workflow\.
 
 ## Attribution
 

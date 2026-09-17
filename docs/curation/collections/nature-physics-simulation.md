@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Artificial life, physics, agents, procedural systems, reinforcement learning, and simulation.</p>
 
-**Aliases:** emergent systems, generative nature, nature simulation<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 120 days
-
-## Meaning
+## Use this collection when
 
 A durable collection for software that models physical, natural, agent\-based, or emergent systems\.
 
-- **Include:** Include a reviewed repository when simulation of physical, natural, agent, or emergent behavior is a central role\.
-- **Exclude:** Exclude general graphics or numerical tools without a reviewed simulation use\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -117,3 +113,12 @@ A durable collection for software that models physical, natural, agent\-based, o
   <p class="catalog-card__need"><strong>Need</strong> Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** emergent systems, generative nature, nature simulation<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 120 days
+
+- **Include:** Include a reviewed repository when simulation of physical, natural, agent, or emergent behavior is a central role\.
+- **Exclude:** Exclude general graphics or numerical tools without a reviewed simulation use\.

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_public_writing_v0_3_2026_09_17",
+  "supersedes": "par_public_writing_2026_09_17",
+  "need": "Review every public human-readable surface while keeping imported prose, factual claims, and deterministic runtime behavior outside editorial-tool authority.",
+  "artifact_role": "public_surface_editorial_review",
+  "discovery": {
+    "queries": [
+      "First Reader context-free repository review",
+      "ZeroSlop 2.12.1 local formal prose scorer",
+      "public documentation surface inventory",
+      "generated documentation and imported upstream prose boundary"
+    ],
+    "stop_condition": "The existing pinned tools covered first-impression, wayfinding, lexical, structural, copy-desk, read-aloud, and fresh-eyes review without adding a runtime dependency or hosted prose service."
+  },
+  "contenders": [
+    {
+      "name": "First Reader in Shubhamsaboo/awesome-llm-apps at f163bb5a92111cee4610ac98e5dce4c6a2a09c26",
+      "disposition": "adopt-review-technique",
+      "evidence": [
+        "Apache-2.0 parent repository",
+        "fresh skimmer, skeptical, sympathetic, recall, trust, and wayfinding roles",
+        "the v0.3.0 README review found that readers understood the opening but left when audit machinery displaced a concrete next step",
+        "no runtime or package dependency"
+      ]
+    },
+    {
+      "name": "ZeroSlop 2.12.1 at 98e34b5cddbafdb25bff385d046fe0cef4d05fad",
+      "disposition": "adopt-review-technique",
+      "evidence": [
+        "MIT",
+        "local formal-prose scorer plus required performed-register and fidelity passes",
+        "baseline review showed low mechanical scores on authored pages but exposed delayed payoff and repeated audit-first structure",
+        "no hosted rewrite call, runtime dependency, or score-based release gate"
+      ]
+    },
+    {
+      "name": "Vale 3.21.0 and vale-action 3.0.0",
+      "disposition": "retain",
+      "evidence": [
+        "deterministic offline project-owned rules",
+        "expanded from a few entrypoints to every hand-authored public Markdown file",
+        "generated pages remain bounded to project-owned frames rather than imported descriptions"
+      ]
+    },
+    {
+      "name": "Model-authored facts or automatic rewriting",
+      "disposition": "reject",
+      "evidence": [
+        "can weaken qualifiers or invent support",
+        "cannot own receipts, hashes, statuses, or public claims",
+        "would make prose tooling part of the product trust boundary"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "facts and qualifiers remain traceable to repository evidence",
+    "First Reader sees no author intent, scores, or proposed revisions before reporting",
+    "ZeroSlop runs locally in formal mode and its score is never presented as authorship probability",
+    "imported upstream descriptions remain unchanged",
+    "generated surfaces are reviewed at generator, schema, representative output, and deterministic diff boundaries",
+    "the product runtime and canonical state remain model-free",
+    "hosted rewriting services receive no unpublished repository prose"
+  ],
+  "unknowns": [
+    "Simulated reader responses are hypotheses rather than measured user behavior.",
+    "The current catalog audience spans casual browsers and evidence-focused operators, so one page cannot optimize equally for both.",
+    "Additional reader testing may reveal that collection names or status labels need plainer alternatives."
+  ],
+  "decision_effect": "Use First Reader on first-contact and journey-level surfaces; use ZeroSlop on all hand-authored public prose, captured CLI help, and project-owned generator wording; retain Vale and deterministic rendering for repeatable checks. Lead with browse, try, or install outcomes and move operator evidence one layer deeper without removing it.",
+  "reconsider_when": [
+    "A new public surface has no route in the review matrix",
+    "Reader reviews repeatedly fail to find the browse, no-authentication, or verified-install path",
+    "ZeroSlop or Vale produces repeated false positives that encourage loss of precise technical meaning",
+    "The generator begins importing prose from a new source class",
+    "The editorial workflow can no longer run without sending unpublished prose to a hosted service"
+  ],
+  "observed_at": "2026-09-17T18:00:00Z"
+}

@@ -24,6 +24,7 @@ from shoulda_used_that.public_export import (
     validate_public_catalog_files,
     write_public_catalog,
 )
+from shoulda_used_that.rendering import OutputFormat, render
 from shoulda_used_that.services import curated, exported
 from shoulda_used_that.state import StateStore
 
@@ -98,19 +99,26 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
         *(item.path for item in first_export.generated_file_manifest),
     }
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
-    assert b"Search all entries" in first_files["index.md"]
+    assert b"Browse by need" in first_files["index.md"]
     assert b"collections/cloud-infrastructure-iac.md" in first_files["index.md"]
     assert b"not a code audit" in first_files["index.md"]
     assert b"pallets/click" not in first_files["index.md"]
     assert b"../entries/pallets--click.md" in first_files["entries/index.md"]
     assert b"DevOps" in first_files["collections/index.md"]
     assert b"opencv/opencv" in first_files["collections/computer-vision-multimodal.md"]
+    assert b"Use this collection when" in first_files["collections/computer-vision-multimodal.md"]
     assert b"curated" in first_files["dogfood.md"]
     assert b"projected" in first_files["dogfood.md"]
     assert b"verify" in first_files["dogfood.md"]
-    assert b"206 unique repositories" in first_files["selection.md"]
+    assert b"**206 unique" in first_files["selection.md"]
     assert b"entries/browser-use--browser-use.md" in first_files["selection.md"]
     assert b"curation/selections/personal-interests.json" in first_files["selection.md"]
+    assert b"Why it is here" in first_files["entries/pallets--click.md"]
+    assert first_files["entries/pallets--click.md"].index(b"Reconsider when") < first_files[
+        "entries/pallets--click.md"
+    ].index(b"Observed facts")
+    assert "public catalog ready" in render(first_export, OutputFormat.TABLE)
+    assert "Private field classes omitted" in render(first_export, OutputFormat.MARKDOWN)
     combined = b"\n".join(first_files.values())
     assert str(ROOT).encode() not in combined
     assert b"github_pat_" not in combined

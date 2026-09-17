@@ -36,7 +36,7 @@ from shoulda_used_that.models import FrozenModel
 
 PUBLIC_EXPORT_SCHEMA_VERSION: Literal["2.0"] = "2.0"
 PUBLIC_ALLOWLIST_SCHEMA_VERSION: Literal["1.0"] = "1.0"
-PUBLIC_RENDERER_VERSION = "shoulda-public-catalog/1.0"
+PUBLIC_RENDERER_VERSION = "shoulda-public-catalog/2.0"
 MANIFEST_NAME = "manifest.json"
 
 PRIVATE_FIELD_CLASSES = (
@@ -99,8 +99,8 @@ TOOLCHAIN_GROUPS = (
     ),
     (
         "Docs",
-        "Generated Markdown/JSON, Vale, typos, lychee, and the bounded Zensical trial",
-        "../decisions/public-writing.json",
+        "Generated Markdown/JSON, First Reader, local ZeroSlop checks, Vale, typos, lychee, and Zensical",
+        "../decisions/public-writing-v0.3.json",
     ),
     (
         "Release",
@@ -610,28 +610,43 @@ def _index_markdown(
 
 <div class="catalog-hero">
   <p class="catalog-kicker">Check before you build</p>
-  <p class="catalog-lead">Find open-source options by the need they serve, then inspect the evidence and decision behind each one.</p>
+  <p class="catalog-lead">Name the job. Find credible open-source options. See why each one is here and what could change the decision.</p>
   <div class="catalog-actions">
-    <a class="md-button md-button--primary" href="entries/index.md">Search all entries</a>
-    <a class="md-button" href="in-use.md">See what is used here</a>
-    <a class="md-button" href="dogfood.md">See Shoulda use itself</a>
+    <a class="md-button md-button--primary" href="collections/index.md">Browse by need</a>
+    <a class="md-button" href="entries/index.md">Find a repository</a>
+    <a class="md-button" href="in-use.md">See a worked example</a>
   </div>
 </div>
 
 !!! info "What reviewed means"
     Each entry passed its stated metadata and fit checks or carries a visible exception. This is not a code audit, security approval, adoption claim, or universal ranking. A GitHub star is only a bookmark.
 
-## Catalog at a glance
+## How to read an entry
 
-This export contains **{len(records)} reviewed records** across **{len(collections)} public collections**. **{current} records** were inside the profile's **{profile.review_policy.default_freshness_days}-day review window** at **{_display_timestamp(snapshot.compiled_at)}**. “Current” refers to each record's last review timestamp, not a code audit, security result, or guarantee of active maintenance. Counts describe this bounded snapshot; they are not popularity scores.
+Start with **Need** and **Why it is here**. The status says how this repository treats the option:
+used here, trialing, reference, learning, watch, rejected, built here, or inbox. Then check the
+evidence date and **Reconsider when** trigger before relying on the choice.
 
-Start with a collection below, use site search for a repository or need, or open the [complete entry index](entries/index.md). The overview stays short; individual entries retain rationale, provenance, freshness, and reconsideration triggers.
+## Choose a need
+
+These **{len(collections)} collections** contain **{len(records)} reviewed records**. Open the domain
+closest to your problem, or use site search for a repository, technology, or phrase.
+
+**{current} records** were inside the profile's **{profile.review_policy.default_freshness_days}-day
+review window** at **{_display_timestamp(snapshot.compiled_at)}**. “Current” describes the review
+date, not a security result or guarantee of active maintenance.
 
 <div class="catalog-grid">
 {cards}
 </div>
 
-## Portable evidence
+## Want to see the method on itself?
+
+Read [what ShouldaUsedThat uses](in-use.md) for concrete choices, or follow the
+[catalog-to-GitHub self-use story](dogfood.md). The complete [entry index](entries/index.md) is
+available when you already know what you want.
+
+## Download or audit the evidence
 
 - [Canonical public JSON](catalog.json)
 - [Digest and reproducibility manifest](manifest.json)
@@ -684,9 +699,23 @@ def _dogfood_markdown(
         )
         + f"""# ShouldaUsedThat uses itself
 
-This repository is both the tool and a public execution of its central claim: **look for existing OSS with relevant public signals before building another implementation, then preserve the evidence and decision boundary**.
+This repository uses its own workflow to answer a practical question: **what existing tools should
+own each job, and what small residual capability is worth building here?** The result is the public
+catalog you are reading and a set of GitHub Lists that make the same choices easier to revisit.
 
-## The executed shape
+## What you can inspect
+
+- **The choices:** [{len(records)} reviewed repositories](index.md) with needs, rationale, dates,
+  and reconsideration triggers.
+- **The public navigation:** {len(projected_collections)} GitHub Lists containing
+  {len(projectable)} projectable repositories and {memberships} intentional memberships.
+- **The readback:** [sanitized live evidence](../operations/live-projection.md) for what was
+  actually applied and independently verified.
+
+GitHub is a convenient view, not the ledger. Lists cannot carry the full rationale, provenance,
+freshness, rejection, or reconsideration evidence preserved by the catalog.
+
+## How the result is produced
 
 1. A human-readable [interest selection](selection.md) exposes the domains and exact repositories compiled from `curation/selections/personal-interests.json`.
 2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
@@ -696,11 +725,11 @@ This repository is both the tool and a public execution of its central claim: **
 6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
 7. `exported` builds this allowlisted catalog and its deterministic manifest.
 
-The current public snapshot contains **{len(records)} reviewed repositories**, **{len(projected_collections)} projected Lists**, **{len(projectable)} projectable repositories**, and **{memberships} intentional repository-to-List memberships**. Its canonical curation fingerprint is `{snapshot.canonical_fingerprint}`.
+The snapshot's canonical curation fingerprint is `{snapshot.canonical_fingerprint}`.
 
 ## Native GitHub projection
 
-The GitHub views are deliberately lossy navigation surfaces. The catalog remains authoritative for rationale, provenance, freshness, rejection, and reconsideration.
+Use the Lists for browsing; use the catalog when the reason or evidence matters.
 
 <div class="table-scroll" role="region" aria-label="Projected GitHub Lists" tabindex="0">
 <table>
@@ -712,7 +741,8 @@ The GitHub views are deliberately lossy navigation surfaces. The catalog remains
 </table>
 </div>
 
-See the [sanitized live projection evidence](../operations/live-projection.md) for the last applied and independently verified public result. Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside the repository.
+Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside
+the repository.
 
 ## What this proves—and what it does not
 
@@ -757,15 +787,24 @@ def _selection_markdown(
         )
         + f"""# Personal OSS interest selection
 
-This is the readable projection of the human-authored `curation/selections/personal-interests.json` manifest. It contains **{len(selected)} unique repositories**, **{memberships} domain memberships**, and **{multi_collection} repositories with intentional multi-domain membership**.
+Use this page when you want the exact personal-interest set behind the public GitHub Lists, grouped
+by the problem domains it was chosen to explore. It contains **{len(selected)} unique
+repositories**, **{memberships} domain memberships**, and **{multi_collection} repositories with
+intentional multi-domain membership**.
 
-Every entry passed the selection's exact public-identity, archive, description, license, popularity, and freshness gates or carries a narrow written exception. The [decision receipt](../decisions/personal-oss-curation.json) records the external discovery sources, limits, rejected shortcuts, and reconsideration triggers. Selection means **consider this before building**; it is not a code audit, security approval, or automatic adoption.
+Selection means **consider this before building**; it is not a code audit, security approval, or
+automatic adoption. Every entry passed the selection's public-identity, archive, description,
+license, popularity, and freshness gates or carries a narrow written exception. The
+[decision receipt](../decisions/personal-oss-curation.json) preserves sources, limits, rejected
+shortcuts, and reconsideration triggers.
 
 {(chr(10) * 2).join(sections)}
 
 ## Relationship to the full catalog
 
 The [complete catalog](index.md) also includes ShouldaUsedThat's own dependency, prior-art, trial, rejection, and build records. The interest selection is kept separate so personal discovery intent remains readable while the compiled catalog remains authoritative for evidence and decision state.
+
+Source selection: `curation/selections/personal-interests.json`.
 """
     )
 
@@ -793,7 +832,9 @@ def _in_use_markdown(profile: CurationProfile, records: tuple[PublicCatalogRecor
         )
         + f"""# What ShouldaUsedThat uses
 
-“Used here” means repository or configuration evidence confirms a named role. It does not turn a local choice into a universal recommendation.
+This is the catalog's clearest worked example: every item below owns a named job in this repository,
+and repository or configuration evidence confirms that use. It answers “what did this project use
+instead of rebuilding?”—not “what should every project use?”
 
 <div class="table-scroll" role="region" aria-label="Toolchain role inventory" tabindex="0">
 <table>
@@ -853,6 +894,9 @@ def _considered_markdown(
             ("Trialing", "Reference", "Watch", "Rejected", "Inbox"),
         )
         + "# Considered choices\n\n"
+        + "Not every useful discovery becomes a dependency. Browse **Trialing** for active "
+        + "evaluations, **Reference** or **Learn** for ideas, **Watch** for deferred choices, and "
+        + "**Rejected / deferred** for options considered but not selected here.\n\n"
         + _markdown_text(profile.non_ranking_disclaimer)
         + "\n\n"
         + "\n\n".join(sections)
@@ -973,7 +1017,11 @@ def _collections_index_markdown(
         )
         + f"""# Collections
 
-Collections organize evidence; they do not rank repositories. Aliases are searchable, and an empty collection remains visible so the catalog design does not depend on GitHub Lists.
+Choose the collection closest to the job you are trying to solve. A repository may belong to more
+than one collection when it genuinely serves more than one need.
+
+Collections organize evidence; they do not rank repositories. Aliases are searchable, and an empty
+collection stays visible as an intentional area rather than disappearing from the catalog.
 
 <div class="catalog-grid">
 {cards}
@@ -1004,20 +1052,25 @@ def _collection_markdown(
 
 <p class="collection-deck">{html.escape(collection.description)}</p>
 
-**Aliases:** {_markdown_text(", ".join(collection.aliases) or "none")}<br>
-**GitHub List eligibility:** {"eligible for a sealed plan" if collection.github_list_projection else "site only"}<br>
-**Review cadence:** {collection.reconsideration_cadence_days} days
-
-## Meaning
+## Use this collection when
 
 {_markdown_text(collection.semantics)}
 
-- **Include:** {_markdown_text(collection.inclusion_rule)}
-- **Exclude:** {_markdown_text(collection.exclusion_rule)}
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
 {body}
+
+## Collection boundary
+
+**Aliases:** {_markdown_text(", ".join(collection.aliases) or "none")}<br>
+**GitHub List eligibility:** {"eligible for a sealed plan" if collection.github_list_projection else "site only"}<br>
+**Review cadence:** {collection.reconsideration_cadence_days} days
+
+- **Include:** {_markdown_text(collection.inclusion_rule)}
+- **Exclude:** {_markdown_text(collection.exclusion_rule)}
 """
     )
 
@@ -1033,6 +1086,9 @@ def _entries_index_markdown(
             ("repositories", "evidence"),
         )
         + f"""# Catalog entries
+
+Use site search when you know a repository name, technology, or phrase. If you are still naming the
+problem, [browse collections](../collections/index.md) instead.
 
 Every card is a contextual decision, not a universal endorsement. {_markdown_text(profile.non_ranking_disclaimer)}
 
@@ -1085,13 +1141,17 @@ def _entry_markdown(
 
 [Open repository]({html.escape(record.url, quote=True)}){{ .md-button .md-button--primary }}
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** {_markdown_text(DISPOSITION_MEANINGS[record.disposition])}<br>
-**Role:** {_markdown_text(record.role)}<br>
 **Need:** {_markdown_text(record.need)}<br>
 **Why:** {_markdown_text(record.rationale)}<br>
+**Role:** {_markdown_text(record.role)}<br>
+**Status meaning:** {_markdown_text(DISPOSITION_MEANINGS[record.disposition])}<br>
 **Collections:** {collection_links}
+
+## Reconsider when
+
+{_markdown_text(record.reconsideration_trigger)}
 
 ## Observed facts
 
@@ -1109,10 +1169,6 @@ def _entry_markdown(
 ### Source provenance
 
 {source_links}
-
-## Reconsider when
-
-{_markdown_text(record.reconsideration_trigger)}
 
 ## Attribution
 

@@ -11,16 +11,12 @@ tags:
 
 <p class="collection-deck">Testing, security analysis, dependency evidence, SBOMs, signing, provenance, and releases.</p>
 
-**Aliases:** SBOM, release security, supply chain security<br>
-**GitHub List eligibility:** eligible for a sealed plan<br>
-**Review cadence:** 60 days
-
-## Meaning
+## Use this collection when
 
 A cross\-cutting collection for evidenced software integrity and assurance controls\.
 
-- **Include:** Include a reviewed repository when it supplies a named test, security, packaging, signing, or provenance control\.
-- **Exclude:** Exclude generic security branding without a bounded, inspectable control\.
+Browse the reviewed entries below first. The rules after them explain the exact boundary used to
+keep this collection coherent.
 
 ## Reviewed entries
 
@@ -194,3 +190,12 @@ A cross\-cutting collection for evidenced software integrity and assurance contr
   <p class="catalog-card__need"><strong>Need</strong> Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.</p>
 </article>
 </div>
+
+## Collection boundary
+
+**Aliases:** SBOM, release security, supply chain security<br>
+**GitHub List eligibility:** eligible for a sealed plan<br>
+**Review cadence:** 60 days
+
+- **Include:** Include a reviewed repository when it supplies a named test, security, packaging, signing, or provenance control\.
+- **Exclude:** Exclude generic security branding without a bounded, inspectable control\.

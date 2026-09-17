@@ -112,6 +112,18 @@ def test_public_exports_are_allowlists_without_private_values(
         "adoption-plan",
     ]
 
+    assert projection is not None
+    readable = (
+        (save, "findings kept locally", "GitHub changed: no"),
+        (projection, "sealed List preview", "GitHub changed: no"),
+        (decision, "Reconsider when", "immutable local decision"),
+        (recheck, "Last-known-good preserved", "Source errors"),
+        (adoption, "planning only", "plan, not an installer"),
+    )
+    for value, table_phrase, markdown_phrase in readable:
+        assert table_phrase in render(value, OutputFormat.TABLE)
+        assert markdown_phrase in render(value, OutputFormat.MARKDOWN)
+
 
 def test_non_check_markdown_and_table_rendering(tmp_path: Path) -> None:
     plan = used(
@@ -128,4 +140,4 @@ def test_non_check_markdown_and_table_rendering(tmp_path: Path) -> None:
         created_at=NOW,
     )
     assert render(plan, OutputFormat.MARKDOWN).startswith("# AdoptionPlan\n")
-    assert "plan_id" in render(plan, OutputFormat.TABLE)
+    assert "Target changed: no" in render(plan, OutputFormat.TABLE)

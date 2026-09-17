@@ -16,13 +16,17 @@ tags:
 
 [Open repository](https://github.com/rasbt/LLMs-from-scratch){ .md-button .md-button--primary }
 
-## Contextual decision
+## Why it is here
 
-**Meaning:** Kept for educational value without an integration claim\.<br>
-**Role:** generative\-AI and agent\-system prior art<br>
 **Need:** Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem\.<br>
 **Why:** Included for this collection after public metadata and fit review; live metadata showed 105,128 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
+**Role:** generative\-AI and agent\-system prior art<br>
+**Status meaning:** Kept for educational value without an integration claim\.<br>
 **Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>
+
+## Reconsider when
+
+The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role\.
 
 ## Observed facts
 
@@ -42,10 +46,6 @@ tags:
 - <a href="https://api.github.com/repos/rasbt/LLMs-from-scratch">https://api.github.com/repos/rasbt/LLMs-from-scratch</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a> — observed `2026-09-17T12:15:00+00:00`
 - <a href="https://github.com/rasbt/LLMs-from-scratch/blob/main/LICENSE.txt">https://github.com/rasbt/LLMs-from-scratch/blob/main/LICENSE.txt</a> — observed `2026-09-17T12:15:00+00:00`
-
-## Reconsider when
-
-The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role\.
 
 ## Attribution
 

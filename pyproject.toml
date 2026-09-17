@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shoulda-used-that"
-version = "0.2.0"
-description = "Find, vet, and remember existing open source before building from scratch, then organize the choices in GitHub Stars and Lists."
+version = "0.3.0"
+description = "Find existing open source before building from scratch, record why it fits, and revisit the choice when evidence changes."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"
