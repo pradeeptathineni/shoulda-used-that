@@ -8,6 +8,9 @@ uv run ruff check .
 uv run mypy
 uv run python scripts/generate_schemas.py --check
 uv run python scripts/validate_repository.py
+uv run python scripts/generate_catalog.py --check
+uv run zensical build --clean --strict
+uv run python scripts/verify_site.py
 actionlint
 uv run zizmor --pedantic .github/workflows
 typos

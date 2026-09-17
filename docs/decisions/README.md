@@ -17,5 +17,6 @@ These receipts dogfood the product's decision vocabulary before or alongside imp
 | [`github-curation.json`](github-curation.json) | Use native Stars/Lists APIs behind an additive sealed plan, drift check, operation receipts, and independent readback |
 | [`project-inventory.json`](project-inventory.json) | Prefer supplied standards-based SBOMs and bounded explicit inspection; reject a universal manifest parser |
 | [`zensical-site.json`](zensical-site.json) | Trial exact Zensical 0.0.62 as a removable static view adapter for the public catalog |
+| [`pages-workflow.json`](pages-workflow.json) | Verify public inputs on pull requests and schedules, then deploy only a verified main-branch artifact with official pinned Pages actions |
 
 Claims are distinct from behavior inspected locally or executed in CI. Dated popularity appears only as discovery evidence and never controls a disposition.

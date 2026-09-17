@@ -1,0 +1,82 @@
+name: Catalog and Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "43 8 * * 4"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: catalog-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify deterministic public catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.12.15
+          enable-cache: false
+      - name: Install Python and locked catalog tools
+        run: |
+          uv python install 3.12
+          uv sync --all-groups --frozen --python 3.12
+      - name: Verify committed public export
+        run: uv run python scripts/generate_catalog.py --check
+      - name: Build the static site strictly
+        run: uv run zensical build --clean --strict
+      - name: Verify links, search, and runtime isolation
+        run: uv run python scripts/verify_site.py
+      - name: Prove the committed catalog is unchanged
+        run: git diff --exit-code -- docs/curation
+      - name: Upload scheduled upkeep evidence
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: catalog-upkeep-${{ github.sha }}
+          path: docs/curation/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Pages artifact
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+          retention-days: 1
+
+  deploy:
+    name: Deploy GitHub Pages
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write # OIDC identity for the native Pages deployment.
+      pages: write # Publish the already-verified static Pages artifact.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Read GitHub Pages configuration
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Deploy immutable site artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
