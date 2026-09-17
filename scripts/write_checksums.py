@@ -7,12 +7,14 @@ import argparse
 import hashlib
 from pathlib import Path
 
+RELEASE_SUFFIXES = (".whl", ".tar.gz", ".cdx.json")
+
 
 def checksum_lines(directory: Path) -> list[str]:
     assets = sorted(
         path
         for path in directory.iterdir()
-        if path.is_file() and not path.is_symlink() and path.name != "SHA256SUMS"
+        if path.is_file() and not path.is_symlink() and path.name.endswith(RELEASE_SUFFIXES)
     )
     if not assets:
         raise ValueError(f"no release assets found in {directory}")

@@ -31,6 +31,11 @@ source data, replace immutable evidence, disclose credentials, or publish an unv
 - Fine-grained GitHub token prefixes, timezone-naive receipt timestamps, malformed set-like
   values, missing source locators, and a string-valued fixture source each received explicit
   handling and regression coverage.
+- The exact release rehearsal found that a repository-owned `dist/.gitignore` entered
+  `SHA256SUMS` even though the release upload glob omitted dotfiles. Checksum generation now uses
+  an allowlist of wheel, source archive, and CycloneDX assets, with a regression proving unrelated
+  and hidden files cannot enter the manifest. The local package and release smoke environments are
+  also excluded at the repository root so a later rebuild cannot package interpreter symlinks.
 
 ## Executed evidence
 

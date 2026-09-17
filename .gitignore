@@ -4,6 +4,8 @@
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+.package-smoke/
+.release-smoke/
 .venv/
 build/
 dist/
