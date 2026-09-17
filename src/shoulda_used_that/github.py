@@ -47,6 +47,15 @@ class GhSbomResult:
     tool_version: str
 
 
+@dataclass(frozen=True, slots=True)
+class GhAuthStatus:
+    login: str
+    host: str
+    scopes: tuple[str, ...]
+    token_source: str
+    tool_version: str
+
+
 class GhClient:
     """Invoke `gh` with argument vectors, timeouts, and typed failures."""
 
@@ -56,13 +65,7 @@ class GhClient:
         self._tool_version: str | None = None
 
     def check_environment(self) -> str:
-        version = self._run(("gh", "--version"), operation="version")
-        first_line = version.stdout.splitlines()[0] if version.stdout else ""
-        if not first_line.startswith("gh version "):
-            raise GitHubSchemaError(
-                code="github_version_unrecognized",
-                message="The installed gh CLI returned an unrecognized version response.",
-            )
+        tool_version = self._read_tool_version()
         auth = self._run(
             ("gh", "auth", "status", "--active", "--hostname", "github.com"),
             operation="auth",
@@ -74,8 +77,76 @@ class GhClient:
                     "GitHub CLI is not actively authenticated for github.com; run 'gh auth login'."
                 ),
             )
-        self._tool_version = first_line.removeprefix("gh version ").split()[0]
-        return self._tool_version
+        return tool_version
+
+    def auth_status(self) -> GhAuthStatus:
+        """Read active identity and scopes without retrieving or printing the token."""
+
+        tool_version = self._read_tool_version()
+        completed = self._run(
+            (
+                "gh",
+                "auth",
+                "status",
+                "--active",
+                "--hostname",
+                "github.com",
+                "--json",
+                "hosts",
+            ),
+            operation="auth-status-json",
+        )
+        try:
+            payload = json.loads(completed.stdout)
+        except json.JSONDecodeError as exc:
+            raise GitHubSchemaError(
+                code="github_auth_schema_invalid",
+                message="GitHub CLI returned invalid JSON for active authentication state.",
+            ) from exc
+        hosts = payload.get("hosts") if isinstance(payload, dict) else None
+        accounts = hosts.get("github.com") if isinstance(hosts, dict) else None
+        if not isinstance(accounts, list):
+            raise GitHubAuthError(
+                code="github_auth_inactive",
+                message="GitHub CLI has no active github.com account.",
+            )
+        active = [
+            item for item in accounts if isinstance(item, dict) and item.get("active") is True
+        ]
+        if len(active) != 1 or active[0].get("state") != "success":
+            raise GitHubAuthError(
+                code="github_auth_inactive",
+                message="GitHub CLI has no single successful active github.com account.",
+            )
+        account = active[0]
+        login = account.get("login")
+        host = account.get("host")
+        scopes_value = account.get("scopes")
+        token_source = account.get("tokenSource")
+        if (
+            not isinstance(login, str)
+            or not isinstance(host, str)
+            or not isinstance(token_source, str)
+        ):
+            raise GitHubSchemaError(
+                code="github_auth_schema_invalid",
+                message="GitHub CLI authentication JSON omitted identity fields.",
+            )
+        if isinstance(scopes_value, str):
+            scopes = tuple(
+                sorted(
+                    {item.strip() for item in scopes_value.split(",") if item.strip()},
+                    key=str.casefold,
+                )
+            )
+        elif isinstance(scopes_value, list) and all(isinstance(item, str) for item in scopes_value):
+            scopes = tuple(sorted(set(scopes_value), key=str.casefold))
+        else:
+            raise GitHubSchemaError(
+                code="github_auth_schema_invalid",
+                message="GitHub CLI authentication JSON omitted its scope list.",
+            )
+        return GhAuthStatus(login, host, scopes, token_source, tool_version)
 
     def repository(self, repository: str) -> GhResult:
         canonical = normalize_repository(repository)
@@ -150,6 +221,78 @@ class GhClient:
         for page in pages:
             flattened.extend(_require_list(page, "starred repository page"))
         return GhResult(flattened, result.tool_version, result.endpoint, paginated=True)
+
+    def user_starred(self, login: str) -> GhResult:
+        if not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})", login):
+            raise ValueError("GitHub login is invalid")
+        result = self._api_json(f"users/{login}/starred", paginate=True)
+        pages = _require_list(result.payload, "public starred repository pages")
+        flattened: list[Any] = []
+        for page in pages:
+            flattened.extend(_require_list(page, "public starred repository page"))
+        return GhResult(flattened, result.tool_version, result.endpoint, paginated=True)
+
+    def graphql(
+        self,
+        query: str,
+        *,
+        variables: dict[str, str] | None = None,
+        maximum_output_bytes: int = MAX_API_RESPONSE_BYTES,
+    ) -> GhResult:
+        tool_version = self._tool_version or self.check_environment()
+        args = ["gh", "api", "graphql", "--raw-field", f"query={query}"]
+        for key, value in sorted((variables or {}).items()):
+            args.extend(("--raw-field", f"{key}={value}"))
+        completed = self._run(tuple(args), operation="graphql")
+        if completed.returncode != 0:
+            self._raise_api_failure("graphql", completed)
+        if len(completed.stdout.encode("utf-8")) > maximum_output_bytes:
+            raise GitHubSchemaError(
+                code="github_response_too_large",
+                message=(
+                    "GitHub GraphQL response exceeded the "
+                    f"{maximum_output_bytes}-byte safety limit."
+                ),
+            )
+        try:
+            payload = json.loads(completed.stdout)
+        except json.JSONDecodeError as exc:
+            raise GitHubSchemaError(
+                code="github_invalid_json",
+                message="GitHub GraphQL returned invalid JSON.",
+            ) from exc
+        if not isinstance(payload, dict):
+            raise GitHubSchemaError(
+                code="github_schema_mismatch",
+                message="GitHub GraphQL response was not an object.",
+            )
+        errors = payload.get("errors")
+        if errors:
+            diagnostic = _redact(json.dumps(errors, ensure_ascii=False)[:500])
+            lowered = diagnostic.casefold()
+            if "rate limit" in lowered:
+                raise GitHubRateLimitError(
+                    code="github_rate_limited",
+                    message="GitHub rate-limited the GraphQL read.",
+                )
+            if "authentication" in lowered or "unauthorized" in lowered:
+                raise GitHubAuthError(
+                    code="github_auth_failed",
+                    message="GitHub authentication failed during the GraphQL read.",
+                )
+            raise GitHubSchemaError(
+                code="github_graphql_error",
+                message=f"GitHub GraphQL rejected the read: {diagnostic}",
+            )
+        if not isinstance(payload.get("data"), dict):
+            raise GitHubSchemaError(
+                code="github_schema_mismatch",
+                message="GitHub GraphQL response omitted its data object.",
+            )
+        return GhResult(payload, tool_version, "graphql", paginated=False)
+
+    def api_version_probe(self) -> GhResult:
+        return self._api_json("meta")
 
     def search(self, query: str, *, maximum: int = 100) -> GhResult:
         if maximum < 1 or maximum > 100:
@@ -242,6 +385,19 @@ class GhClient:
                 ),
                 details={"operation": operation},
             ) from exc
+
+    def _read_tool_version(self) -> str:
+        if self._tool_version is not None:
+            return self._tool_version
+        version = self._run(("gh", "--version"), operation="version")
+        first_line = version.stdout.splitlines()[0] if version.stdout else ""
+        if not first_line.startswith("gh version "):
+            raise GitHubSchemaError(
+                code="github_version_unrecognized",
+                message="The installed gh CLI returned an unrecognized version response.",
+            )
+        self._tool_version = first_line.removeprefix("gh version ").split()[0]
+        return self._tool_version
 
     def _raise_api_failure(
         self, endpoint: str, completed: subprocess.CompletedProcess[str]

@@ -15,6 +15,7 @@ from rich.table import Table
 from shoulda_used_that.curation import CurationSnapshot
 from shoulda_used_that.models import CheckReceipt
 from shoulda_used_that.project_context import ProjectSnapshot
+from shoulda_used_that.projection import GitHubProjectionPlan
 
 
 class OutputFormat(StrEnum):
@@ -115,6 +116,48 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             f"sbom={value.sbom.format if value.sbom else 'unavailable'} "
             f"result={value.canonical_fingerprint}"
         )
+    elif isinstance(value, GitHubProjectionPlan):
+        table = Table(title=f"{value.plan_id} · {value.target_account}")
+        table.add_column("#", justify="right")
+        table.add_column("Additive operation")
+        table.add_column("Target")
+        table.add_column("Exact detail")
+        table.add_column("Memberships preserved")
+        for index, operation in enumerate(value.operations, start=1):
+            target = operation.repository or operation.list_name or "-"
+            detail = (
+                operation.list_description
+                if operation.kind == "create-list"
+                else operation.list_name
+                if operation.kind == "add-membership"
+                else operation.repository or "-"
+            )
+            table.add_row(
+                str(index),
+                operation.kind,
+                target,
+                detail or "-",
+                ", ".join(operation.preserved_list_ids) or "none",
+            )
+        if not value.operations:
+            table.add_row("-", "semantic-no-op", "-", "No additive changes", "all")
+        console.print(table)
+        console.print(
+            f"identity={value.observed_login} capability={value.capability.state.value} "
+            f"apply-ready={'yes' if value.apply_ready else 'no'} "
+            f"expires={value.expires_at.isoformat()}"
+        )
+        console.print(
+            f"creates={value.operation_counts.create_lists} "
+            f"stars={value.operation_counts.star_repositories} "
+            f"memberships={value.operation_counts.add_memberships} "
+            f"total={value.operation_counts.total}"
+        )
+        console.print(f"source-state={value.github_state_fingerprint}")
+        console.print(f"plan={value.canonical_plan_fingerprint}")
+        console.print(f"forbidden={', '.join(value.forbidden_operation_classes)}")
+        if value.capability.operator_command:
+            console.print(f"operator-action={value.capability.operator_command}")
     else:
         table = Table(title=value.__class__.__name__)
         table.add_column("Field")
@@ -190,6 +233,44 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
         for manifest in value.manifest_facts:
             lines.append(
                 f"| {manifest.ecosystem} | `{manifest.relative_path}` | {manifest.manifest_kind} |"
+            )
+    elif isinstance(value, GitHubProjectionPlan):
+        lines.extend(
+            [
+                f"- Plan: `{value.plan_id}`",
+                f"- Target: `{value.target_account}` (`{value.observed_account_node_id}`)",
+                f"- Source state: `{value.github_state_fingerprint}`",
+                f"- Capability: {value.capability.state.value}",
+                f"- Apply ready: {'yes' if value.apply_ready else 'no'}",
+                f"- Expires: `{value.expires_at.isoformat()}`",
+                f"- Plan fingerprint: `{value.canonical_plan_fingerprint}`",
+                "",
+                "| # | Additive operation | Target | Preserved List IDs |",
+                "|---:|---|---|---|",
+            ]
+        )
+        for index, operation in enumerate(value.operations, start=1):
+            target = operation.repository or operation.list_name or "-"
+            preserved = ", ".join(operation.preserved_list_ids) or "none"
+            lines.append(f"| {index} | {operation.kind} | `{target}` | `{preserved}` |")
+        if not value.operations:
+            lines.append("| - | semantic-no-op | - | all |")
+        lines.extend(
+            [
+                "",
+                "## Intentionally forbidden",
+                "",
+                *[f"- {item}" for item in value.forbidden_operation_classes],
+            ]
+        )
+        if value.capability.operator_command:
+            lines.extend(
+                [
+                    "",
+                    "## Operator action required",
+                    "",
+                    f"`{value.capability.operator_command}`",
+                ]
             )
     else:
         for key, item in payload.items():

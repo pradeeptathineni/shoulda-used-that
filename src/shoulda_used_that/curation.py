@@ -342,6 +342,9 @@ class CurationSnapshot(FrozenModel):
     profile_fingerprint: str
     compiler_version: str
     compiled_at: datetime
+    collection_definitions: tuple[CollectionDefinition, ...]
+    projection_policy: ProjectionPolicy
+    mutation_policy: MutationPolicy
     source_snapshots: tuple[CurationSourceSnapshot, ...]
     entries: tuple[CurationEntry, ...]
     excluded_candidates: tuple[ExcludedCandidate, ...]
@@ -353,6 +356,86 @@ class CurationSnapshot(FrozenModel):
     counts: CurationCounts
     semantic_diff: CurationSemanticDiff
     canonical_fingerprint: str = Field(pattern=r"^curation_[0-9a-f]{64}$")
+
+
+def validate_curation_snapshot(snapshot: CurationSnapshot) -> None:
+    """Recompute derived fields and the sealed identity of a stored snapshot."""
+
+    entries = tuple(sorted(snapshot.entries, key=lambda item: item.repository))
+    exclusions = tuple(sorted(snapshot.excluded_candidates, key=lambda item: item.repository))
+    if entries != snapshot.entries or len({item.repository for item in entries}) != len(entries):
+        raise StateError(
+            code="curation_snapshot_inconsistent",
+            message="Curation entries are not a unique canonical repository sequence.",
+        )
+    if exclusions != snapshot.excluded_candidates or len(
+        {item.repository for item in exclusions}
+    ) != len(exclusions):
+        raise StateError(
+            code="curation_snapshot_inconsistent",
+            message="Curation exclusions are not a unique canonical repository sequence.",
+        )
+
+    collections = {item.slug: item for item in snapshot.collection_definitions}
+    expected_memberships = {
+        slug: tuple(entry.repository for entry in entries if slug in entry.collection_memberships)
+        for slug in sorted(collections)
+    }
+    expected_inbox = tuple(
+        item.repository for item in entries if item.primary_disposition is CurationDisposition.INBOX
+    )
+    expected_stale = _repositories_with_freshness(entries, FreshnessState.STALE)
+    expected_partial = _repositories_with_freshness(entries, FreshnessState.PARTIAL)
+    expected_blocked = _repositories_with_freshness(entries, FreshnessState.BLOCKED)
+    expected_counts = CurationCounts(
+        sources=len(snapshot.source_snapshots),
+        entries=len(entries),
+        excluded=len(exclusions),
+        inbox=len(expected_inbox),
+        stale=len(expected_stale),
+        partial=len(expected_partial),
+        blocked=len(expected_blocked),
+    )
+    if (
+        snapshot.collection_membership_map != expected_memberships
+        or snapshot.unresolved_inbox_entries != expected_inbox
+        or snapshot.stale_entries != expected_stale
+        or snapshot.partial_entries != expected_partial
+        or snapshot.blocked_entries != expected_blocked
+        or snapshot.counts != expected_counts
+    ):
+        raise StateError(
+            code="curation_snapshot_inconsistent",
+            message="Curation snapshot derived fields do not match its sealed entries.",
+        )
+
+    semantic = _snapshot_semantic(
+        profile_fingerprint=snapshot.profile_fingerprint,
+        compiler_version=snapshot.compiler_version,
+        compiled_at=snapshot.compiled_at,
+        collections=snapshot.collection_definitions,
+        projection_policy=snapshot.projection_policy,
+        mutation_policy=snapshot.mutation_policy,
+        source_snapshots=snapshot.source_snapshots,
+        entries=entries,
+        exclusions=exclusions,
+        membership_map=expected_memberships,
+        counts=expected_counts,
+    )
+    expected_fingerprint = digest(semantic, prefix="curation")
+    expected_id = short_id(semantic, prefix="cur")
+    if (
+        snapshot.canonical_fingerprint != expected_fingerprint
+        or snapshot.curation_snapshot_id != expected_id
+    ):
+        raise StateError(
+            code="curation_snapshot_fingerprint_mismatch",
+            message="Curation snapshot identity does not match its sealed semantic content.",
+            details={
+                "expected_id": expected_id,
+                "expected_fingerprint": expected_fingerprint,
+            },
+        )
 
 
 def profile_fingerprint(profile_payload: dict[str, Any]) -> str:
@@ -490,16 +573,19 @@ def compile_profile(
         partial=len(partial),
         blocked=len(blocked),
     )
-    semantic = {
-        "profile_fingerprint": profile.canonical_fingerprint,
-        "compiler_version": __version__,
-        "compiled_at": profile.review_policy.as_of.isoformat(),
-        "source_snapshots": [item.model_dump(mode="json") for item in source_snapshots],
-        "entries": [item.model_dump(mode="json") for item in stable_entries],
-        "excluded_candidates": [item.model_dump(mode="json") for item in stable_excluded],
-        "collection_membership_map": membership_map,
-        "counts": counts.model_dump(mode="json"),
-    }
+    semantic = _snapshot_semantic(
+        profile_fingerprint=profile.canonical_fingerprint,
+        compiler_version=__version__,
+        compiled_at=profile.review_policy.as_of,
+        collections=profile.collections,
+        projection_policy=profile.projection_policy,
+        mutation_policy=profile.mutation_policy,
+        source_snapshots=tuple(source_snapshots),
+        entries=stable_entries,
+        exclusions=stable_excluded,
+        membership_map=membership_map,
+        counts=counts,
+    )
     fingerprint = digest(semantic, prefix="curation")
     if previous is not None and previous.canonical_fingerprint == fingerprint:
         return previous
@@ -515,6 +601,9 @@ def compile_profile(
         profile_fingerprint=profile.canonical_fingerprint,
         compiler_version=__version__,
         compiled_at=profile.review_policy.as_of,
+        collection_definitions=profile.collections,
+        projection_policy=profile.projection_policy,
+        mutation_policy=profile.mutation_policy,
         source_snapshots=tuple(source_snapshots),
         entries=stable_entries,
         excluded_candidates=stable_excluded,
@@ -527,6 +616,35 @@ def compile_profile(
         semantic_diff=diff,
         canonical_fingerprint=fingerprint,
     )
+
+
+def _snapshot_semantic(
+    *,
+    profile_fingerprint: str,
+    compiler_version: str,
+    compiled_at: datetime,
+    collections: tuple[CollectionDefinition, ...],
+    projection_policy: ProjectionPolicy,
+    mutation_policy: MutationPolicy,
+    source_snapshots: tuple[CurationSourceSnapshot, ...],
+    entries: tuple[CurationEntry, ...],
+    exclusions: tuple[ExcludedCandidate, ...],
+    membership_map: dict[str, tuple[str, ...]],
+    counts: CurationCounts,
+) -> dict[str, Any]:
+    return {
+        "profile_fingerprint": profile_fingerprint,
+        "compiler_version": compiler_version,
+        "compiled_at": compiled_at.isoformat(),
+        "collection_definitions": [item.model_dump(mode="json") for item in collections],
+        "projection_policy": projection_policy.model_dump(mode="json"),
+        "mutation_policy": mutation_policy.model_dump(mode="json"),
+        "source_snapshots": [item.model_dump(mode="json") for item in source_snapshots],
+        "entries": [item.model_dump(mode="json") for item in entries],
+        "excluded_candidates": [item.model_dump(mode="json") for item in exclusions],
+        "collection_membership_map": membership_map,
+        "counts": counts.model_dump(mode="json"),
+    }
 
 
 def _default_source_root(profile_path: Path) -> Path:

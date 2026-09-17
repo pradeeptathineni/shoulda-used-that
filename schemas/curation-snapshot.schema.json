@@ -1,5 +1,99 @@
 {
   "$defs": {
+    "CollectionDefinition": {
+      "additionalProperties": false,
+      "description": "Durable collection semantics independent of a GitHub List.",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "exact_bound_sources": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Exact Bound Sources",
+          "type": "array"
+        },
+        "exclusion_rule": {
+          "minLength": 1,
+          "title": "Exclusion Rule",
+          "type": "string"
+        },
+        "github_list_projection": {
+          "default": false,
+          "title": "Github List Projection",
+          "type": "boolean"
+        },
+        "inclusion_rule": {
+          "minLength": 1,
+          "title": "Inclusion Rule",
+          "type": "string"
+        },
+        "max_candidates": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Max Candidates",
+          "type": "integer"
+        },
+        "max_repositories": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Max Repositories",
+          "type": "integer"
+        },
+        "public_site_visibility": {
+          "default": true,
+          "title": "Public Site Visibility",
+          "type": "boolean"
+        },
+        "reconsideration_cadence_days": {
+          "exclusiveMinimum": 0,
+          "maximum": 3650,
+          "title": "Reconsideration Cadence Days",
+          "type": "integer"
+        },
+        "semantics": {
+          "minLength": 1,
+          "title": "Semantics",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "slug",
+        "title",
+        "description",
+        "semantics",
+        "inclusion_rule",
+        "exclusion_rule",
+        "exact_bound_sources",
+        "max_candidates",
+        "max_repositories",
+        "reconsideration_cadence_days"
+      ],
+      "title": "CollectionDefinition",
+      "type": "object"
+    },
     "CurationCounts": {
       "additionalProperties": false,
       "properties": {
@@ -371,6 +465,81 @@
       "title": "FreshnessState",
       "type": "string"
     },
+    "MutationPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "additive_only": {
+          "const": true,
+          "default": true,
+          "title": "Additive Only",
+          "type": "boolean"
+        },
+        "caps": {
+          "$ref": "#/$defs/OperationCaps"
+        },
+        "forbid_ci": {
+          "const": true,
+          "default": true,
+          "title": "Forbid Ci",
+          "type": "boolean"
+        },
+        "plan_expiry_hours": {
+          "exclusiveMinimum": 0,
+          "maximum": 168,
+          "title": "Plan Expiry Hours",
+          "type": "integer"
+        },
+        "require_tty": {
+          "const": true,
+          "default": true,
+          "title": "Require Tty",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "plan_expiry_hours",
+        "caps"
+      ],
+      "title": "MutationPolicy",
+      "type": "object"
+    },
+    "OperationCaps": {
+      "additionalProperties": false,
+      "properties": {
+        "add_memberships": {
+          "maximum": 5000,
+          "minimum": 0,
+          "title": "Add Memberships",
+          "type": "integer"
+        },
+        "create_lists": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Create Lists",
+          "type": "integer"
+        },
+        "star_repositories": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Star Repositories",
+          "type": "integer"
+        },
+        "total": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Total",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "total",
+        "create_lists",
+        "star_repositories",
+        "add_memberships"
+      ],
+      "title": "OperationCaps",
+      "type": "object"
+    },
     "PopularitySnapshot": {
       "additionalProperties": false,
       "properties": {
@@ -402,6 +571,46 @@
         }
       },
       "title": "PopularitySnapshot",
+      "type": "object"
+    },
+    "ProjectionPolicy": {
+      "additionalProperties": false,
+      "description": "Deliberately smaller public GitHub projection than the full catalog.",
+      "properties": {
+        "account": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "max_projected_lists": {
+          "default": 0,
+          "maximum": 20,
+          "minimum": 0,
+          "title": "Max Projected Lists",
+          "type": "integer"
+        },
+        "selected_collection_slugs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Selected Collection Slugs",
+          "type": "array"
+        }
+      },
+      "title": "ProjectionPolicy",
       "type": "object"
     },
     "SourceProvenance": {
@@ -460,6 +669,13 @@
       "title": "Canonical Fingerprint",
       "type": "string"
     },
+    "collection_definitions": {
+      "items": {
+        "$ref": "#/$defs/CollectionDefinition"
+      },
+      "title": "Collection Definitions",
+      "type": "array"
+    },
     "collection_membership_map": {
       "additionalProperties": {
         "items": {
@@ -500,6 +716,9 @@
       "title": "Excluded Candidates",
       "type": "array"
     },
+    "mutation_policy": {
+      "$ref": "#/$defs/MutationPolicy"
+    },
     "partial_entries": {
       "items": {
         "type": "string"
@@ -514,6 +733,9 @@
     "profile_id": {
       "title": "Profile Id",
       "type": "string"
+    },
+    "projection_policy": {
+      "$ref": "#/$defs/ProjectionPolicy"
     },
     "schema_version": {
       "const": "2.0",
@@ -552,6 +774,9 @@
     "profile_fingerprint",
     "compiler_version",
     "compiled_at",
+    "collection_definitions",
+    "projection_policy",
+    "mutation_policy",
     "source_snapshots",
     "entries",
     "excluded_candidates",

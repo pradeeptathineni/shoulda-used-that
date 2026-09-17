@@ -235,6 +235,7 @@ def test_version_and_help_expose_stable_surface() -> None:
         "checked",
         "curated",
         "inspected",
+        "projected",
         "saved",
         "remembered",
         "rechecked",

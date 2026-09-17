@@ -295,6 +295,37 @@ def curated_command(runtime: Runtime, profile_path: Path) -> None:
         _fail(runtime, exc)
 
 
+@cli.command("projected")
+@click.argument("curation_id")
+@click.option(
+    "--to",
+    "destination",
+    type=click.Choice(["github-lists"], case_sensitive=True),
+    required=True,
+)
+@click.option("--account", required=True, help="Exact GitHub login bound by the profile.")
+@click.pass_obj
+def projected_command(
+    runtime: Runtime,
+    curation_id: str,
+    destination: str,
+    account: str,
+) -> None:
+    """Seal an additive-only GitHub star/List plan; perform no mutation."""
+
+    try:
+        if destination != "github-lists":  # pragma: no cover - guarded by Click
+            raise ShouldaError("unsupported_projection", "Unsupported projection target.")
+        plan = services.projected(
+            runtime.store,
+            curation_snapshot_id=curation_id,
+            account=account,
+        )
+        click.echo(render(plan, runtime.output_format), nl=False)
+    except ShouldaError as exc:
+        _fail(runtime, exc)
+
+
 @cli.command("used")
 @click.argument("repository")
 @click.option("--for", "need", required=True)
