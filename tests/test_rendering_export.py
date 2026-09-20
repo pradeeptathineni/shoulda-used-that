@@ -62,9 +62,17 @@ def test_decision_and_recheck_human_views_stay_compact_while_machine_views_are_c
     recheck = rechecked(store, target_id=check.check_id, checked_at=LATER)
 
     decision_table = render(decision, OutputFormat.TABLE)
+    decision_markdown = render(decision, OutputFormat.MARKDOWN)
     recheck_markdown = render(recheck, OutputFormat.MARKDOWN)
     assert "Reconsider when" in decision_table
     assert "immutable local decision" in decision_table
+    assert "Source check" in decision_table
+    assert check.check_id in decision_table
+    assert f"Source check: `{check.check_id}`" in decision_markdown
+    for human_view in (decision_table, decision_markdown):
+        assert check.source_observations[0].payload_fingerprint not in human_view
+        assert check.result_set_fingerprint not in human_view
+        assert "manual-vector" not in human_view
     assert "Last-known-good preserved" in recheck_markdown
     assert "Source errors" in recheck_markdown
     assert json.loads(render(decision, OutputFormat.JSON)) == decision.model_dump(mode="json")

@@ -3,6 +3,8 @@ title: "Evidence for best-of-lists/best-of"
 description: "Problem-relative assessment and observed repository facts for best-of-lists/best-of."
 tags:
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for best\-of\-lists/best\-of
 

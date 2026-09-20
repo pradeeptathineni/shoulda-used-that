@@ -3,6 +3,8 @@ title: "Evidence for amintacccp/githubstarsmanager"
 description: "Problem-relative assessment and observed repository facts for amintacccp/githubstarsmanager."
 tags:
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for amintacccp/githubstarsmanager
 

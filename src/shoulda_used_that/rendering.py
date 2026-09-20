@@ -17,6 +17,7 @@ from shoulda_used_that.models import (
     CheckReceipt,
     DecisionReceipt,
     RecheckReceipt,
+    SourceRank,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
 
@@ -254,9 +255,7 @@ def _check_table(value: CheckReceipt, console: Console, *, explain: bool) -> Non
         evaluation_by_repository[repository] for repository in value.result_repositories
     )
     for evaluation in visible_evaluations:
-        source_rank = ", ".join(
-            f"{item.source} #{item.rank}" for item in evaluation.candidate.source_ranks
-        )
+        source_rank = _source_positions(evaluation.candidate.source_ranks)
         row = [
             evaluation.candidate.repository,
             evaluation.candidate.description or "No description supplied.",
@@ -367,7 +366,7 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
         table.add_row("Need", value.need)
         table.add_row("Status", value.disposition.value)
         table.add_row("Why", "; ".join(value.rationale))
-        table.add_row("Evidence", "; ".join(value.evidence_ids) or "none recorded")
+        table.add_row("Source check", value.source_check_id or "not bound")
         table.add_row("Alternatives", "; ".join(value.alternatives) or "none recorded")
         table.add_row("Unknowns", "; ".join(value.unknowns) or "none recorded")
         table.add_row("Reconsider when", "; ".join(value.reconsider_when))
@@ -439,9 +438,7 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
         for evaluation in visible_evaluations:
             candidate = evaluation.candidate
             description = candidate.description or "No description supplied."
-            source_rank = ", ".join(
-                f"{item.source} #{item.rank}" for item in candidate.source_ranks
-            )
+            source_rank = _source_positions(candidate.source_ranks)
             lines.append(
                 f"| `{candidate.repository}` | {description} | "
                 f"{candidate.evidence_state.value} | {source_rank or 'not supplied'} |"
@@ -622,7 +619,7 @@ def _local_workflow_markdown(value: BaseModel) -> list[str]:
             f"- Need: {value.need}",
             f"- Status: {value.disposition.value}",
             f"- Why: {'; '.join(value.rationale)}",
-            f"- Evidence: {'; '.join(value.evidence_ids) or 'none recorded'}",
+            f"- Source check: `{value.source_check_id or 'not bound'}`",
             f"- Alternatives: {'; '.join(value.alternatives) or 'none recorded'}",
             f"- Unknowns: {'; '.join(value.unknowns) or 'none recorded'}",
             f"- Reconsider when: {'; '.join(value.reconsider_when)}",
@@ -649,3 +646,19 @@ def _local_workflow_markdown(value: BaseModel) -> list[str]:
             lines.append("| none | none | no difference | No typed differences found. |")
         return lines
     raise TypeError(f"unsupported local workflow record: {type(value).__name__}")
+
+
+def _source_positions(source_ranks: tuple[SourceRank, ...]) -> str:
+    """Keep complete fixture identities in receipts while rendering readable positions."""
+
+    fixture_total = sum(item.source.startswith("fixture:locator_") for item in source_ranks)
+    fixture_index = 0
+    rendered: list[str] = []
+    for item in source_ranks:
+        if item.source.startswith("fixture:locator_"):
+            fixture_index += 1
+            label = "fixture input" if fixture_total == 1 else f"fixture input {fixture_index}"
+        else:
+            label = item.source
+        rendered.append(f"{label} #{item.rank}")
+    return ", ".join(rendered)

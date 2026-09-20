@@ -84,7 +84,7 @@ def test_json_and_yaml_fixtures_load_with_content_identity(
     assert json_batch.observation.payload_fingerprint.startswith("payload_")
     assert json_batch.candidates[0].sources[0].startswith("fixture:src_")
     assert [item.source_ranks[0].rank for item in json_batch.candidates] == [1, 2, 3, 4, 5]
-    assert json_batch.candidates[0].source_ranks[0].source == "fixture:candidates.json"
+    assert json_batch.candidates[0].source_ranks[0].source.startswith("fixture:locator_")
     assert yaml_batch.candidates[0].repository == "fixture-labs/yaml"
 
 
@@ -175,6 +175,33 @@ def test_fixture_string_source_is_preserved_as_one_value(tmp_path: Path) -> None
 
     assert "manual" in batch.candidates[0].sources
     assert len(batch.candidates[0].sources) == 2
+
+
+def test_same_named_fixture_sources_preserve_independent_positions(tmp_path: Path) -> None:
+    first_path = tmp_path / "first" / "candidates.json"
+    second_path = tmp_path / "second" / "candidates.json"
+    first_path.parent.mkdir()
+    second_path.parent.mkdir()
+    first_path.write_text('[{"repository": "fixture-labs/shared"}]', encoding="utf-8")
+    second_path.write_text(
+        '[{"repository": "fixture-labs/other"}, {"repository": "fixture-labs/shared"}]',
+        encoding="utf-8",
+    )
+
+    batches = load_sources(
+        (
+            SourceRequest(kind=SourceKind.FIXTURE, locator=str(first_path)),
+            SourceRequest(kind=SourceKind.FIXTURE, locator=str(second_path)),
+        ),
+        observed_at=NOW,
+    )
+    merged, _ = merge_batches(batches)
+    shared = next(item for item in merged if item.repository == "fixture-labs/shared")
+
+    assert len(shared.sources) == 2
+    assert len({item.source for item in shared.source_ranks}) == 2
+    assert all(item.source.startswith("fixture:locator_") for item in shared.source_ranks)
+    assert {item.rank for item in shared.source_ranks} == {1, 2}
 
 
 def test_github_sources_normalize_typed_candidates() -> None:

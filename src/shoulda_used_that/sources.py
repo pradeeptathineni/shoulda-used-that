@@ -160,7 +160,7 @@ def _load_fixture(request: SourceRequest, observed_at: datetime) -> SourceBatch:
     candidates = _validate_candidates(
         items,
         source_id=source_id,
-        source_rank_id=f"fixture:{path.name}",
+        source_rank_id=f"fixture:{digest(str(path), prefix='locator')}",
     )
     observation = SourceObservation(
         kind=request.kind,

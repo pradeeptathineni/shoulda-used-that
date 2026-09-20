@@ -134,6 +134,8 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     evidence = first_files["evidence/pallets--click.md"]
     assert b"Evidence for pallets/click" in evidence
     assert b"Observed repository and provenance details" in evidence
+    assert b"search:\n  exclude: true" in evidence
+    assert b"search:\n  exclude: true" not in brief
     assert all(not path.startswith(("entries/", "collections/")) for path in first_files)
     screened_slug = "langchain-ai--langchain"
     assert all(screened_slug not in path for path in first_files)

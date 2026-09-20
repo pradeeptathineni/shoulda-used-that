@@ -11,7 +11,14 @@ from scripts.verify_site import SEARCH_CASES
 def _payloads(*, runtime_resource: str | None = None) -> dict[str, bytes]:
     resource = f'<script src="{runtime_resource}"></script>' if runtime_resource else ""
     html = f"<!doctype html><title>ShouldaUsedThat</title>{resource}".encode()
-    search = {"documents": [{"text": " ".join(SEARCH_CASES.values())}]}
+    search = {
+        "items": [
+            {
+                "location": "curation/briefs/example/",
+                "text": " ".join(SEARCH_CASES.values()),
+            }
+        ]
+    }
     return {
         "": html,
         "curation/": html,
@@ -55,3 +62,14 @@ def test_live_payloads_match_committed_bytes_search_and_runtime_boundary() -> No
     )
     assert "live catalog JSON differs from the committed artifact" in problems
     assert any("third-party resource" in item for item in problems)
+
+    hostile_search = _payloads()
+    search = json.loads(hostile_search["search.json"])
+    search["items"].append({"location": "curation/evidence/example/", "text": "deep evidence"})
+    hostile_search["search.json"] = json.dumps(search).encode()
+    problems = live_payload_problems(
+        hostile_search,
+        expected_catalog=b"{}\n",
+        expected_manifest=b"{}\n",
+    )
+    assert "live client search index includes deep evidence pages" in problems

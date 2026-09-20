@@ -3,6 +3,8 @@ title: "Evidence for boffti/stardash"
 description: "Problem-relative assessment and observed repository facts for boffti/stardash."
 tags:
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for boffti/stardash
 

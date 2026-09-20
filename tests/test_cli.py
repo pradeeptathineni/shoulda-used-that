@@ -122,7 +122,8 @@ def test_default_check_output_is_bounded_answer_first_and_diagnostic(
     assert "Filtered or gated: 4" in result.stdout
     assert "Result fingerprint" not in result.stdout
     assert "NEED is context only and never expands a query" in result.stdout
-    assert "fixture:candidates.json #1" in result.stdout
+    assert "fixture input #1" in result.stdout
+    assert "fixture:src_" not in result.stdout
     assert len(result.stdout.splitlines()) <= 30
 
     empty = runner.invoke(cli, [*base, "--language", "Rust"])

@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for gith
 tags:
   - "platform-engineering-delivery"
   - "software-supply-chain"
+search:
+  exclude: true
 ---
 # Evidence for github/codeql\-action
 

@@ -11,7 +11,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-from scripts.verify_site import SEARCH_CASES, SiteHTMLParser
+from scripts.verify_site import SEARCH_CASES, SiteHTMLParser, search_index_problems
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_HOST = "pradeeptathineni.github.io"
@@ -107,10 +107,10 @@ def live_payload_problems(
     except (json.JSONDecodeError, UnicodeDecodeError):
         problems.append("live client search index is invalid JSON")
     else:
-        searchable = json.dumps(search, ensure_ascii=False).casefold()
-        for label, query in SEARCH_CASES.items():
-            if query.casefold() not in searchable:
-                problems.append(f"live client search index misses {label} query: {query}")
+        problems.extend(
+            problem.replace("client search index", "live client search index")
+            for problem in search_index_problems(search)
+        )
     return sorted(set(problems))
 
 

@@ -19,6 +19,7 @@ SEARCH_CASES = {
     "unresolved": "problem-specific research plan",
     "domain": "python-engineering",
 }
+EVIDENCE_SEARCH_PREFIX = "curation/evidence/"
 RUNTIME_ELEMENTS = {
     "audio": "src",
     "iframe": "src",
@@ -108,10 +109,7 @@ def verify_site(site: Path) -> list[str]:
         except json.JSONDecodeError as exc:
             problems.append(f"client search index is invalid JSON: {exc}")
         else:
-            searchable = json.dumps(search, ensure_ascii=False).casefold()
-            for label, query in SEARCH_CASES.items():
-                if query.casefold() not in searchable:
-                    problems.append(f"client search index misses {label} query: {query}")
+            problems.extend(search_index_problems(search))
 
     manifest_path = site / "curation" / "manifest.json"
     catalog_path = site / "curation" / "catalog.json"
@@ -124,6 +122,29 @@ def verify_site(site: Path) -> list[str]:
         except json.JSONDecodeError as exc:
             problems.append(f"public {label} JSON is invalid: {exc}")
     return sorted(set(problems))
+
+
+def search_index_problems(search: object) -> list[str]:
+    """Validate that search covers briefs without promoting deep evidence pages."""
+
+    if not isinstance(search, dict) or not isinstance(search.get("items"), list):
+        return ["client search index has an unexpected shape"]
+    items = search["items"]
+    problems: list[str] = []
+    searchable = json.dumps(search, ensure_ascii=False).casefold()
+    for label, query in SEARCH_CASES.items():
+        if query.casefold() not in searchable:
+            problems.append(f"client search index misses {label} query: {query}")
+    evidence_locations = sorted(
+        item["location"]
+        for item in items
+        if isinstance(item, dict)
+        and isinstance(item.get("location"), str)
+        and item["location"].startswith(EVIDENCE_SEARCH_PREFIX)
+    )
+    if evidence_locations:
+        problems.append("client search index includes deep evidence pages")
+    return problems
 
 
 def _resolve_local_link(site: Path, page: Path, href: str) -> tuple[Path, str] | None:
