@@ -42,9 +42,9 @@ def _enum_choice(enum_type: type[StrEnum]) -> click.Choice[str]:
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
     epilog=(
-        "Start here: checked finds options; saved keeps the exact result; remembered records "
-        "your decision; rechecked tells you what changed. Run COMMAND --help for examples and "
-        "boundaries."
+        "Start here: checked finds options from an explicit source/query plan; inspected opens "
+        "evidence for one target; remembered records a decision; rechecked tells you what "
+        "changed. The NEED text is context and never expands queries."
     ),
 )
 @click.version_option(version=__version__, prog_name="shoulda")
@@ -64,7 +64,7 @@ def _enum_choice(enum_type: type[StrEnum]) -> click.Choice[str]:
 )
 @click.pass_context
 def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format: str) -> None:
-    """Find existing OSS, keep the evidence, and revisit the choice."""
+    """Find, inspect, decide, and recheck evidence-backed OSS options."""
 
     ctx.obj = Runtime(
         store=StateStore(state_dir, profile=profile),
@@ -109,7 +109,11 @@ def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> 
     multiple=True,
     help="Public or synthetic fixture file used by --source fixture.",
 )
-@click.option("--query", multiple=True, help="Bounded GitHub repository-search query.")
+@click.option(
+    "--query",
+    multiple=True,
+    help="Exact GitHub repository-search query; NEED never expands or rewrites it.",
+)
 @click.option("--repo", multiple=True, help="Exact owner/repo seed.")
 @click.option("--role", multiple=True, help="Keep a matching role; repeat for OR within role.")
 @click.option(
@@ -160,11 +164,17 @@ def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> 
 @click.option(
     "--limit",
     type=click.IntRange(min=1, max=1000),
-    default=50,
+    default=5,
     show_default=True,
     help="Maximum visible results after filtering and stable ordering.",
 )
-@click.option("--explain-filter", is_flag=True, help="Show why candidates passed or were removed.")
+@click.option(
+    "--explain",
+    "--explain-filter",
+    "explain_filter",
+    is_flag=True,
+    help="Show candidate-level filter and limit reasons.",
+)
 @click.option(
     "--in",
     "project_context",
@@ -200,7 +210,7 @@ def checked_command(
     explain_filter: bool,
     project_context: str | None,
 ) -> None:
-    """Find candidates for a need and record the exact visible result."""
+    """Find candidates from an explicit source/query plan; NEED is context only."""
 
     try:
         requests = _source_requests(source, fixture=fixture, query=query, repo=repo)
@@ -244,7 +254,7 @@ def checked_command(
         _fail(runtime, ShouldaError("invalid_input", str(exc)))
 
 
-@cli.command("saved")
+@cli.command("saved", hidden=True)
 @click.argument("repositories", nargs=-1)
 @click.option("--all", "save_all", is_flag=True, help="Use one check's exact visible result set.")
 @click.option("--from", "from_check_id", help="Explicit chk_ receipt identifier.")
@@ -361,7 +371,7 @@ def rechecked_command(runtime: Runtime, target_id: str) -> None:
         _fail(runtime, exc)
 
 
-@cli.command("curated")
+@cli.command("curated", hidden=True)
 @click.argument("profile_path", type=click.Path(path_type=Path, dir_okay=False, exists=True))
 @click.pass_obj
 def curated_command(runtime: Runtime, profile_path: Path) -> None:
@@ -374,7 +384,7 @@ def curated_command(runtime: Runtime, profile_path: Path) -> None:
         _fail(runtime, exc)
 
 
-@cli.command("exported")
+@cli.command("exported", hidden=True)
 @click.argument("curation_id")
 @click.option("--public", "public_export", is_flag=True, help="Use the public allowlist boundary.")
 @click.option(
@@ -404,7 +414,7 @@ def exported_command(
         _fail(runtime, exc)
 
 
-@cli.command("projected")
+@cli.command("projected", hidden=True)
 @click.argument("curation_id")
 @click.option(
     "--to",
@@ -436,7 +446,7 @@ def projected_command(
         _fail(runtime, exc)
 
 
-@cli.command("used")
+@cli.command("used", hidden=True)
 @click.argument("repository")
 @click.option("--for", "need", required=True, help="The concrete need the adoption serves.")
 @click.option(
@@ -497,7 +507,7 @@ def used_command(
         )
 
 
-@cli.command("apply")
+@cli.command("apply", hidden=True)
 @click.argument("plan_id")
 @click.option("--fingerprint", required=True, help="Exact canonical plan fingerprint.")
 @click.pass_obj
@@ -519,7 +529,7 @@ def apply_command(runtime: Runtime, plan_id: str, fingerprint: str) -> None:
         _fail(runtime, exc)
 
 
-@cli.command("verify")
+@cli.command("verify", hidden=True)
 @click.argument("apply_id")
 @click.pass_obj
 def verify_command(runtime: Runtime, apply_id: str) -> None:

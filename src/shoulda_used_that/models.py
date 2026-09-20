@@ -97,6 +97,13 @@ class RecheckOutcome(StrEnum):
     MATERIAL_REVIEW_REQUIRED = "material-review-required"
 
 
+class SourceRank(FrozenModel):
+    """One upstream position preserved independently of local filtering and sorting."""
+
+    source: str = Field(min_length=1)
+    rank: int = Field(gt=0)
+
+
 class Candidate(FrozenModel):
     """Canonical, source-neutral candidate used by filters and receipts."""
 
@@ -122,6 +129,7 @@ class Candidate(FrozenModel):
     stars: int | None = Field(default=None, ge=0)
     url: str | None = None
     sources: tuple[str, ...] = ()
+    source_ranks: tuple[SourceRank, ...] = ()
     conflicts: tuple[str, ...] = ()
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -146,6 +154,14 @@ class Candidate(FrozenModel):
         return tuple(
             sorted({str(item).strip() for item in items if str(item).strip()}, key=str.casefold)
         )
+
+    @field_validator("source_ranks")
+    @classmethod
+    def stable_source_ranks(cls, value: tuple[SourceRank, ...]) -> tuple[SourceRank, ...]:
+        sources = [item.source for item in value]
+        if len(sources) != len(set(sources)):
+            raise ValueError("source ranks must contain at most one position per source")
+        return tuple(sorted(value, key=lambda item: (item.source, item.rank)))
 
     def filter_view(self) -> dict[str, Any]:
         """Return the stable public shape exposed to JMESPath."""
@@ -221,7 +237,7 @@ class FilterSpec(FrozenModel):
     min_stars: int | None = Field(default=None, ge=0)
     where: str | None = None
     sort: tuple[str, ...] = ("repo",)
-    limit: int = Field(default=50, gt=0, le=1000)
+    limit: int = Field(default=5, gt=0, le=1000)
 
     _string_fields: ClassVar[tuple[str, ...]] = (
         "roles",

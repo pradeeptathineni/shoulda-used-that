@@ -110,6 +110,40 @@ def test_human_and_view_outputs_are_uncolored_and_parseable(
         assert "fixture-labs/canonical-kit" in result.stdout
 
 
+def test_default_check_output_is_bounded_answer_first_and_diagnostic(
+    tmp_path: Path, fixture_path: Path
+) -> None:
+    runner = CliRunner()
+    base = [
+        "--state-dir",
+        str(tmp_path / "state"),
+        "checked",
+        "canonical identity",
+        "--source",
+        "fixture",
+        "--fixture",
+        str(fixture_path),
+    ]
+    result = runner.invoke(
+        cli,
+        [*base, "--language", "Python", "--license", "Apache-2.0", "--not-archived"],
+    )
+    assert result.exit_code == 0, result.output
+    assert "fixture-labs/canonical-kit" in result.stdout
+    assert "fixture-labs/query-needle" not in result.stdout
+    assert "Filtered or gated: 4" in result.stdout
+    assert "Result fingerprint" not in result.stdout
+    assert "NEED is context only and never expands a query" in result.stdout
+    assert "fixture:candidates.json #1" in result.stdout
+    assert len(result.stdout.splitlines()) <= 30
+
+    empty = runner.invoke(cli, [*base, "--language", "Rust"])
+    assert empty.exit_code == 0, empty.output
+    assert "Zero-result diagnosis" in empty.stdout
+    assert "every source candidate was removed" in empty.stdout
+    assert "nothing was broadened" in empty.stdout
+
+
 def test_used_then_apply_and_verify_fail_closed(tmp_path: Path) -> None:
     runner = CliRunner()
     state = tmp_path / "state"
@@ -242,21 +276,13 @@ def test_version_and_help_expose_stable_surface() -> None:
     assert version.stdout == "shoulda, version 0.3.0\n"
     assert help_result.exit_code == 0
     assert "Start here: checked finds options" in help_result.stdout
-    assert "Find candidates for a need and record the exact visible result." in help_result.stdout
-    for command in (
-        "checked",
-        "curated",
-        "exported",
-        "inspected",
-        "projected",
-        "saved",
-        "remembered",
-        "rechecked",
-        "used",
-        "apply",
-        "verify",
-    ):
+    assert "Find candidates from an explicit source/query plan" in help_result.stdout
+    for command in ("checked", "inspected", "remembered", "rechecked"):
         assert command in help_result.stdout
+    for hidden in ("curated", "exported", "projected", "saved", "used", "apply", "verify"):
+        assert hidden not in help_result.stdout
     assert checked_help.exit_code == 0
     assert "Explicit discovery source" in checked_help.stdout
-    assert "Show why candidates passed or were removed" in checked_help.stdout
+    assert "NEED never expands or rewrites it" in " ".join(checked_help.stdout.split())
+    assert "Show candidate-level filter and limit reasons" in checked_help.stdout
+    assert "default: 5" in checked_help.stdout

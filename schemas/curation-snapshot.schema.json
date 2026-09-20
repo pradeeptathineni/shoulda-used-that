@@ -104,6 +104,77 @@
       "title": "AssessmentBasis",
       "type": "string"
     },
+    "Brief": {
+      "additionalProperties": false,
+      "description": "A deliberately small prior-art answer for exactly one concrete problem.",
+      "properties": {
+        "candidate_repositories": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 3,
+          "title": "Candidate Repositories",
+          "type": "array"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "what_appears_covered": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "What Appears Covered",
+          "type": "array"
+        },
+        "what_remains_unresolved": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "What Remains Unresolved",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "title",
+        "candidate_repositories",
+        "what_appears_covered",
+        "what_remains_unresolved",
+        "evidence_refs",
+        "checked_at"
+      ],
+      "title": "Brief",
+      "type": "object"
+    },
     "CandidateScreening": {
       "additionalProperties": false,
       "description": "A candidate retained by eligibility evidence, not a contextual fit claim.",
@@ -274,6 +345,12 @@
         "assessments": {
           "minimum": 0,
           "title": "Assessments",
+          "type": "integer"
+        },
+        "briefs": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Briefs",
           "type": "integer"
         },
         "problems": {
@@ -578,6 +655,14 @@
     "CurationSemanticDiff": {
       "additionalProperties": false,
       "properties": {
+        "added_briefs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Added Briefs",
+          "type": "array"
+        },
         "added_exclusions": {
           "default": [],
           "items": {
@@ -592,6 +677,14 @@
             "type": "string"
           },
           "title": "Added Repositories",
+          "type": "array"
+        },
+        "changed_briefs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Briefs",
           "type": "array"
         },
         "changed_exclusions": {
@@ -631,6 +724,14 @@
           "default": false,
           "title": "Profile Changed",
           "type": "boolean"
+        },
+        "removed_briefs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Removed Briefs",
+          "type": "array"
         },
         "removed_exclusions": {
           "default": [],
@@ -1087,6 +1188,14 @@
       "title": "Blocked Entries",
       "type": "array"
     },
+    "briefs": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Brief"
+      },
+      "title": "Briefs",
+      "type": "array"
+    },
     "canonical_fingerprint": {
       "pattern": "^curation_[0-9a-f]{64}$",
       "title": "Canonical Fingerprint",
@@ -1132,7 +1241,10 @@
     "context_model_version": {
       "anyOf": [
         {
-          "const": "1.0",
+          "enum": [
+            "1.0",
+            "2.0"
+          ],
           "type": "string"
         },
         {

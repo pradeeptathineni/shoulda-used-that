@@ -241,6 +241,62 @@
       "title": "PublicAttribution",
       "type": "object"
     },
+    "PublicBrief": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_repositories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Candidate Repositories",
+          "type": "array"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "what_appears_covered": {
+          "items": {
+            "type": "string"
+          },
+          "title": "What Appears Covered",
+          "type": "array"
+        },
+        "what_remains_unresolved": {
+          "items": {
+            "type": "string"
+          },
+          "title": "What Remains Unresolved",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "title",
+        "candidate_repositories",
+        "what_appears_covered",
+        "what_remains_unresolved",
+        "evidence_refs",
+        "checked_at"
+      ],
+      "title": "PublicBrief",
+      "type": "object"
+    },
     "PublicCatalogRecord": {
       "additionalProperties": false,
       "properties": {
@@ -534,6 +590,13 @@
       "title": "Assessments",
       "type": "array"
     },
+    "briefs": {
+      "items": {
+        "$ref": "#/$defs/PublicBrief"
+      },
+      "title": "Briefs",
+      "type": "array"
+    },
     "canonical_fingerprint": {
       "pattern": "^public_[0-9a-f]{64}$",
       "title": "Canonical Fingerprint",
@@ -623,8 +686,8 @@
       "type": "string"
     },
     "schema_version": {
-      "const": "3.0",
-      "default": "3.0",
+      "const": "4.0",
+      "default": "4.0",
       "title": "Schema Version",
       "type": "string"
     },
@@ -663,6 +726,7 @@
     "exported_records",
     "problems",
     "assessments",
+    "briefs",
     "excluded_candidates",
     "omitted_private_field_counts",
     "license_attribution_inventory",

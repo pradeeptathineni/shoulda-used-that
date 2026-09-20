@@ -20,6 +20,7 @@ from shoulda_used_that.curation import (
 from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
     AdoptionPlan,
+    CandidateEvaluation,
     CheckReceipt,
     DecisionReceipt,
     ProjectionPlan,
@@ -70,45 +71,7 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         width=120,
     )
     if isinstance(value, CheckReceipt):
-        table = Table(title=f"{value.check_id} · {value.need}")
-        table.add_column("Repository")
-        table.add_column("Role")
-        table.add_column("License")
-        table.add_column("Evidence")
-        table.add_column("Result")
-        if explain:
-            table.add_column("Reasons")
-        if value.project_snapshot_id:
-            table.add_column("Project context")
-        for evaluation in value.evaluations:
-            row = [
-                evaluation.candidate.repository,
-                evaluation.candidate.role,
-                evaluation.candidate.license or "unknown",
-                evaluation.candidate.evidence_state.value,
-                "included" if evaluation.included else "excluded",
-            ]
-            if explain:
-                failed = [reason.reason for reason in evaluation.reasons if not reason.passed]
-                row.append("; ".join(failed) or "all predicates passed")
-            if value.project_snapshot_id:
-                row.append(
-                    "; ".join(
-                        f"{item.field}:{item.relationship}" for item in evaluation.applicability
-                    )
-                    or "unavailable"
-                )
-            table.add_row(*row)
-        console.print(table)
-        console.print(
-            f"Visible: {value.counts.visible} · Excluded: {value.counts.excluded} · "
-            f"Result fingerprint: {value.result_set_fingerprint}"
-            + (
-                f" · Project context: {value.project_snapshot_id}"
-                if value.project_snapshot_id
-                else ""
-            )
-        )
+        _check_table(value, console, explain=explain)
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         _local_workflow_table(value, console)
     elif isinstance(value, CurationSnapshot):
@@ -135,21 +98,24 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         )
         console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, ProjectSnapshot):
-        table = Table(title=f"{value.project_snapshot_id} · {value.target_identity}", min_width=80)
+        table = Table(title=f"Evidence for {value.target_identity}", min_width=80)
         table.add_column("Evidence")
-        table.add_column("Count")
-        table.add_row("languages", str(len(value.languages)))
-        table.add_row("topics", str(len(value.topics)))
-        table.add_row("manifests", str(len(value.manifest_facts)))
-        table.add_row("dependency components", str(len(value.dependency_components)))
-        table.add_row("typed gaps", str(len(value.evidence_gaps)))
+        table.add_column("Observed value")
+        if value.repository_metadata is not None:
+            table.add_row("license", value.repository_metadata.license or "unknown")
+            table.add_row("archived", str(value.repository_metadata.archived).lower())
+            table.add_row("default branch", value.repository_metadata.default_branch)
+        table.add_row("languages", ", ".join(item.name for item in value.languages) or "unknown")
+        table.add_row("ecosystems", ", ".join(value.ecosystems) or "unknown")
+        table.add_row(
+            "typed evidence gaps",
+            "; ".join(item.subject for item in value.evidence_gaps) or "none",
+        )
         console.print(table)
         console.print(
-            f"Files inspected: {value.inspected_file_count} · "
-            f"Bytes inspected: {value.inspected_byte_count} · "
-            f"SBOM: {value.sbom.format if value.sbom else 'unavailable'}"
+            f"Use in a check: --in {value.project_snapshot_id} · "
+            "Full source, manifest, and SBOM evidence: --format json"
         )
-        console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, GitHubProjectionPlan):
         table = Table(title=f"{value.plan_id} · {value.target_account}")
         table.add_column("#", justify="right")
@@ -251,6 +217,125 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
     return console.export_text(styles=False)
 
 
+def _check_table(value: CheckReceipt, console: Console, *, explain: bool) -> None:
+    table = Table(title=f"Options for: {value.need}")
+    table.add_column("Repository", min_width=28, no_wrap=True)
+    for heading in ("Description", "Evidence", "Upstream position"):
+        table.add_column(heading)
+    if explain:
+        table.add_column("Why included")
+    if value.project_snapshot_id:
+        table.add_column("Project context")
+    evaluation_by_repository = {
+        evaluation.candidate.repository: evaluation for evaluation in value.evaluations
+    }
+    visible_evaluations = tuple(
+        evaluation_by_repository[repository] for repository in value.result_repositories
+    )
+    for evaluation in visible_evaluations:
+        source_rank = ", ".join(
+            f"{item.source} #{item.rank}" for item in evaluation.candidate.source_ranks
+        )
+        row = [
+            evaluation.candidate.repository,
+            evaluation.candidate.description or "No description supplied.",
+            evaluation.candidate.evidence_state.value,
+            source_rank or "not supplied",
+        ]
+        if explain:
+            failed = [reason.reason for reason in evaluation.reasons if not reason.passed]
+            row.append("; ".join(failed) or "all predicates passed")
+        if value.project_snapshot_id:
+            row.append(
+                "; ".join(f"{item.field}:{item.relationship}" for item in evaluation.applicability)
+                or "unavailable"
+            )
+        table.add_row(*row)
+    if not visible_evaluations:
+        empty = ["none", "No candidate survived the explicit plan.", "-", "-"]
+        if explain:
+            empty.append("see diagnosis below")
+        if value.project_snapshot_id:
+            empty.append("-")
+        table.add_row(*empty)
+    console.print(table)
+    predicate_excluded = tuple(
+        evaluation
+        for evaluation in value.evaluations
+        if not evaluation.included
+        and not any(reason.field == "limit" for reason in evaluation.reasons)
+    )
+    limit_excluded = tuple(
+        evaluation
+        for evaluation in value.evaluations
+        if any(not reason.passed and reason.field == "limit" for reason in evaluation.reasons)
+    )
+    console.print(
+        f"Visible: {value.counts.visible} · Filtered or gated: {len(predicate_excluded)} · "
+        f"Outside limit: {len(limit_excluded)}"
+        + (f" · Project context: {value.project_snapshot_id}" if value.project_snapshot_id else "")
+    )
+    console.print(
+        f"Plan: {len(value.source_requests)} explicit source request(s); "
+        "NEED is context only and never expands a query."
+    )
+    if not visible_evaluations:
+        console.print(_zero_result_diagnosis(value, predicate_excluded))
+    elif value.result_repositories:
+        console.print(f"Inspect: shoulda inspected github:{value.result_repositories[0]}")
+    if explain and (predicate_excluded or limit_excluded):
+        _excluded_table((*predicate_excluded, *limit_excluded), console)
+
+
+def _excluded_table(evaluations: tuple[CandidateEvaluation, ...], console: Console) -> None:
+    details = Table(title="Excluded candidates")
+    for heading in ("Repository", "Stage", "Reason"):
+        details.add_column(heading)
+    for evaluation in evaluations:
+        failures = tuple(reason for reason in evaluation.reasons if not reason.passed)
+        stage = (
+            "limit"
+            if any(reason.field == "limit" for reason in failures)
+            else "hard gate"
+            if any(reason.category == "hard-gate" for reason in failures)
+            else "filter"
+        )
+        details.add_row(
+            evaluation.candidate.repository,
+            stage,
+            "; ".join(reason.reason for reason in failures),
+        )
+    console.print(details)
+
+
+def _zero_result_diagnosis(
+    value: CheckReceipt, predicate_excluded: tuple[CandidateEvaluation, ...]
+) -> str:
+    if value.counts.deduplicated == 0:
+        return (
+            "Zero-result diagnosis: the explicit sources returned no candidates. "
+            "Review --source, --query, --repo, or fixture input; nothing was broadened."
+        )
+    missing_required_evidence = sum(
+        any(
+            not reason.passed and reason.category == "hard-gate" and reason.unknown
+            for reason in evaluation.reasons
+        )
+        for evaluation in predicate_excluded
+    )
+    if missing_required_evidence:
+        return (
+            "Zero-result diagnosis: "
+            f"{missing_required_evidence} candidate(s) lacked required hard-gate evidence. "
+            "Use --explain to inspect the missing facts; nothing was broadened."
+        )
+    return (
+        "Zero-result diagnosis: every source candidate was removed by the explicit gates or "
+        "filters. Use --explain to inspect reasons or edit the research plan; nothing was "
+        "broadened."
+    )
+
+
 def _local_workflow_table(value: BaseModel, console: Console) -> None:
     """Render the smaller local workflow records without exposing model field dumps."""
 
@@ -344,8 +429,9 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
         table = Table(title=f"{value.export_id} · public catalog ready")
         table.add_column("Public result")
         table.add_column("Count or state")
-        table.add_row("Reviewed records", str(len(value.exported_records)))
-        table.add_row("Collections", str(len(value.collections)))
+        table.add_row("Prior-art briefs", str(len(value.briefs)))
+        table.add_row("Assessed relations", str(len(value.assessments)))
+        table.add_row("Safe corpus records", str(len(value.exported_records)))
         table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
         table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
         table.add_row("Reproducibility", value.reproducibility_status)
@@ -363,28 +449,57 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
 def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
     lines = [f"# {value.__class__.__name__}", ""]
     if isinstance(value, CheckReceipt):
+        evaluation_by_repository = {
+            evaluation.candidate.repository: evaluation for evaluation in value.evaluations
+        }
+        visible_evaluations = tuple(
+            evaluation_by_repository[repository] for repository in value.result_repositories
+        )
+        predicate_excluded = tuple(
+            evaluation
+            for evaluation in value.evaluations
+            if not evaluation.included
+            and not any(reason.field == "limit" for reason in evaluation.reasons)
+        )
+        limit_excluded = tuple(
+            evaluation
+            for evaluation in value.evaluations
+            if any(not reason.passed and reason.field == "limit" for reason in evaluation.reasons)
+        )
         lines.extend(
             [
                 f"- Check: `{value.check_id}`",
-                f"- Need: {value.need}",
-                f"- Result fingerprint: `{value.result_set_fingerprint}`",
+                f"- Problem context: {value.need}",
                 f"- Visible: {value.counts.visible}",
+                f"- Filtered or gated: {len(predicate_excluded)}",
+                f"- Outside limit: {len(limit_excluded)}",
+                "- Query behavior: explicit sources only; problem context never expands queries",
                 *(
                     [f"- Project context: `{value.project_snapshot_id}`"]
                     if value.project_snapshot_id
                     else []
                 ),
                 "",
-                "| Repository | Role | License | Result |",
+                "| Repository | Description | Evidence | Upstream position |",
                 "|---|---|---|---|",
             ]
         )
-        for evaluation in value.evaluations:
+        for evaluation in visible_evaluations:
             candidate = evaluation.candidate
+            description = candidate.description or "No description supplied."
+            source_rank = ", ".join(
+                f"{item.source} #{item.rank}" for item in candidate.source_ranks
+            )
             lines.append(
-                f"| `{candidate.repository}` | {candidate.role} | "
-                f"{candidate.license or 'unknown'} | "
-                f"{'included' if evaluation.included else 'excluded'} |"
+                f"| `{candidate.repository}` | {description} | "
+                f"{candidate.evidence_state.value} | {source_rank or 'not supplied'} |"
+            )
+        if not visible_evaluations:
+            lines.extend(["| none | No candidate survived the explicit plan. | - | - |", ""])
+            lines.append(_zero_result_diagnosis(value, predicate_excluded))
+        elif value.result_repositories:
+            lines.extend(
+                ["", f"Inspect: `shoulda inspected github:{value.result_repositories[0]}`"]
             )
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         lines.extend(_local_workflow_markdown(value))
@@ -602,8 +717,9 @@ def _local_workflow_markdown(value: BaseModel) -> list[str]:
     if isinstance(value, PublicCatalogExport):
         return [
             f"- Public export: `{value.export_id}`",
-            f"- Reviewed records: {len(value.exported_records)}",
-            f"- Collections: {len(value.collections)}",
+            f"- Prior-art briefs: {len(value.briefs)}",
+            f"- Assessed relations: {len(value.assessments)}",
+            f"- Safe corpus records: {len(value.exported_records)}",
             f"- Excluded candidates: {len(value.excluded_candidates)}",
             f"- Generated files: {len(value.generated_file_manifest) + 1}",
             f"- Reproducibility: {value.reproducibility_status}",

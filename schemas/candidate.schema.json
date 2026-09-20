@@ -32,6 +32,28 @@
       ],
       "title": "SecurityState",
       "type": "string"
+    },
+    "SourceRank": {
+      "additionalProperties": false,
+      "description": "One upstream position preserved independently of local filtering and sorting.",
+      "properties": {
+        "rank": {
+          "exclusiveMinimum": 0,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "rank"
+      ],
+      "title": "SourceRank",
+      "type": "object"
     }
   },
   "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/candidate.schema.json",
@@ -200,6 +222,14 @@
     "security_state": {
       "$ref": "#/$defs/SecurityState",
       "default": "unknown"
+    },
+    "source_ranks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SourceRank"
+      },
+      "title": "Source Ranks",
+      "type": "array"
     },
     "sources": {
       "default": [],

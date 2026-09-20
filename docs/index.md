@@ -1,50 +1,45 @@
 ---
 title: ShouldaUsedThat
-description: Build an evidence-backed prior-art brief for a concrete software problem before writing another implementation.
+description: See the prior-art landscape for one concrete software build problem before writing another implementation.
 hide:
   - toc
 ---
 
 # Know the landscape before you build
 
-Suppose you need stable JSON identity, safe local querying, or a mature CLI boundary. The useful
-answer is not a wall of repositories. It is a short, evidence-backed view of the credible options:
-what each covers, what to watch, what is still unknown, and which part may genuinely remain yours.
-
-ShouldaUsedThat is built around that prior-art brief. The current public Explore surface exposes
-the screened evidence corpus and explicit assessments used to prove the underlying model; it does
-not pretend every screened candidate has been assessed for your problem.
+ShouldaUsedThat turns one concrete software build problem into a short, evidence-backed brief:
+the few existing approaches worth knowing, what each covers, where it stops, and what still appears
+worth building.
 
 <div class="home-actions" markdown>
 
-[Explore the evidence](curation/index.md){ .md-button .md-button--primary }
-[Try the deterministic CLI](getting-started.md){ .md-button }
+[Explore prior-art briefs](curation/index.md){ .md-button .md-button--primary }
+[Use the research CLI](getting-started.md){ .md-button }
 
 </div>
 
-## What the evidence means
+## Example: build a deterministic Python research core
 
-- **Screened**: public source, metadata, and eligibility evidence made a candidate worth retaining.
-- **Assessed**: reviewed evidence supports contextual covers, watch, or unknown content for one
-  concrete problem.
+Four established pieces already cover much of the foundation:
 
-The same repository may deserve different assessments for different problems. Domains help filter
-the backing corpus; they are not needs or recommendations.
+- **Click** — mature parsing and help; it does not define research semantics.
+- **Pydantic** — strict versioned records; workflow rules remain explicit.
+- **JMESPath** — safe expressions over a documented view; native gates stay project-owned.
+- **rfc8785.py** — canonical JSON bytes; receipt and state policy remain separate.
 
-## A local, revisitable workflow
+**What appears covered:** parsing, validation, safe local querying, and stable content identity.
 
-```text
-find options → keep the exact result → record the choice → revisit material change
-  checked           saved               remembered              rechecked
-```
+**What remains:** the problem-specific research plan, evidence gates, state transitions, and compact
+human answer.
 
-The CLI is deterministic and keeps state outside the target repository. Read and record commands
-do not mutate GitHub or a target project. Start with the [guided CLI journey](getting-started.md),
-or see the durable [product and evidence boundary](architecture/product-contract.md).
+[Open the full brief](curation/briefs/deterministic-python-research-core.md)
 
-## Evidence stays available
+## How trust stays out of the way
 
-Reader pages hide routine machinery, but the safe public corpus, dated observations, provenance,
-schemas, decision evidence, and reproducibility manifest remain inspectable. Operator controls and
-live readback evidence are available through the [runbook](operations/github-curation.md) without
-competing for first-visit navigation.
+Every visible claim links to dated evidence. The complete screened corpus, provenance, and canonical
+JSON remain available underneath, but metadata never becomes contextual fit and screened-only
+candidates do not receive rich pages.
+
+The CLI executes only explicit sources, queries, filters, and ordering. It records the complete
+result while keeping normal output to five candidates. Read, research, and record commands do not
+mutate GitHub or a target repository.

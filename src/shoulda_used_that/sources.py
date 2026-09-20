@@ -23,6 +23,7 @@ from shoulda_used_that.models import (
     NetworkBoundary,
     SourceKind,
     SourceObservation,
+    SourceRank,
     SourceRequest,
     normalize_repository,
     utc_now,
@@ -156,7 +157,11 @@ def _load_fixture(request: SourceRequest, observed_at: datetime) -> SourceBatch:
             message=f"Fixture must be a list or an object with a candidates list: {path}",
         )
     source_id = f"fixture:{digest(raw.decode('utf-8'), prefix='src')}"
-    candidates = _validate_candidates(items, source_id=source_id)
+    candidates = _validate_candidates(
+        items,
+        source_id=source_id,
+        source_rank_id=f"fixture:{path.name}",
+    )
     observation = SourceObservation(
         kind=request.kind,
         locator=str(path),
@@ -171,7 +176,7 @@ def _load_fixture(request: SourceRequest, observed_at: datetime) -> SourceBatch:
 def _load_stars(request: SourceRequest, github: GhClient, observed_at: datetime) -> SourceBatch:
     result = github.starred()
     candidates: list[Candidate] = []
-    for entry in result.payload:
+    for rank, entry in enumerate(result.payload, start=1):
         if not isinstance(entry, dict) or not isinstance(entry.get("repo"), dict):
             raise SourceError(
                 code="github_star_schema_invalid",
@@ -180,6 +185,7 @@ def _load_stars(request: SourceRequest, github: GhClient, observed_at: datetime)
         candidate = _github_candidate(
             entry["repo"],
             source_id="github:stars",
+            source_rank=rank,
             starred_at=entry.get("starred_at"),
             is_starred=True,
         )
@@ -197,8 +203,12 @@ def _load_stars(request: SourceRequest, github: GhClient, observed_at: datetime)
 def _load_search(request: SourceRequest, github: GhClient, observed_at: datetime) -> SourceBatch:
     result = github.search(request.query or "", maximum=100)
     candidates = tuple(
-        _github_candidate(item, source_id=f"github:search:{request.query}")
-        for item in result.payload
+        _github_candidate(
+            item,
+            source_id=f"github:search:{request.query}",
+            source_rank=rank,
+        )
+        for rank, item in enumerate(result.payload, start=1)
     )
     observation = SourceObservation(
         kind=request.kind,
@@ -223,7 +233,11 @@ def _load_repository(
             details={"repository": request.locator},
         ) from exc
     result = github.repository(repository)
-    candidate = _github_candidate(result.payload, source_id=f"github:repo:{repository}")
+    candidate = _github_candidate(
+        result.payload,
+        source_id=f"github:repo:{repository}",
+        source_rank=1,
+    )
     observation = SourceObservation(
         kind=request.kind,
         locator=repository,
@@ -239,6 +253,7 @@ def _github_candidate(
     item: Any,
     *,
     source_id: str,
+    source_rank: int,
     starred_at: str | None = None,
     is_starred: bool | None = None,
 ) -> Candidate:
@@ -269,6 +284,7 @@ def _github_candidate(
             stars=item.get("stargazers_count"),
             url=item.get("html_url"),
             sources=(source_id,),
+            source_ranks=(SourceRank(source=source_id, rank=source_rank),),
         )
     except ValidationError as exc:
         raise SourceError(
@@ -278,7 +294,9 @@ def _github_candidate(
         ) from exc
 
 
-def _validate_candidates(items: list[Any], *, source_id: str) -> tuple[Candidate, ...]:
+def _validate_candidates(
+    items: list[Any], *, source_id: str, source_rank_id: str
+) -> tuple[Candidate, ...]:
     candidates: list[Candidate] = []
     for index, item in enumerate(items):
         if not isinstance(item, dict):
@@ -293,6 +311,7 @@ def _validate_candidates(items: list[Any], *, source_id: str) -> tuple[Candidate
                     {
                         **candidate.model_dump(mode="python"),
                         "sources": (*candidate.sources, source_id),
+                        "source_ranks": (SourceRank(source=source_rank_id, rank=index + 1),),
                     }
                 )
             )
@@ -334,6 +353,12 @@ def _merge(first: Candidate, second: Candidate) -> Candidate:
             conflicts.append(f"{field}: retained first observed value")
     for field in ("ecosystems", "topics", "platforms", "runtimes", "sources"):
         first_data[field] = tuple({*first_data[field], *second_data[field]})
+    ranks = {item.source: item.rank for item in (*first.source_ranks, *second.source_ranks)}
+    for item in (*first.source_ranks, *second.source_ranks):
+        ranks[item.source] = min(ranks[item.source], item.rank)
+    first_data["source_ranks"] = tuple(
+        SourceRank(source=source, rank=rank) for source, rank in sorted(ranks.items())
+    )
     state_order = {
         EvidenceState.ERROR: 0,
         EvidenceState.UNKNOWN: 1,

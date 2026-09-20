@@ -38,6 +38,21 @@ are explicit first steps; command help and generated catalog pages lead with the
 before showing operator evidence. First Reader and ZeroSlop are review techniques, not runtime
 dependencies or authorities.
 
+## Post-`v0.3.0` brief-first boundary
+
+The primary reader unit is now a prior-art brief for one concrete build problem. A brief selects
+three to five explicit `problem × repository` assessments, shows candidate-specific `covers` plus
+`watch` or uncertainty, and states what appears covered and what remains unresolved. Screened
+repository evidence remains complete in canonical JSON, but screened-only candidates do not receive
+rich reader pages.
+
+The ordinary CLI journey is `checked → inspected → remembered → rechecked`. `checked` treats the
+problem text as context and executes only explicit sources and queries, preserves upstream source
+positions separately from local ordering, defaults to five visible results, aggregates exclusions,
+and diagnoses zero-result categories without broadening the plan. JSON and YAML retain the complete
+receipt. Compatibility commands `saved` and `used`, plus catalog and GitHub operator commands,
+remain callable but are hidden from ordinary root help.
+
 ## State and identity
 
 Runtime state lives under an OS data directory selected by `platformdirs`, or under an explicit `--state-dir`. Profiles do not share latest-check pointers, saved items, or decisions. State is JSON validated by versioned Pydantic models and hashed with RFC 8785 canonical JSON. Receipts are immutable; a later receipt may supersede an earlier one.

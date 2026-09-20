@@ -9,7 +9,7 @@ import pytest
 
 from shoulda_used_that.errors import SourceError
 from shoulda_used_that.github import GhResult
-from shoulda_used_that.models import Candidate, SourceKind, SourceRequest
+from shoulda_used_that.models import Candidate, SourceKind, SourceRank, SourceRequest
 from shoulda_used_that.sources import SourceBatch, load_sources, merge_batches
 
 NOW = datetime(2026, 9, 17, 12, tzinfo=UTC)
@@ -83,6 +83,8 @@ def test_json_and_yaml_fixtures_load_with_content_identity(
     assert len(json_batch.candidates) == 5
     assert json_batch.observation.payload_fingerprint.startswith("payload_")
     assert json_batch.candidates[0].sources[0].startswith("fixture:src_")
+    assert [item.source_ranks[0].rank for item in json_batch.candidates] == [1, 2, 3, 4, 5]
+    assert json_batch.candidates[0].source_ranks[0].source == "fixture:candidates.json"
     assert yaml_batch.candidates[0].repository == "fixture-labs/yaml"
 
 
@@ -191,6 +193,7 @@ def test_github_sources_normalize_typed_candidates() -> None:
     assert batches[0].candidates[0].is_starred is True
     assert batches[0].candidates[0].starred_at is not None
     assert batches[1].candidates[0].license is None
+    assert all(item.candidates[0].source_ranks[0].rank == 1 for item in batches)
     assert all(item.observation.tool_version == "gh/2.test" for item in batches)
 
 
@@ -255,6 +258,7 @@ def test_merge_is_deterministic_and_preserves_conflicts() -> None:
         topics=("one",),
         evidence_state="claim",
         metadata={"first": True},
+        source_ranks=(SourceRank(source="source-a", rank=3),),
     )
     second = Candidate(
         repository="fixtures/merge",
@@ -263,6 +267,10 @@ def test_merge_is_deterministic_and_preserves_conflicts() -> None:
         topics=("two",),
         evidence_state="verified",
         metadata={"second": True},
+        source_ranks=(
+            SourceRank(source="source-a", rank=2),
+            SourceRank(source="source-b", rank=4),
+        ),
     )
     batches = (
         SourceBatch(request, observation, (first,)),
@@ -277,6 +285,10 @@ def test_merge_is_deterministic_and_preserves_conflicts() -> None:
     assert merged[0].evidence_state.value == "verified"
     assert "language: retained first observed value" in merged[0].conflicts
     assert merged[0].metadata == {"second": True, "first": True}
+    assert [(item.source, item.rank) for item in merged[0].source_ranks] == [
+        ("source-a", 2),
+        ("source-b", 4),
+    ]
 
 
 def test_fixture_payload_fingerprint_matches_parsed_content(tmp_path: Path) -> None:

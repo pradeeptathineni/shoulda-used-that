@@ -23,7 +23,7 @@
     {
       "kind": "public-context-json",
       "locator": "curation/assessments/shoulda-used-that.json",
-      "content_sha256": "77faf8591d06bd7e48477147695a3872fc429401daf5da850139970c34c1bcfa",
+      "content_sha256": "bee442123b02256e3adfce6b56c6fbecf9efe7f210eeadb7ecf1a6b1ae0faab1",
       "license": "Apache-2.0",
       "attribution": "Repository-authored problem definitions and explicit problem-by-repository assessments backed by public decision evidence."
     }
@@ -348,5 +348,5 @@
       "add_memberships": 600
     }
   },
-  "canonical_fingerprint": "profile_961d3751e725aaef097c2f48d87620853111952c4a87dd93d87fc86510df58ad"
+  "canonical_fingerprint": "profile_dd6168ffe55539c55b3ed5305172937aacb42b72f67e174a138cca436174f141"
 }

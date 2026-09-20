@@ -113,11 +113,14 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert first.context_counts.model_dump() == {
         "repositories": 222,
         "screenings": 222,
-        "problems": 17,
+        "problems": 5,
         "assessments": 17,
+        "briefs": 5,
         "screened_only_repositories": 205,
         "assessed_repositories": 17,
     }
+    assert len(first.briefs) == 5
+    assert all(3 <= len(item.candidate_repositories) <= 5 for item in first.briefs)
     assert profile.projection_policy.selected_collection_slugs == (
         "generative-ai-agents",
         "rag-search-knowledge",
@@ -202,6 +205,17 @@ def test_changed_entries_exclusions_and_profile_are_a_material_diff(tmp_path: Pa
     assert current.semantic_diff.material is True
 
 
+def test_changed_brief_synthesis_is_a_material_diff(tmp_path: Path) -> None:
+    previous = compile_profile(PUBLIC_PROFILE)
+    context = _payload(PUBLIC_CONTEXT)
+    context["briefs"][0]["what_remains_unresolved"] = ["A newly reviewed residual gap."]
+
+    current = compile_profile(_write_tree(tmp_path, context=context), previous=previous)
+
+    assert current.semantic_diff.changed_briefs == ("curated-oss-evidence-publishing",)
+    assert current.semantic_diff.material is True
+
+
 @pytest.mark.skipif(not hasattr(Path, "symlink_to"), reason="symlinks unavailable")
 def test_source_path_boundaries_and_size_are_typed(tmp_path: Path) -> None:
     profile_path = _write_tree(tmp_path / "symlink")
@@ -256,6 +270,12 @@ def test_entry_review_time_cannot_be_after_profile_review_time(tmp_path: Path) -
     with pytest.raises(StateError) as raised:
         compile_profile(profile_path)
     assert raised.value.code == "curation_entry_from_future"
+
+    context = _payload(PUBLIC_CONTEXT)
+    context["briefs"][0]["checked_at"] = "2026-09-18T00:00:00Z"
+    with pytest.raises(StateError) as future_brief:
+        compile_profile(_write_tree(tmp_path / "brief", context=context))
+    assert future_brief.value.code == "curation_brief_from_future"
 
 
 @pytest.mark.parametrize(
@@ -339,6 +359,97 @@ def test_metadata_is_not_a_valid_assessment_basis(tmp_path: Path) -> None:
     assert raised.value.code == "curation_source_invalid"
 
 
+def test_briefs_require_complete_contextual_assessments_and_small_candidate_sets() -> None:
+    snapshot = compile_profile(PUBLIC_PROFILE)
+    assessments = {(item.problem_id, item.repository): item for item in snapshot.assessments}
+
+    for brief in snapshot.briefs:
+        assert 3 <= len(brief.candidate_repositories) <= 5
+        for repository in brief.candidate_repositories:
+            assessment = assessments[(brief.problem_id, repository)]
+            assert assessment.covers
+            assert assessment.watch or assessment.unknowns
+            words = sum(
+                len(value.split())
+                for value in (*assessment.covers, *assessment.watch, *assessment.unknowns)
+            )
+            assert words <= 60
+
+
+def test_brief_missing_assessment_and_repeated_candidate_copy_fail_closed(
+    tmp_path: Path,
+) -> None:
+    missing = _payload(PUBLIC_CONTEXT)
+    missing["assessments"] = [
+        item
+        for item in missing["assessments"]
+        if not (
+            item["problem_id"] == "deterministic-python-research-core"
+            and item["repository"] == "pallets/click"
+        )
+    ]
+    with pytest.raises(StateError) as absent:
+        compile_profile(_write_tree(tmp_path / "missing", context=missing))
+    assert absent.value.code == "curation_brief_assessment_missing"
+
+    repeated = _payload(PUBLIC_CONTEXT)
+    repeated_text = "This substantive sentence belongs at the brief level instead."
+    for assessment in repeated["assessments"]:
+        if assessment["problem_id"] == "deterministic-python-research-core":
+            assessment["covers"] = [repeated_text]
+    with pytest.raises(StateError) as duplicate:
+        compile_profile(_write_tree(tmp_path / "repeated", context=repeated))
+    assert duplicate.value.code == "curation_brief_repeated_candidate_copy"
+
+
+@pytest.mark.parametrize(
+    ("mutation", "code"),
+    [
+        ("invalid-problem-id", "curation_source_invalid"),
+        ("duplicate-candidate", "curation_source_invalid"),
+        ("legacy-with-brief", "curation_source_invalid"),
+        ("unknown-brief-problem", "curation_brief_problem_unknown"),
+        ("unknown-assessment-repository", "curation_assessment_repository_unknown"),
+        ("unknown-assessment-problem", "curation_assessment_problem_unknown"),
+        ("incomplete-assessment", "curation_brief_assessment_incomplete"),
+        ("candidate-copy-too-long", "curation_brief_candidate_too_long"),
+    ],
+)
+def test_brief_structure_and_relationship_failures_are_typed(
+    tmp_path: Path, mutation: str, code: str
+) -> None:
+    context = _payload(PUBLIC_CONTEXT)
+    if mutation == "invalid-problem-id":
+        context["briefs"][0]["problem_id"] = "Not a valid ID"
+    elif mutation == "duplicate-candidate":
+        candidates = context["briefs"][0]["candidate_repositories"]
+        candidates[-1] = candidates[0]
+    elif mutation == "legacy-with-brief":
+        context["schema_version"] = "1.0"
+    elif mutation == "unknown-brief-problem":
+        context["briefs"][0]["problem_id"] = "missing-problem"
+    elif mutation == "unknown-assessment-repository":
+        context["assessments"][-1]["repository"] = "missing/repository"
+    elif mutation == "unknown-assessment-problem":
+        context["assessments"][-1]["problem_id"] = "missing-problem"
+    else:
+        assessment = next(
+            item
+            for item in context["assessments"]
+            if item["problem_id"] == "deterministic-python-research-core"
+            and item["repository"] == "pallets/click"
+        )
+        if mutation == "incomplete-assessment":
+            assessment["watch"] = []
+            assessment["unknowns"] = []
+        else:
+            assessment["covers"] = [" ".join(["word"] * 61)]
+
+    with pytest.raises(StateError) as raised:
+        compile_profile(_write_tree(tmp_path, context=context))
+    assert raised.value.code == code
+
+
 def test_same_repository_keeps_distinct_problem_assessments(tmp_path: Path) -> None:
     context = _payload(PUBLIC_CONTEXT)
     original = next(
@@ -368,13 +479,15 @@ def test_same_repository_keeps_distinct_problem_assessments(tmp_path: Path) -> N
     click_assessments = {
         item.problem_id: item for item in snapshot.assessments if item.repository == "pallets/click"
     }
-    assert click_assessments["mature-cli-parsing"].covers == tuple(original["covers"])
+    assert click_assessments["deterministic-python-research-core"].covers == tuple(
+        original["covers"]
+    )
     assert click_assessments["consistent-cli-help"].covers == (
         "Click supplies established help generation for declared commands.",
     )
     assert (
         click_assessments["consistent-cli-help"].watch
-        != click_assessments["mature-cli-parsing"].watch
+        != click_assessments["deterministic-python-research-core"].watch
     )
 
 

@@ -89,6 +89,13 @@ def _write_profile_tree(
     return profile_path
 
 
+@pytest.fixture(scope="module")
+def valid_public_export_payload() -> dict[str, Any]:
+    profile = load_profile(PUBLIC_PROFILE)
+    export, _ = render_public_catalog(compile_profile(PUBLIC_PROFILE), profile)
+    return export.model_dump(mode="json")
+
+
 def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     profile = load_profile(PUBLIC_PROFILE)
     snapshot = compile_profile(PUBLIC_PROFILE)
@@ -101,8 +108,9 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert first_export.reproducibility_status == "verified-deterministic"
     assert len(first_export.exported_records) == 222
     assert len(first_export.collections) == 12
-    assert len(first_export.problems) == 17
+    assert len(first_export.problems) == 5
     assert len(first_export.assessments) == 17
+    assert len(first_export.briefs) == 5
     assert sum(item.publication_state == "assessed" for item in first_export.exported_records) == 17
     assert set(first_export.omitted_private_field_counts.values()) == {0}
     assert {item.repository for item in first_export.license_attribution_inventory} == {
@@ -114,44 +122,120 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
         *(item.path for item in first_export.generated_file_manifest),
     }
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
-    assert b"Backing evidence, not the final answer" in first_files["index.md"]
-    assert b"collections/cloud-infrastructure-iac.md" in first_files["index.md"]
-    assert b"Screening never generates a fit claim" in first_files["index.md"]
+    assert b"Explore prior-art briefs" in first_files["index.md"]
+    assert b"briefs/deterministic-python-research-core.md" in first_files["index.md"]
+    assert b"screened metadata never becomes contextual fit" in first_files["index.md"]
     assert b"pallets/click" not in first_files["index.md"]
-    assert b"../entries/pallets--click.md" in first_files["entries/index.md"]
-    assert b"DevOps" not in first_files["collections/index.md"]
-    assert b"opencv/opencv" in first_files["collections/computer-vision-multimodal.md"]
-    assert (
-        b"Browse the screened candidates"
-        in first_files["collections/computer-vision-multimodal.md"]
-    )
-    assert b"curated" in first_files["dogfood.md"]
-    assert b"projected" in first_files["dogfood.md"]
-    assert b"verify" in first_files["dogfood.md"]
-    assert b"**206 unique" in first_files["selection.md"]
-    assert b"entries/browser-use--browser-use.md" in first_files["selection.md"]
-    assert b"curation/selections/personal-interests.json" in first_files["selection.md"]
-    assert b"Contextual assessments" in first_files["entries/pallets--click.md"]
-    assert b"Click owns parsing" in first_files["entries/pallets--click.md"]
-    assert (
-        b"No explicit problem-specific assessment"
-        in first_files["entries/langchain-ai--langchain.md"]
-    )
-    assert first_files["entries/pallets--click.md"].index(b"Reconsider when") < first_files[
-        "entries/pallets--click.md"
-    ].index(b"Observed repository facts")
-    assert b"freshness-chip--current" not in first_files["entries/index.md"]
-    assert b"status-chip--reference" not in first_files["entries/index.md"]
-    assert b"catalog-card__eyebrow" not in first_files["entries/index.md"]
-    assert b"Checked 2026-09-17 \xc2\xb7 <a" in first_files["entries/index.md"]
-    assert b"curation_" not in first_files["dogfood.md"]
-    entry_before_evidence = first_files["entries/3b1b--manim.md"].split(b"## Evidence", 1)[0]
-    assert b"fafa083a4fb274bba9cabde0b6e2f50ba6da0622" not in entry_before_evidence
+    brief = first_files["briefs/deterministic-python-research-core.md"]
+    assert b"pallets/click" in brief
+    assert b"Owns mature command parsing" in brief
+    assert b"What still appears unresolved" in brief
+    assert b"decision_state" not in brief
+    evidence = first_files["evidence/pallets--click.md"]
+    assert b"Evidence for pallets/click" in evidence
+    assert b"Observed repository and provenance details" in evidence
+    assert all(not path.startswith(("entries/", "collections/")) for path in first_files)
+    screened_slug = "langchain-ai--langchain"
+    assert all(screened_slug not in path for path in first_files)
+    assert len([path for path in first_files if path.startswith("briefs/")]) == 5
+    assert len([path for path in first_files if path.startswith("evidence/")]) == 17
     assert "public catalog ready" in render(first_export, OutputFormat.TABLE)
     assert "Private field classes omitted" in render(first_export, OutputFormat.MARKDOWN)
     combined = b"\n".join(first_files.values())
     assert str(ROOT).encode() not in combined
     assert b"github_pat_" not in combined
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("missing-private-class", "private-field count classes"),
+        ("negative-private-count", "private-field counts cannot be negative"),
+        ("record-order", "records must use unique canonical repository order"),
+        ("problem-order", "problems must use unique canonical problem order"),
+        ("assessment-order", "assessments must use unique canonical relation order"),
+        ("assessment-reference", "assessments must reference exported"),
+        ("brief-order", "briefs must use unique canonical problem order"),
+        ("brief-problem", "briefs require one known problem"),
+        ("brief-duplicate", "3-5 unique candidates"),
+        ("brief-assessment", "brief candidates require contextual assessments"),
+        ("publication-state", "record state must be derived"),
+        ("manifest-order", "manifest must be unique, sorted"),
+        ("fingerprint", "fingerprint does not match"),
+        ("export-id", "export ID does not match"),
+    ],
+)
+def test_public_export_model_rejects_incoherent_derived_state(
+    valid_public_export_payload: dict[str, Any], mutation: str, message: str
+) -> None:
+    payload = deepcopy(valid_public_export_payload)
+    if mutation == "missing-private-class":
+        payload["omitted_private_field_counts"].pop("credentials")
+    elif mutation == "negative-private-count":
+        payload["omitted_private_field_counts"]["credentials"] = -1
+    elif mutation == "record-order":
+        payload["exported_records"].reverse()
+    elif mutation == "problem-order":
+        payload["problems"].reverse()
+    elif mutation == "assessment-order":
+        payload["assessments"].reverse()
+    elif mutation == "assessment-reference":
+        payload["assessments"][-1]["repository"] = "zzzz/missing"
+    elif mutation == "brief-order":
+        payload["briefs"].reverse()
+    elif mutation == "brief-problem":
+        payload["briefs"][-1]["problem_id"] = "zzzz-unknown-problem"
+    elif mutation == "brief-duplicate":
+        candidates = payload["briefs"][0]["candidate_repositories"]
+        candidates[-1] = candidates[0]
+    elif mutation == "brief-assessment":
+        payload["briefs"][0]["candidate_repositories"][0] = payload["exported_records"][0][
+            "repository"
+        ]
+    elif mutation == "publication-state":
+        state = payload["exported_records"][0]["publication_state"]
+        payload["exported_records"][0]["publication_state"] = (
+            "assessed" if state == "screened" else "screened"
+        )
+    elif mutation == "manifest-order":
+        payload["generated_file_manifest"].reverse()
+    elif mutation == "fingerprint":
+        payload["canonical_fingerprint"] = f"public_{'0' * 64}"
+    else:
+        payload["export_id"] = f"pcx_{'0' * 24}"
+
+    with pytest.raises(ValidationError, match=message):
+        PublicCatalogExport.model_validate(payload)
+
+
+def test_brief_pages_enforce_reader_information_and_publication_budgets() -> None:
+    profile = load_profile(PUBLIC_PROFILE)
+    export, files = render_public_catalog(compile_profile(PUBLIC_PROFILE), profile)
+    assessed = {item.repository for item in export.assessments}
+
+    for brief in export.briefs:
+        payload = files[f"briefs/{brief.problem_id}.md"]
+        assert 3 <= len(brief.candidate_repositories) <= 5
+        assert payload.count(b'<article class="catalog-card assessment-card">') == len(
+            brief.candidate_repositories
+        )
+        assert payload.count(b">Evidence</a>") == len(brief.candidate_repositories)
+        assert b"What appears covered" in payload
+        assert b"What still appears unresolved" in payload
+        default_view = payload.split(b"<details>", 1)[0]
+        for hidden in (b"Latest commit", b"fingerprint", b"projection", b"receipt ID"):
+            assert hidden not in default_view
+
+    evidence_pages = {
+        path.removeprefix("evidence/").removesuffix(".md").replace("--", "/")
+        for path in files
+        if path.startswith("evidence/")
+    }
+    assert evidence_pages == assessed
+    screened_only = {
+        item.repository for item in export.exported_records if item.publication_state == "screened"
+    }
+    assert evidence_pages.isdisjoint(screened_only)
 
 
 def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
@@ -173,11 +257,8 @@ def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
     changed_paths = {path for path in baseline if baseline[path] != changed[path]}
     assert changed_paths == {
         "catalog.json",
-        "collections/oss-curation-foundations.md",
-        "collections/platform-engineering-delivery.md",
-        "collections/python-engineering.md",
-        "entries/index.md",
-        "entries/pallets--click.md",
+        "briefs/deterministic-python-research-core.md",
+        "evidence/pallets--click.md",
         MANIFEST_NAME,
         "sources.md",
     }
@@ -202,12 +283,16 @@ def test_non_public_collections_are_omitted_instead_of_leaked(tmp_path: Path) ->
 
 def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
     def inject_markup(entries: dict[str, Any]) -> None:
-        entries["repository_evidence"][0]["description"] = '<script>alert("catalog")</script>'
+        click = next(
+            item for item in entries["repository_evidence"] if item["repository"] == "pallets/click"
+        )
+        click["description"] = '<script>alert("catalog")</script>'
 
     def inject_context(context: dict[str, Any]) -> None:
-        context["assessments"][0]["covers"] = [
-            "[steal](javascript:alert(1))\n# injected heading\n1. fake list"
-        ]
+        click = next(
+            item for item in context["assessments"] if item["repository"] == "pallets/click"
+        )
+        click["covers"] = ["[steal](javascript:alert(1))\n# injected heading\n1. fake list"]
 
     profile_path = _write_profile_tree(
         tmp_path,
@@ -217,10 +302,10 @@ def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
     profile = load_profile(profile_path)
     snapshot = compile_profile(profile_path)
     _, files = render_public_catalog(snapshot, profile)
-    entry_path = "entries/pallets--click.md"
+    entry_path = "evidence/pallets--click.md"
 
     assert b"<script>" not in files[entry_path]
-    assert b"&lt;script&gt;alert(&quot;catalog&quot;)&lt;/script&gt;" in files[entry_path]
+    assert b"&lt;script\\&gt;alert\\(&quot;catalog&quot;\\)&lt;/script\\&gt;" in files[entry_path]
     assert b"](javascript:" not in files[entry_path]
     assert b"\n# injected heading" not in files[entry_path]
     assert b"\\[steal\\]\\(javascript:alert\\(1\\)\\)" in files[entry_path]
@@ -273,6 +358,35 @@ def test_private_mismatched_invalid_and_leaking_inputs_fail_closed(tmp_path: Pat
     with pytest.raises(StateError) as secret:
         render_public_catalog(compile_profile(secret_path), load_profile(secret_path))
     assert secret.value.code == "public_export_secret_leak"
+
+
+@pytest.mark.parametrize(
+    "location",
+    ["source-provenance", "screening", "assessment", "brief"],
+)
+def test_all_public_evidence_layers_reject_local_paths(tmp_path: Path, location: str) -> None:
+    def mutate_entries(entries: dict[str, Any]) -> None:
+        if location == "source-provenance":
+            entries["repository_evidence"][0]["source_provenance"][0]["locator"] = (
+                "/private/evidence.json"
+            )
+        elif location == "screening":
+            entries["screenings"][0]["evidence_receipt_ids"] = ["/private/screening.json"]
+
+    def mutate_context(context: dict[str, Any]) -> None:
+        if location == "assessment":
+            context["assessments"][0]["evidence_refs"] = ["/private/assessment.json"]
+        elif location == "brief":
+            context["briefs"][0]["evidence_refs"] = ["/private/brief.json"]
+
+    profile_path = _write_profile_tree(
+        tmp_path,
+        mutate_entries=mutate_entries,
+        mutate_context=mutate_context,
+    )
+    with pytest.raises(StateError) as raised:
+        render_public_catalog(compile_profile(profile_path), load_profile(profile_path))
+    assert raised.value.code == "public_export_local_path_leak"
 
 
 def test_transactional_writer_repairs_managed_output_and_rejects_unsafe_paths(

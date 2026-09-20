@@ -78,8 +78,12 @@ def test_primary_navigation_and_homepage_obey_the_reader_information_budget() ->
     assert all(isinstance(next(iter(item.values())), str) for item in navigation)
 
     homepage = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
-    first_screen = homepage.split("## What the evidence means", maxsplit=1)[0]
+    first_screen = homepage.split("## Example:", maxsplit=1)[0]
     assert len(first_screen.split()) <= 150
     assert not {"fingerprint", "projection", "receipt"}.intersection(
         first_screen.casefold().split()
     )
+    assert "## Example: build a deterministic Python research core" in homepage
+    assert homepage.index("## Example:") < homepage.index("## How trust stays out of the way")
+    assert "**What appears covered:**" in homepage
+    assert "**What remains:**" in homepage

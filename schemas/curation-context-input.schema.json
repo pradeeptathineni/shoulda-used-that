@@ -104,6 +104,77 @@
       "title": "AssessmentBasis",
       "type": "string"
     },
+    "Brief": {
+      "additionalProperties": false,
+      "description": "A deliberately small prior-art answer for exactly one concrete problem.",
+      "properties": {
+        "candidate_repositories": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 3,
+          "title": "Candidate Repositories",
+          "type": "array"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "what_appears_covered": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "What Appears Covered",
+          "type": "array"
+        },
+        "what_remains_unresolved": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "What Remains Unresolved",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "title",
+        "candidate_repositories",
+        "what_appears_covered",
+        "what_remains_unresolved",
+        "evidence_refs",
+        "checked_at"
+      ],
+      "title": "Brief",
+      "type": "object"
+    },
     "CurationDisposition": {
       "description": "Primary meaning of one repository in one curation context.",
       "enum": [
@@ -167,6 +238,14 @@
       "title": "Assessments",
       "type": "array"
     },
+    "briefs": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Brief"
+      },
+      "title": "Briefs",
+      "type": "array"
+    },
     "problems": {
       "items": {
         "$ref": "#/$defs/Problem"
@@ -175,8 +254,11 @@
       "type": "array"
     },
     "schema_version": {
-      "const": "1.0",
-      "default": "1.0",
+      "default": "2.0",
+      "enum": [
+        "1.0",
+        "2.0"
+      ],
       "title": "Schema Version",
       "type": "string"
     }
