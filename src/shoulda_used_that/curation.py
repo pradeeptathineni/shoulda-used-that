@@ -7,6 +7,7 @@ import json
 import os
 import re
 import stat
+from collections.abc import Hashable
 from datetime import datetime, timedelta
 from enum import StrEnum
 from pathlib import Path
@@ -19,7 +20,9 @@ from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.errors import StateError
 from shoulda_used_that.models import FrozenModel, normalize_repository
 
-CURATION_SCHEMA_VERSION: Literal["2.0"] = "2.0"
+CURATION_SCHEMA_VERSION: Literal["3.0"] = "3.0"
+LEGACY_CURATION_SCHEMA_VERSION: Literal["2.0"] = "2.0"
+CONTEXT_MODEL_VERSION: Literal["1.0"] = "1.0"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MAX_SOURCE_BYTES = 5 * 1024 * 1024
 
@@ -50,6 +53,22 @@ class FreshnessState(StrEnum):
     STALE = "stale"
     PARTIAL = "partial"
     BLOCKED = "blocked"
+
+
+class ScreeningBasis(StrEnum):
+    """Why a candidate is retained before contextual assessment."""
+
+    METADATA_AND_ELIGIBILITY = "metadata-and-eligibility"
+    REVIEWED_USE_AND_PRIOR_ART = "reviewed-use-and-prior-art"
+    LEGACY_MIGRATION = "legacy-migration"
+
+
+class AssessmentBasis(StrEnum):
+    """Evidence-bearing bases that can support contextual human judgment."""
+
+    DOCUMENTED_USE = "documented-use"
+    CAPABILITY_REVIEW = "capability-review"
+    DECISION_RECORD = "decision-record"
 
 
 class CollectionDefinition(FrozenModel):
@@ -93,7 +112,7 @@ class CollectionDefinition(FrozenModel):
 class CurationSourceSpec(FrozenModel):
     """Exact public input bound into a profile."""
 
-    kind: Literal["public-json"] = "public-json"
+    kind: Literal["public-json", "public-corpus-json", "public-context-json"] = "public-json"
     locator: str = Field(min_length=1)
     content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     license: str | None = None
@@ -139,7 +158,7 @@ class MutationPolicy(FrozenModel):
 class CurationProfile(FrozenModel):
     """Human intent compiled into a curation snapshot."""
 
-    schema_version: Literal["2.0"] = CURATION_SCHEMA_VERSION
+    schema_version: Literal["2.0", "3.0"] = CURATION_SCHEMA_VERSION
     profile_id: str
     title: str = Field(min_length=1)
     description: str = Field(min_length=1)
@@ -237,10 +256,154 @@ class SourceProvenance(FrozenModel):
     content_digest: str | None = None
 
 
-class CurationEntry(FrozenModel):
-    """One evidence-bound repository meaning in a curation context."""
+class RepositoryEvidence(FrozenModel):
+    """Reusable repository observations with no problem-specific judgment."""
 
-    schema_version: Literal["2.0"] = CURATION_SCHEMA_VERSION
+    schema_version: Literal["1.0"] = "1.0"
+    repository: str
+    url: str
+    description: str = Field(min_length=1)
+    observed_license: str | None = None
+    archived: bool | None = None
+    latest_release: str | None = None
+    latest_commit: str | None = None
+    popularity: PopularitySnapshot
+    last_checked_at: datetime
+    freshness_state: FreshnessState
+    source_provenance: tuple[SourceProvenance, ...] = Field(min_length=1)
+    attribution_obligations: tuple[str, ...] = ()
+    field_classification: Literal["public"] = "public"
+
+    _normalize_repository = field_validator("repository")(normalize_repository)
+
+    @field_validator("attribution_obligations", mode="before")
+    @classmethod
+    def stable_strings(cls, value: Any) -> tuple[str, ...]:
+        return tuple(sorted({str(item).strip() for item in value or () if str(item).strip()}))
+
+    @model_validator(mode="after")
+    def public_github_identity_matches(self) -> RepositoryEvidence:
+        expected_url = f"https://github.com/{self.repository}"
+        if self.url.casefold().rstrip("/") != expected_url:
+            raise ValueError("repository evidence URL must match the canonical GitHub identity")
+        return self
+
+
+class CandidateScreening(FrozenModel):
+    """A candidate retained by eligibility evidence, not a contextual fit claim."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    repository: str
+    domain_tags: tuple[str, ...] = Field(min_length=1)
+    screening_basis: ScreeningBasis
+    decision_receipt_ids: tuple[str, ...] = ()
+    evidence_receipt_ids: tuple[str, ...] = Field(min_length=1)
+    notes: tuple[str, ...] = ()
+    screened_at: datetime
+
+    _normalize_repository = field_validator("repository")(normalize_repository)
+
+    @field_validator(
+        "domain_tags",
+        "decision_receipt_ids",
+        "evidence_receipt_ids",
+        "notes",
+        mode="before",
+    )
+    @classmethod
+    def stable_strings(cls, value: Any) -> tuple[str, ...]:
+        return tuple(sorted({str(item).strip() for item in value or () if str(item).strip()}))
+
+
+class CurationProjectionEntry(FrozenModel):
+    """Operator-only GitHub projection intent, separate from contextual assessment."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    repository: str
+    collection_memberships: tuple[str, ...]
+    primary_disposition: CurationDisposition
+
+    _normalize_repository = field_validator("repository")(normalize_repository)
+
+    @field_validator("collection_memberships", mode="before")
+    @classmethod
+    def stable_memberships(cls, value: Any) -> tuple[str, ...]:
+        return tuple(sorted({str(item).strip() for item in value or () if str(item).strip()}))
+
+    @model_validator(mode="after")
+    def reviewed_projection_has_membership(self) -> CurationProjectionEntry:
+        if self.primary_disposition is not CurationDisposition.INBOX and not (
+            self.collection_memberships
+        ):
+            raise ValueError("every non-inbox projection entry needs a collection membership")
+        return self
+
+
+class Problem(FrozenModel):
+    """One concrete build need or question; domains remain optional taxonomy."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    problem_id: str
+    question: str = Field(min_length=12)
+    domain_tags: tuple[str, ...] = ()
+
+    @field_validator("problem_id")
+    @classmethod
+    def valid_problem_id(cls, value: str) -> str:
+        if not SLUG_PATTERN.fullmatch(value):
+            raise ValueError("problem_id must use lowercase kebab-case")
+        return value
+
+    @field_validator("question")
+    @classmethod
+    def concrete_question(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if len(normalized.split()) < 3:
+            raise ValueError("a problem must describe a concrete job or question")
+        return normalized
+
+    @field_validator("domain_tags", mode="before")
+    @classmethod
+    def stable_domain_tags(cls, value: Any) -> tuple[str, ...]:
+        return tuple(sorted({str(item).strip() for item in value or () if str(item).strip()}))
+
+
+class Assessment(FrozenModel):
+    """Contextual judgment owned by exactly one problem and repository relation."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    problem_id: str
+    repository: str
+    publication_state: Literal["assessed"] = "assessed"
+    assessment_basis: AssessmentBasis
+    covers: tuple[str, ...] = ()
+    watch: tuple[str, ...] = ()
+    unknowns: tuple[str, ...] = ()
+    evidence_refs: tuple[str, ...] = Field(min_length=1)
+    decision_state: CurationDisposition | None = None
+    reconsider_when: tuple[str, ...] = ()
+    assessed_at: datetime
+
+    _normalize_repository = field_validator("repository")(normalize_repository)
+
+    @field_validator(
+        "covers", "watch", "unknowns", "evidence_refs", "reconsider_when", mode="before"
+    )
+    @classmethod
+    def stable_strings(cls, value: Any) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(str(item).strip() for item in value or () if str(item).strip()))
+
+    @model_validator(mode="after")
+    def assessment_has_contextual_judgment(self) -> Assessment:
+        if not (self.covers or self.watch or self.unknowns):
+            raise ValueError("an assessment needs covers, watch, or explicit unknowns")
+        return self
+
+
+class CurationEntry(FrozenModel):
+    """Legacy v2 fact/context record retained only for migration and history."""
+
+    schema_version: Literal["2.0"] = LEGACY_CURATION_SCHEMA_VERSION
     repository: str
     url: str
     description: str = Field(min_length=1)
@@ -302,9 +465,38 @@ class ExcludedCandidate(FrozenModel):
 
 
 class CurationInput(FrozenModel):
-    schema_version: Literal["2.0"] = CURATION_SCHEMA_VERSION
+    """Legacy v2 source document accepted for an evidence-preserving migration."""
+
+    schema_version: Literal["2.0"] = LEGACY_CURATION_SCHEMA_VERSION
     entries: tuple[CurationEntry, ...]
     excluded_candidates: tuple[ExcludedCandidate, ...] = ()
+
+
+class CurationCorpusInput(FrozenModel):
+    """Current source document with facts, screening, and projection intent separated."""
+
+    schema_version: Literal["3.0"] = CURATION_SCHEMA_VERSION
+    repository_evidence: tuple[RepositoryEvidence, ...]
+    screenings: tuple[CandidateScreening, ...]
+    projection_entries: tuple[CurationProjectionEntry, ...]
+    excluded_candidates: tuple[ExcludedCandidate, ...] = ()
+
+
+class CurationContextInput(FrozenModel):
+    """Explicit problem and problem-by-repository assessment source."""
+
+    schema_version: Literal["1.0"] = CONTEXT_MODEL_VERSION
+    problems: tuple[Problem, ...]
+    assessments: tuple[Assessment, ...]
+
+
+class ContextCounts(FrozenModel):
+    repositories: int = Field(ge=0)
+    screenings: int = Field(ge=0)
+    problems: int = Field(ge=0)
+    assessments: int = Field(ge=0)
+    screened_only_repositories: int = Field(ge=0)
+    assessed_repositories: int = Field(ge=0)
 
 
 class CurationSourceSnapshot(FrozenModel):
@@ -337,7 +529,7 @@ class CurationSemanticDiff(FrozenModel):
 
 
 class CurationSnapshot(FrozenModel):
-    schema_version: Literal["2.0"] = CURATION_SCHEMA_VERSION
+    schema_version: Literal["2.0", "3.0"] = CURATION_SCHEMA_VERSION
     curation_snapshot_id: str
     profile_id: str
     profile_fingerprint: str
@@ -347,7 +539,16 @@ class CurationSnapshot(FrozenModel):
     projection_policy: ProjectionPolicy
     mutation_policy: MutationPolicy
     source_snapshots: tuple[CurationSourceSnapshot, ...]
+    # v2 snapshots keep their fused records readable here. Current v3 snapshots require this
+    # compatibility field to be empty and use the separated structures below.
     entries: tuple[CurationEntry, ...]
+    context_model_version: Literal["1.0"] | None = None
+    repository_evidence: tuple[RepositoryEvidence, ...] = ()
+    screenings: tuple[CandidateScreening, ...] = ()
+    projection_entries: tuple[CurationProjectionEntry, ...] = ()
+    problems: tuple[Problem, ...] = ()
+    assessments: tuple[Assessment, ...] = ()
+    context_counts: ContextCounts | None = None
     excluded_candidates: tuple[ExcludedCandidate, ...]
     unresolved_inbox_entries: tuple[str, ...]
     stale_entries: tuple[str, ...]
@@ -359,16 +560,36 @@ class CurationSnapshot(FrozenModel):
     canonical_fingerprint: str = Field(pattern=r"^curation_[0-9a-f]{64}$")
 
 
+def repository_evidence_records(snapshot: CurationSnapshot) -> tuple[RepositoryEvidence, ...]:
+    """Return reusable evidence from current or historical curation snapshots."""
+
+    if snapshot.schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        return tuple(_repository_evidence_from_legacy(item) for item in snapshot.entries)
+    return snapshot.repository_evidence
+
+
+def candidate_screenings(snapshot: CurationSnapshot) -> tuple[CandidateScreening, ...]:
+    """Return screening records without treating legacy rationale as assessment."""
+
+    if snapshot.schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        return tuple(_screening_from_legacy(item) for item in snapshot.entries)
+    return snapshot.screenings
+
+
+def curation_projection_entries(
+    snapshot: CurationSnapshot,
+) -> tuple[CurationProjectionEntry, ...]:
+    """Return operator projection intent from current or historical snapshots."""
+
+    if snapshot.schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        return tuple(_projection_entry_from_legacy(item) for item in snapshot.entries)
+    return snapshot.projection_entries
+
+
 def validate_curation_snapshot(snapshot: CurationSnapshot) -> None:
     """Recompute derived fields and the sealed identity of a stored snapshot."""
 
-    entries = tuple(sorted(snapshot.entries, key=lambda item: item.repository))
     exclusions = tuple(sorted(snapshot.excluded_candidates, key=lambda item: item.repository))
-    if entries != snapshot.entries or len({item.repository for item in entries}) != len(entries):
-        raise StateError(
-            code="curation_snapshot_inconsistent",
-            message="Curation entries are not a unique canonical repository sequence.",
-        )
     if exclusions != snapshot.excluded_candidates or len(
         {item.repository for item in exclusions}
     ) != len(exclusions):
@@ -378,19 +599,97 @@ def validate_curation_snapshot(snapshot: CurationSnapshot) -> None:
         )
 
     collections = {item.slug: item for item in snapshot.collection_definitions}
+    if snapshot.schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        if any(
+            (
+                snapshot.context_model_version is not None,
+                snapshot.repository_evidence,
+                snapshot.screenings,
+                snapshot.projection_entries,
+                snapshot.problems,
+                snapshot.assessments,
+                snapshot.context_counts is not None,
+            )
+        ):
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Legacy curation snapshots cannot contain v3 context fields.",
+            )
+        entries = tuple(sorted(snapshot.entries, key=lambda item: item.repository))
+        if entries != snapshot.entries or len({item.repository for item in entries}) != len(
+            entries
+        ):
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Curation entries are not a unique canonical repository sequence.",
+            )
+        evidence = tuple(_repository_evidence_from_legacy(item) for item in entries)
+        projection_entries = tuple(_projection_entry_from_legacy(item) for item in entries)
+    else:
+        if snapshot.entries or snapshot.context_model_version != CONTEXT_MODEL_VERSION:
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Current curation snapshots require only the separated context model.",
+            )
+        evidence = tuple(sorted(snapshot.repository_evidence, key=lambda item: item.repository))
+        screenings = tuple(sorted(snapshot.screenings, key=lambda item: item.repository))
+        projection_entries = tuple(
+            sorted(snapshot.projection_entries, key=lambda item: item.repository)
+        )
+        problems = tuple(sorted(snapshot.problems, key=lambda item: item.problem_id))
+        assessments = tuple(
+            sorted(snapshot.assessments, key=lambda item: (item.problem_id, item.repository))
+        )
+        if (
+            evidence != snapshot.repository_evidence
+            or screenings != snapshot.screenings
+            or projection_entries != snapshot.projection_entries
+            or problems != snapshot.problems
+            or assessments != snapshot.assessments
+            or len({item.repository for item in evidence}) != len(evidence)
+            or len({item.repository for item in screenings}) != len(screenings)
+            or len({item.repository for item in projection_entries}) != len(projection_entries)
+            or len({item.problem_id for item in problems}) != len(problems)
+            or len({(item.problem_id, item.repository) for item in assessments}) != len(assessments)
+        ):
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Separated curation records are not unique canonical sequences.",
+            )
+        repositories = {item.repository for item in evidence}
+        if repositories != {item.repository for item in screenings} or repositories != {
+            item.repository for item in projection_entries
+        }:
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Evidence, screening, and projection repository sets must match.",
+            )
+        _validate_context_relationships(
+            collections=collections,
+            repositories=repositories,
+            screenings=screenings,
+            projection_entries=projection_entries,
+            problems=problems,
+            assessments=assessments,
+        )
+
     expected_memberships = {
-        slug: tuple(entry.repository for entry in entries if slug in entry.collection_memberships)
+        slug: tuple(
+            entry.repository for entry in projection_entries if slug in entry.collection_memberships
+        )
         for slug in sorted(collections)
     }
     expected_inbox = tuple(
-        item.repository for item in entries if item.primary_disposition is CurationDisposition.INBOX
+        item.repository
+        for item in projection_entries
+        if item.primary_disposition is CurationDisposition.INBOX
     )
-    expected_stale = _repositories_with_freshness(entries, FreshnessState.STALE)
-    expected_partial = _repositories_with_freshness(entries, FreshnessState.PARTIAL)
-    expected_blocked = _repositories_with_freshness(entries, FreshnessState.BLOCKED)
+    expected_stale = _repositories_with_freshness(evidence, FreshnessState.STALE)
+    expected_partial = _repositories_with_freshness(evidence, FreshnessState.PARTIAL)
+    expected_blocked = _repositories_with_freshness(evidence, FreshnessState.BLOCKED)
     expected_counts = CurationCounts(
         sources=len(snapshot.source_snapshots),
-        entries=len(entries),
+        entries=len(evidence),
         excluded=len(exclusions),
         inbox=len(expected_inbox),
         stale=len(expected_stale),
@@ -410,7 +709,25 @@ def validate_curation_snapshot(snapshot: CurationSnapshot) -> None:
             message="Curation snapshot derived fields do not match its sealed entries.",
         )
 
+    if snapshot.schema_version == CURATION_SCHEMA_VERSION:
+        assessed_repositories = {item.repository for item in snapshot.assessments}
+        screened_repositories = {item.repository for item in snapshot.screenings}
+        expected_context_counts = ContextCounts(
+            repositories=len(snapshot.repository_evidence),
+            screenings=len(snapshot.screenings),
+            problems=len(snapshot.problems),
+            assessments=len(snapshot.assessments),
+            screened_only_repositories=len(screened_repositories - assessed_repositories),
+            assessed_repositories=len(assessed_repositories),
+        )
+        if snapshot.context_counts != expected_context_counts:
+            raise StateError(
+                code="curation_snapshot_inconsistent",
+                message="Context counts do not match the separated curation records.",
+            )
+
     semantic = _snapshot_semantic(
+        schema_version=snapshot.schema_version,
         profile_fingerprint=snapshot.profile_fingerprint,
         compiler_version=snapshot.compiler_version,
         compiled_at=snapshot.compiled_at,
@@ -418,7 +735,14 @@ def validate_curation_snapshot(snapshot: CurationSnapshot) -> None:
         projection_policy=snapshot.projection_policy,
         mutation_policy=snapshot.mutation_policy,
         source_snapshots=snapshot.source_snapshots,
-        entries=entries,
+        entries=snapshot.entries,
+        context_model_version=snapshot.context_model_version,
+        repository_evidence=snapshot.repository_evidence,
+        screenings=snapshot.screenings,
+        projection_entries=snapshot.projection_entries,
+        problems=snapshot.problems,
+        assessments=snapshot.assessments,
+        context_counts=snapshot.context_counts,
         exclusions=exclusions,
         membership_map=expected_memberships,
         counts=expected_counts,
@@ -499,7 +823,11 @@ def compile_profile(
     root = _resolve_root(source_root or _default_source_root(profile_path))
     collection_by_slug = {item.slug: item for item in profile.collections}
     source_snapshots: list[CurationSourceSnapshot] = []
-    entries: dict[str, CurationEntry] = {}
+    evidence_by_repository: dict[str, RepositoryEvidence] = {}
+    screenings_by_repository: dict[str, CandidateScreening] = {}
+    projection_by_repository: dict[str, CurationProjectionEntry] = {}
+    problems_by_id: dict[str, Problem] = {}
+    assessments_by_relation: dict[tuple[str, str], Assessment] = {}
     excluded: dict[str, ExcludedCandidate] = {}
     for source in profile.source_specifications:
         source_path = _resolve_source(root, source.locator)
@@ -511,8 +839,19 @@ def compile_profile(
                 message=f"Curation source digest changed: {source.locator}",
                 details={"expected": source.content_sha256, "actual": content_sha256},
             )
+        corpus: CurationCorpusInput | None = None
+        context: CurationContextInput | None = None
         try:
-            document = CurationInput.model_validate_json(payload_bytes)
+            if source.kind == "public-json":
+                legacy = CurationInput.model_validate_json(payload_bytes)
+                corpus = _migrate_legacy_input(legacy)
+                record_count = len(legacy.entries)
+            elif source.kind == "public-corpus-json":
+                corpus = CurationCorpusInput.model_validate_json(payload_bytes)
+                record_count = len(corpus.repository_evidence)
+            else:
+                context = CurationContextInput.model_validate_json(payload_bytes)
+                record_count = len(context.problems) + len(context.assessments)
         except ValidationError as exc:
             raise StateError(
                 code="curation_source_invalid",
@@ -523,40 +862,93 @@ def compile_profile(
                 kind=source.kind,
                 locator=source.locator,
                 content_sha256=content_sha256,
-                entry_count=len(document.entries),
+                entry_count=record_count,
             )
         )
-        for raw_entry in document.entries:
-            entry = _normalize_freshness(raw_entry, profile)
-            unknown_collections = sorted(
-                set(entry.collection_memberships) - set(collection_by_slug)
-            )
-            if unknown_collections:
-                raise StateError(
-                    code="curation_collection_unknown",
-                    message=f"{entry.repository} references unknown collections.",
-                    details={"collections": unknown_collections},
+        if corpus is not None:
+            for raw_evidence in corpus.repository_evidence:
+                evidence = _normalize_freshness(raw_evidence, profile)
+                _merge_repository_record(
+                    evidence_by_repository,
+                    evidence.repository,
+                    evidence,
+                    conflict_code="curation_evidence_conflict",
+                    label="repository evidence",
                 )
-            existing = entries.get(entry.repository)
-            if existing is not None and existing != entry:
-                raise StateError(
-                    code="curation_disposition_conflict",
-                    message=f"Conflicting curation claims for {entry.repository}.",
+            for screening in corpus.screenings:
+                _merge_repository_record(
+                    screenings_by_repository,
+                    screening.repository,
+                    screening,
+                    conflict_code="curation_screening_conflict",
+                    label="candidate screening",
                 )
-            entries[entry.repository] = entry
-        for candidate in document.excluded_candidates:
-            existing_excluded = excluded.get(candidate.repository)
-            if existing_excluded is not None and existing_excluded != candidate:
-                raise StateError(
-                    code="curation_exclusion_conflict",
-                    message=f"Conflicting exclusion reasons for {candidate.repository}.",
+            for projection_entry in corpus.projection_entries:
+                _merge_repository_record(
+                    projection_by_repository,
+                    projection_entry.repository,
+                    projection_entry,
+                    conflict_code="curation_disposition_conflict",
+                    label="projection intent",
                 )
-            excluded[candidate.repository] = candidate
+            for candidate in corpus.excluded_candidates:
+                _merge_repository_record(
+                    excluded,
+                    candidate.repository,
+                    candidate,
+                    conflict_code="curation_exclusion_conflict",
+                    label="exclusion reason",
+                )
+        if context is not None:
+            for problem in context.problems:
+                _merge_repository_record(
+                    problems_by_id,
+                    problem.problem_id,
+                    problem,
+                    conflict_code="curation_problem_conflict",
+                    label="problem definition",
+                )
+            for assessment in context.assessments:
+                relation = (assessment.problem_id, assessment.repository)
+                _merge_repository_record(
+                    assessments_by_relation,
+                    relation,
+                    assessment,
+                    conflict_code="curation_assessment_conflict",
+                    label="contextual assessment",
+                )
 
-    stable_entries = tuple(entries[key] for key in sorted(entries))
+    stable_evidence = tuple(evidence_by_repository[key] for key in sorted(evidence_by_repository))
+    stable_screenings = tuple(
+        screenings_by_repository[key] for key in sorted(screenings_by_repository)
+    )
+    stable_projection_entries = tuple(
+        projection_by_repository[key] for key in sorted(projection_by_repository)
+    )
+    stable_problems = tuple(problems_by_id[key] for key in sorted(problems_by_id))
+    stable_assessments = tuple(
+        assessments_by_relation[key] for key in sorted(assessments_by_relation)
+    )
+    _validate_context_relationships(
+        collections=collection_by_slug,
+        repositories={item.repository for item in stable_evidence},
+        screenings=stable_screenings,
+        projection_entries=stable_projection_entries,
+        problems=stable_problems,
+        assessments=stable_assessments,
+    )
+    if {item.repository for item in stable_evidence} != {
+        item.repository for item in stable_projection_entries
+    }:
+        raise StateError(
+            code="curation_projection_scope_mismatch",
+            message="Every repository evidence record needs one operator projection entry.",
+        )
     membership_map = {
         slug: tuple(
-            entry.repository for entry in stable_entries if slug in entry.collection_memberships
+            entry.repository
+            for entry in stable_projection_entries
+            if slug in entry.collection_memberships
         )
         for slug in sorted(collection_by_slug)
     }
@@ -571,23 +963,34 @@ def compile_profile(
 
     inbox = tuple(
         entry.repository
-        for entry in stable_entries
+        for entry in stable_projection_entries
         if entry.primary_disposition is CurationDisposition.INBOX
     )
-    stale = _repositories_with_freshness(stable_entries, FreshnessState.STALE)
-    partial = _repositories_with_freshness(stable_entries, FreshnessState.PARTIAL)
-    blocked = _repositories_with_freshness(stable_entries, FreshnessState.BLOCKED)
+    stale = _repositories_with_freshness(stable_evidence, FreshnessState.STALE)
+    partial = _repositories_with_freshness(stable_evidence, FreshnessState.PARTIAL)
+    blocked = _repositories_with_freshness(stable_evidence, FreshnessState.BLOCKED)
     stable_excluded = tuple(excluded[key] for key in sorted(excluded))
     counts = CurationCounts(
         sources=len(source_snapshots),
-        entries=len(stable_entries),
+        entries=len(stable_evidence),
         excluded=len(stable_excluded),
         inbox=len(inbox),
         stale=len(stale),
         partial=len(partial),
         blocked=len(blocked),
     )
+    assessed_repositories = {item.repository for item in stable_assessments}
+    screened_repositories = {item.repository for item in stable_screenings}
+    context_counts = ContextCounts(
+        repositories=len(stable_evidence),
+        screenings=len(stable_screenings),
+        problems=len(stable_problems),
+        assessments=len(stable_assessments),
+        screened_only_repositories=len(screened_repositories - assessed_repositories),
+        assessed_repositories=len(assessed_repositories),
+    )
     semantic = _snapshot_semantic(
+        schema_version=CURATION_SCHEMA_VERSION,
         profile_fingerprint=profile.canonical_fingerprint,
         compiler_version=__version__,
         compiled_at=profile.review_policy.as_of,
@@ -595,7 +998,14 @@ def compile_profile(
         projection_policy=profile.projection_policy,
         mutation_policy=profile.mutation_policy,
         source_snapshots=tuple(source_snapshots),
-        entries=stable_entries,
+        entries=(),
+        context_model_version=CONTEXT_MODEL_VERSION,
+        repository_evidence=stable_evidence,
+        screenings=stable_screenings,
+        projection_entries=stable_projection_entries,
+        problems=stable_problems,
+        assessments=stable_assessments,
+        context_counts=context_counts,
         exclusions=stable_excluded,
         membership_map=membership_map,
         counts=counts,
@@ -606,10 +1016,15 @@ def compile_profile(
     diff = _semantic_diff(
         previous,
         profile_fingerprint=profile.canonical_fingerprint,
-        current_entries=stable_entries,
+        current_evidence=stable_evidence,
+        current_screenings=stable_screenings,
+        current_projection_entries=stable_projection_entries,
+        current_problems=stable_problems,
+        current_assessments=stable_assessments,
         current_exclusions=stable_excluded,
     )
     return CurationSnapshot(
+        schema_version=CURATION_SCHEMA_VERSION,
         curation_snapshot_id=short_id(semantic, prefix="cur"),
         profile_id=profile.profile_id,
         profile_fingerprint=profile.canonical_fingerprint,
@@ -619,7 +1034,14 @@ def compile_profile(
         projection_policy=profile.projection_policy,
         mutation_policy=profile.mutation_policy,
         source_snapshots=tuple(source_snapshots),
-        entries=stable_entries,
+        entries=(),
+        context_model_version=CONTEXT_MODEL_VERSION,
+        repository_evidence=stable_evidence,
+        screenings=stable_screenings,
+        projection_entries=stable_projection_entries,
+        problems=stable_problems,
+        assessments=stable_assessments,
+        context_counts=context_counts,
         excluded_candidates=stable_excluded,
         unresolved_inbox_entries=inbox,
         stale_entries=stale,
@@ -634,6 +1056,7 @@ def compile_profile(
 
 def _snapshot_semantic(
     *,
+    schema_version: Literal["2.0", "3.0"] = LEGACY_CURATION_SCHEMA_VERSION,
     profile_fingerprint: str,
     compiler_version: str,
     compiled_at: datetime,
@@ -642,11 +1065,18 @@ def _snapshot_semantic(
     mutation_policy: MutationPolicy,
     source_snapshots: tuple[CurationSourceSnapshot, ...],
     entries: tuple[CurationEntry, ...],
+    context_model_version: Literal["1.0"] | None = None,
+    repository_evidence: tuple[RepositoryEvidence, ...] = (),
+    screenings: tuple[CandidateScreening, ...] = (),
+    projection_entries: tuple[CurationProjectionEntry, ...] = (),
+    problems: tuple[Problem, ...] = (),
+    assessments: tuple[Assessment, ...] = (),
+    context_counts: ContextCounts | None = None,
     exclusions: tuple[ExcludedCandidate, ...],
     membership_map: dict[str, tuple[str, ...]],
     counts: CurationCounts,
 ) -> dict[str, Any]:
-    return {
+    semantic: dict[str, Any] = {
         "profile_fingerprint": profile_fingerprint,
         "compiler_version": compiler_version,
         "compiled_at": compiled_at.isoformat(),
@@ -654,11 +1084,28 @@ def _snapshot_semantic(
         "projection_policy": projection_policy.model_dump(mode="json"),
         "mutation_policy": mutation_policy.model_dump(mode="json"),
         "source_snapshots": [item.model_dump(mode="json") for item in source_snapshots],
-        "entries": [item.model_dump(mode="json") for item in entries],
         "excluded_candidates": [item.model_dump(mode="json") for item in exclusions],
         "collection_membership_map": membership_map,
         "counts": counts.model_dump(mode="json"),
     }
+    if schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        semantic["entries"] = [item.model_dump(mode="json") for item in entries]
+        return semantic
+    semantic.update(
+        {
+            "schema_version": schema_version,
+            "context_model_version": context_model_version,
+            "repository_evidence": [item.model_dump(mode="json") for item in repository_evidence],
+            "screenings": [item.model_dump(mode="json") for item in screenings],
+            "projection_entries": [item.model_dump(mode="json") for item in projection_entries],
+            "problems": [item.model_dump(mode="json") for item in problems],
+            "assessments": [item.model_dump(mode="json") for item in assessments],
+            "context_counts": (
+                context_counts.model_dump(mode="json") if context_counts is not None else None
+            ),
+        }
+    )
+    return semantic
 
 
 def _default_source_root(profile_path: Path) -> Path:
@@ -766,49 +1213,249 @@ def _read_json(path: Path, *, maximum_bytes: int) -> dict[str, Any]:
     return payload
 
 
-def _normalize_freshness(entry: CurationEntry, profile: CurationProfile) -> CurationEntry:
-    if entry.last_checked_at > profile.review_policy.as_of:
+def _repository_evidence_from_legacy(entry: CurationEntry) -> RepositoryEvidence:
+    return RepositoryEvidence(
+        repository=entry.repository,
+        url=entry.url,
+        description=entry.description,
+        observed_license=entry.observed_license,
+        archived=entry.archived,
+        latest_release=entry.latest_release,
+        latest_commit=entry.latest_commit,
+        popularity=entry.popularity,
+        last_checked_at=entry.last_checked_at,
+        freshness_state=entry.freshness_state,
+        source_provenance=entry.source_provenance,
+        attribution_obligations=entry.attribution_obligations,
+        field_classification=entry.field_classification,
+    )
+
+
+def _screening_from_legacy(entry: CurationEntry) -> CandidateScreening:
+    evidence_refs = entry.evidence_receipt_ids or entry.decision_receipt_ids
+    if not evidence_refs:
+        evidence_refs = tuple(item.locator for item in entry.source_provenance)
+    return CandidateScreening(
+        repository=entry.repository,
+        domain_tags=entry.collection_memberships,
+        screening_basis=ScreeningBasis.LEGACY_MIGRATION,
+        decision_receipt_ids=entry.decision_receipt_ids,
+        evidence_receipt_ids=evidence_refs,
+        screened_at=entry.last_checked_at,
+    )
+
+
+def _projection_entry_from_legacy(entry: CurationEntry) -> CurationProjectionEntry:
+    return CurationProjectionEntry(
+        repository=entry.repository,
+        collection_memberships=entry.collection_memberships,
+        primary_disposition=entry.primary_disposition,
+    )
+
+
+def _migrate_legacy_input(document: CurationInput) -> CurationCorpusInput:
+    """Preserve v2 evidence while refusing to promote legacy prose into assessments."""
+
+    return CurationCorpusInput(
+        repository_evidence=tuple(
+            _repository_evidence_from_legacy(item) for item in document.entries
+        ),
+        screenings=tuple(_screening_from_legacy(item) for item in document.entries),
+        projection_entries=tuple(_projection_entry_from_legacy(item) for item in document.entries),
+        excluded_candidates=document.excluded_candidates,
+    )
+
+
+def _merge_repository_record[KeyT: Hashable, RecordT](
+    target: dict[KeyT, RecordT],
+    key: KeyT,
+    value: RecordT,
+    *,
+    conflict_code: str,
+    label: str,
+) -> None:
+    existing = target.get(key)
+    if existing is not None and existing != value:
+        raise StateError(
+            code=conflict_code,
+            message=f"Conflicting {label} for {key}.",
+        )
+    target[key] = value
+
+
+def _validate_context_relationships(
+    *,
+    collections: dict[str, CollectionDefinition],
+    repositories: set[str],
+    screenings: tuple[CandidateScreening, ...],
+    projection_entries: tuple[CurationProjectionEntry, ...],
+    problems: tuple[Problem, ...],
+    assessments: tuple[Assessment, ...],
+) -> None:
+    screening_repositories = {item.repository for item in screenings}
+    if screening_repositories != repositories:
+        raise StateError(
+            code="curation_screening_scope_mismatch",
+            message="Every repository evidence record needs one candidate screening.",
+        )
+    collection_slugs = set(collections)
+    for screening in screenings:
+        unknown = sorted(set(screening.domain_tags) - collection_slugs)
+        if unknown:
+            raise StateError(
+                code="curation_collection_unknown",
+                message=f"{screening.repository} screening references unknown domains.",
+                details={"collections": unknown},
+            )
+    for projection_entry in projection_entries:
+        unknown = sorted(set(projection_entry.collection_memberships) - collection_slugs)
+        if unknown:
+            raise StateError(
+                code="curation_collection_unknown",
+                message=f"{projection_entry.repository} projection references unknown domains.",
+                details={"collections": unknown},
+            )
+    domain_names = {
+        value.casefold()
+        for collection in collections.values()
+        for value in (collection.slug, collection.title, *collection.aliases)
+    }
+    problem_by_id = {item.problem_id: item for item in problems}
+    for problem in problems:
+        unknown = sorted(set(problem.domain_tags) - collection_slugs)
+        if unknown:
+            raise StateError(
+                code="curation_collection_unknown",
+                message=f"Problem {problem.problem_id} references unknown domains.",
+                details={"collections": unknown},
+            )
+        if problem.question.casefold().rstrip(".?") in domain_names:
+            raise StateError(
+                code="curation_problem_not_concrete",
+                message=f"Problem {problem.problem_id} is only a domain label.",
+            )
+    for assessment in assessments:
+        if assessment.repository not in repositories:
+            raise StateError(
+                code="curation_assessment_repository_unknown",
+                message=(
+                    f"Assessment {assessment.problem_id} references missing repository "
+                    f"{assessment.repository}."
+                ),
+            )
+        if assessment.problem_id not in problem_by_id:
+            raise StateError(
+                code="curation_assessment_problem_unknown",
+                message=f"Assessment references missing problem {assessment.problem_id}.",
+            )
+
+
+def _normalize_freshness(
+    evidence: RepositoryEvidence, profile: CurationProfile
+) -> RepositoryEvidence:
+    if evidence.last_checked_at > profile.review_policy.as_of:
         raise StateError(
             code="curation_entry_from_future",
-            message=f"{entry.repository} was checked after the profile review time.",
+            message=f"{evidence.repository} was checked after the profile review time.",
         )
-    if entry.freshness_state is not FreshnessState.CURRENT:
-        return entry
+    if evidence.freshness_state is not FreshnessState.CURRENT:
+        return evidence
     maximum_age = timedelta(days=profile.review_policy.default_freshness_days)
-    if profile.review_policy.as_of - entry.last_checked_at > maximum_age:
-        return entry.model_copy(update={"freshness_state": FreshnessState.STALE})
-    return entry
+    if profile.review_policy.as_of - evidence.last_checked_at > maximum_age:
+        return evidence.model_copy(update={"freshness_state": FreshnessState.STALE})
+    return evidence
 
 
 def _repositories_with_freshness(
-    entries: tuple[CurationEntry, ...], state: FreshnessState
+    entries: tuple[RepositoryEvidence, ...], state: FreshnessState
 ) -> tuple[str, ...]:
     return tuple(entry.repository for entry in entries if entry.freshness_state is state)
+
+
+def _repository_semantics(
+    *,
+    evidence: tuple[RepositoryEvidence, ...],
+    screenings: tuple[CandidateScreening, ...],
+    projection_entries: tuple[CurationProjectionEntry, ...],
+    problems: tuple[Problem, ...],
+    assessments: tuple[Assessment, ...],
+) -> dict[str, dict[str, Any]]:
+    screening_by_repository = {item.repository: item for item in screenings}
+    projection_by_repository = {item.repository: item for item in projection_entries}
+    problem_by_id = {item.problem_id: item for item in problems}
+    assessments_by_repository: dict[str, list[dict[str, Any]]] = {}
+    for assessment in assessments:
+        assessments_by_repository.setdefault(assessment.repository, []).append(
+            {
+                "problem": problem_by_id[assessment.problem_id].model_dump(mode="json"),
+                "assessment": assessment.model_dump(mode="json"),
+            }
+        )
+    return {
+        item.repository: {
+            "evidence": item.model_dump(mode="json"),
+            "screening": screening_by_repository[item.repository].model_dump(mode="json"),
+            "projection": projection_by_repository[item.repository].model_dump(mode="json"),
+            "assessments": assessments_by_repository.get(item.repository, []),
+        }
+        for item in evidence
+    }
+
+
+def _snapshot_repository_semantics(snapshot: CurationSnapshot) -> dict[str, dict[str, Any]]:
+    if snapshot.schema_version == LEGACY_CURATION_SCHEMA_VERSION:
+        evidence = tuple(_repository_evidence_from_legacy(item) for item in snapshot.entries)
+        screenings = tuple(_screening_from_legacy(item) for item in snapshot.entries)
+        projections = tuple(_projection_entry_from_legacy(item) for item in snapshot.entries)
+        return _repository_semantics(
+            evidence=evidence,
+            screenings=screenings,
+            projection_entries=projections,
+            problems=(),
+            assessments=(),
+        )
+    return _repository_semantics(
+        evidence=snapshot.repository_evidence,
+        screenings=snapshot.screenings,
+        projection_entries=snapshot.projection_entries,
+        problems=snapshot.problems,
+        assessments=snapshot.assessments,
+    )
 
 
 def _semantic_diff(
     previous: CurationSnapshot | None,
     *,
     profile_fingerprint: str,
-    current_entries: tuple[CurationEntry, ...],
+    current_evidence: tuple[RepositoryEvidence, ...],
+    current_screenings: tuple[CandidateScreening, ...],
+    current_projection_entries: tuple[CurationProjectionEntry, ...],
+    current_problems: tuple[Problem, ...],
+    current_assessments: tuple[Assessment, ...],
     current_exclusions: tuple[ExcludedCandidate, ...],
 ) -> CurationSemanticDiff:
+    current = _repository_semantics(
+        evidence=current_evidence,
+        screenings=current_screenings,
+        projection_entries=current_projection_entries,
+        problems=current_problems,
+        assessments=current_assessments,
+    )
     if previous is None:
-        added_repositories = tuple(item.repository for item in current_entries)
+        added_repositories = tuple(sorted(current))
         added_exclusions = tuple(item.repository for item in current_exclusions)
         return CurationSemanticDiff(
             added_repositories=added_repositories,
             added_exclusions=added_exclusions,
             material=bool(added_repositories or added_exclusions),
         )
-    before = {item.repository: item for item in previous.entries}
-    after = {item.repository: item for item in current_entries}
-    added = tuple(sorted(set(after) - set(before)))
-    removed = tuple(sorted(set(before) - set(after)))
+    before = _snapshot_repository_semantics(previous)
+    added = tuple(sorted(set(current) - set(before)))
+    removed = tuple(sorted(set(before) - set(current)))
     changed = tuple(
         repository
-        for repository in sorted(set(before) & set(after))
-        if before[repository] != after[repository]
+        for repository in sorted(set(before) & set(current))
+        if before[repository] != current[repository]
     )
     before_exclusions = {item.repository: item for item in previous.excluded_candidates}
     after_exclusions = {item.repository: item for item in current_exclusions}

@@ -131,8 +131,12 @@
           "type": "string"
         },
         "kind": {
-          "const": "public-json",
           "default": "public-json",
+          "enum": [
+            "public-json",
+            "public-corpus-json",
+            "public-context-json"
+          ],
           "title": "Kind",
           "type": "string"
         },
@@ -378,8 +382,11 @@
       "$ref": "#/$defs/ReviewPolicy"
     },
     "schema_version": {
-      "const": "2.0",
-      "default": "2.0",
+      "default": "3.0",
+      "enum": [
+        "2.0",
+        "3.0"
+      ],
       "title": "Schema Version",
       "type": "string"
     },

@@ -2,33 +2,51 @@
 title: "ejacobhayes/parsecio"
 description: "Static dashboard experiment for organizing starred repositories."
 tags:
-  - "Watch"
   - "OSS Curation \u0026 Prior Art"
 ---
 # ejacobhayes/parsecio
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--watch">Watch</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Static dashboard experiment for organizing starred repositories.</p>
 
 [Open repository](https://github.com/ejacobhayes/parsecio){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Watch a lightweight public catalog approach without adopting an immature contract\.<br>
-**Why:** The static approach is relevant, but stable releases and an auditable export contract are not yet established\.<br>
-**Role:** static zero\-dependency catalog prior art<br>
-**Status meaning:** Not selected; a concrete future trigger can reopen the decision\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
-## Reconsider when
+## Contextual assessments
 
-A stable release and documented deterministic export contract exist\.
+### Watch a lightweight public catalog approach without adopting an immature contract\.
 
-## Observed facts
+**Decision in this context:** Watch<br>
+**Assessment basis:** decision\-record<br>
+**Assessed:** `2026-09-17T12:00:00+00:00`
+
+#### Covers
+
+- No covered capability recorded.
+
+#### Watch
+
+- The static approach is relevant, but stable releases and an auditable export contract are not yet established\.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a>
+
+#### Reconsider when
+
+- A stable release and documented deterministic export contract exist\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +55,7 @@ A stable release and documented deterministic export contract exist\.
 - **Popularity:** No public star count is claimed by this snapshot.
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a>
 

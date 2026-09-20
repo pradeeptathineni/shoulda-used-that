@@ -2,34 +2,52 @@
 title: "jmespath/jmespath.py"
 description: "Python implementation of the JMESPath query language for JSON documents."
 tags:
-  - "Used here"
   - "OSS Curation \u0026 Prior Art"
   - "Python Engineering"
 ---
 # jmespath/jmespath\.py
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--adopt">Used here</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Python implementation of the JMESPath query language for JSON documents.</p>
 
 [Open repository](https://github.com/jmespath/jmespath.py){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Safe local expressions over a documented candidate view\.<br>
-**Why:** JMESPath avoids a custom DSL or arbitrary Python evaluation\.<br>
-**Role:** runtime advanced filter language<br>
-**Status meaning:** Confirmed by repository evidence for the named role\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
-## Reconsider when
+## Contextual assessments
 
-A required real\-world filter cannot be expressed safely\.
+### Safe local expressions over a documented candidate view\.
 
-## Observed facts
+**Decision in this context:** Used here<br>
+**Assessment basis:** documented\-use<br>
+**Assessed:** `2026-09-17T12:00:00+00:00`
+
+#### Covers
+
+- JMESPath avoids a custom DSL or arbitrary Python evaluation\.
+
+#### Watch
+
+- No watch item recorded.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/cli-filter.json">docs/decisions/cli-filter.json</a>
+
+#### Reconsider when
+
+- A required real\-world filter cannot be expressed safely\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -38,7 +56,7 @@ A required real\-world filter cannot be expressed safely\.
 - **Popularity:** No public star count is claimed by this snapshot.
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/cli-filter.json">docs/decisions/cli-filter.json</a>
 

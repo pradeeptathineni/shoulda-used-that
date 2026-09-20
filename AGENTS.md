@@ -1,5 +1,14 @@
 # ShouldaUsedThat repository guidance
 
+## Product contract
+
+- The primary product is an evidence-backed prior-art brief for one concrete software build problem.
+- A repository is evidence inside an answer; it is not the human-facing product unit.
+- Domains are taxonomy and filters, not concrete needs or owners of contextual judgment.
+- Contextual fit belongs to the `problem × candidate` relation. Metadata screening never counts as contextual assessment.
+- Keep complete evidence beneath a deliberately lossy human view. A reader-facing field must justify the next decision it changes.
+- General natural-language discovery is outside the current implementation cycle.
+
 ## Durable boundaries
 
 - Keep the core deterministic and runtime-AI-free. Facts, gates, hashes, state transitions, and mutation plans must not depend on a model.

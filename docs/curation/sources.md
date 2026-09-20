@@ -11,8 +11,9 @@ tags:
 ## Bound source snapshots
 
 <ul>
-<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>13039bd53a84d27856aa1c80041fce2796690b951471d2134513d8de07820e65</code>; 16 entries</li>
-<li><code>curation/entries/personal-interests.json</code> — SHA-256 <code>fc43e4cecf45ebf939d801ea3eeda56acb8197c9b8956cdb2ad7f85009036c0f</code>; 206 entries</li>
+<li><code>curation/entries/shoulda-used-that.json</code> — SHA-256 <code>51fbdd12a70d3737079d23d8e2af7f299a01e37ec5776cd2d166c26ec6595656</code>; 16 records</li>
+<li><code>curation/entries/personal-interests.json</code> — SHA-256 <code>01a372c4fe4cb89bfd256eac56ab39a098fa8115de6a70e8463bb7c776c2ee52</code>; 206 records</li>
+<li><code>curation/assessments/shoulda-used-that.json</code> — SHA-256 <code>77faf8591d06bd7e48477147695a3872fc429401daf5da850139970c34c1bcfa</code>; 34 records</li>
 </ul>
 
 The profile source is Apache-2.0 repository-authored review data. Upstream material remains under its own license; catalog-specific obligations are listed below.

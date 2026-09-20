@@ -1,5 +1,174 @@
 {
   "$defs": {
+    "Assessment": {
+      "additionalProperties": false,
+      "description": "Contextual judgment owned by exactly one problem and repository relation.",
+      "properties": {
+        "assessed_at": {
+          "format": "date-time",
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "assessment_basis": {
+          "$ref": "#/$defs/AssessmentBasis"
+        },
+        "covers": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Covers",
+          "type": "array"
+        },
+        "decision_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CurationDisposition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "publication_state": {
+          "const": "assessed",
+          "default": "assessed",
+          "title": "Publication State",
+          "type": "string"
+        },
+        "reconsider_when": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reconsider When",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unknowns": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknowns",
+          "type": "array"
+        },
+        "watch": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Watch",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "repository",
+        "assessment_basis",
+        "evidence_refs",
+        "assessed_at"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "AssessmentBasis": {
+      "description": "Evidence-bearing bases that can support contextual human judgment.",
+      "enum": [
+        "documented-use",
+        "capability-review",
+        "decision-record"
+      ],
+      "title": "AssessmentBasis",
+      "type": "string"
+    },
+    "CandidateScreening": {
+      "additionalProperties": false,
+      "description": "A candidate retained by eligibility evidence, not a contextual fit claim.",
+      "properties": {
+        "decision_receipt_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Decision Receipt Ids",
+          "type": "array"
+        },
+        "domain_tags": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Domain Tags",
+          "type": "array"
+        },
+        "evidence_receipt_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Receipt Ids",
+          "type": "array"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "screened_at": {
+          "format": "date-time",
+          "title": "Screened At",
+          "type": "string"
+        },
+        "screening_basis": {
+          "$ref": "#/$defs/ScreeningBasis"
+        }
+      },
+      "required": [
+        "repository",
+        "domain_tags",
+        "screening_basis",
+        "evidence_receipt_ids",
+        "screened_at"
+      ],
+      "title": "CandidateScreening",
+      "type": "object"
+    },
     "CollectionDefinition": {
       "additionalProperties": false,
       "description": "Durable collection semantics independent of a GitHub List.",
@@ -94,6 +263,51 @@
       "title": "CollectionDefinition",
       "type": "object"
     },
+    "ContextCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "assessed_repositories": {
+          "minimum": 0,
+          "title": "Assessed Repositories",
+          "type": "integer"
+        },
+        "assessments": {
+          "minimum": 0,
+          "title": "Assessments",
+          "type": "integer"
+        },
+        "problems": {
+          "minimum": 0,
+          "title": "Problems",
+          "type": "integer"
+        },
+        "repositories": {
+          "minimum": 0,
+          "title": "Repositories",
+          "type": "integer"
+        },
+        "screened_only_repositories": {
+          "minimum": 0,
+          "title": "Screened Only Repositories",
+          "type": "integer"
+        },
+        "screenings": {
+          "minimum": 0,
+          "title": "Screenings",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "repositories",
+        "screenings",
+        "problems",
+        "assessments",
+        "screened_only_repositories",
+        "assessed_repositories"
+      ],
+      "title": "ContextCounts",
+      "type": "object"
+    },
     "CurationCounts": {
       "additionalProperties": false,
       "properties": {
@@ -162,7 +376,7 @@
     },
     "CurationEntry": {
       "additionalProperties": false,
-      "description": "One evidence-bound repository meaning in a curation context.",
+      "description": "Legacy v2 fact/context record retained only for migration and history.",
       "properties": {
         "archived": {
           "anyOf": [
@@ -326,6 +540,39 @@
         "source_provenance"
       ],
       "title": "CurationEntry",
+      "type": "object"
+    },
+    "CurationProjectionEntry": {
+      "additionalProperties": false,
+      "description": "Operator-only GitHub projection intent, separate from contextual assessment.",
+      "properties": {
+        "collection_memberships": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Collection Memberships",
+          "type": "array"
+        },
+        "primary_disposition": {
+          "$ref": "#/$defs/CurationDisposition"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "collection_memberships",
+        "primary_disposition"
+      ],
+      "title": "CurationProjectionEntry",
       "type": "object"
     },
     "CurationSemanticDiff": {
@@ -579,6 +826,41 @@
       "title": "PopularitySnapshot",
       "type": "object"
     },
+    "Problem": {
+      "additionalProperties": false,
+      "description": "One concrete build need or question; domains remain optional taxonomy.",
+      "properties": {
+        "domain_tags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Domain Tags",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 12,
+          "title": "Question",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "problem_id",
+        "question"
+      ],
+      "title": "Problem",
+      "type": "object"
+    },
     "ProjectionPolicy": {
       "additionalProperties": false,
       "description": "Deliberately smaller public GitHub projection than the full catalog.",
@@ -618,6 +900,133 @@
       },
       "title": "ProjectionPolicy",
       "type": "object"
+    },
+    "RepositoryEvidence": {
+      "additionalProperties": false,
+      "description": "Reusable repository observations with no problem-specific judgment.",
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archived"
+        },
+        "attribution_obligations": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Attribution Obligations",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "field_classification": {
+          "const": "public",
+          "default": "public",
+          "title": "Field Classification",
+          "type": "string"
+        },
+        "freshness_state": {
+          "$ref": "#/$defs/FreshnessState"
+        },
+        "last_checked_at": {
+          "format": "date-time",
+          "title": "Last Checked At",
+          "type": "string"
+        },
+        "latest_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Commit"
+        },
+        "latest_release": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Release"
+        },
+        "observed_license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed License"
+        },
+        "popularity": {
+          "$ref": "#/$defs/PopularitySnapshot"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_provenance": {
+          "items": {
+            "$ref": "#/$defs/SourceProvenance"
+          },
+          "minItems": 1,
+          "title": "Source Provenance",
+          "type": "array"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "url",
+        "description",
+        "popularity",
+        "last_checked_at",
+        "freshness_state",
+        "source_provenance"
+      ],
+      "title": "RepositoryEvidence",
+      "type": "object"
+    },
+    "ScreeningBasis": {
+      "description": "Why a candidate is retained before contextual assessment.",
+      "enum": [
+        "metadata-and-eligibility",
+        "reviewed-use-and-prior-art",
+        "legacy-migration"
+      ],
+      "title": "ScreeningBasis",
+      "type": "string"
     },
     "SourceProvenance": {
       "additionalProperties": false,
@@ -663,6 +1072,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "assessments": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Assessment"
+      },
+      "title": "Assessments",
+      "type": "array"
+    },
     "blocked_entries": {
       "items": {
         "type": "string"
@@ -701,6 +1118,30 @@
       "title": "Compiler Version",
       "type": "string"
     },
+    "context_counts": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ContextCounts"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "context_model_version": {
+      "anyOf": [
+        {
+          "const": "1.0",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context Model Version"
+    },
     "counts": {
       "$ref": "#/$defs/CurationCounts"
     },
@@ -732,6 +1173,14 @@
       "title": "Partial Entries",
       "type": "array"
     },
+    "problems": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Problem"
+      },
+      "title": "Problems",
+      "type": "array"
+    },
     "profile_fingerprint": {
       "title": "Profile Fingerprint",
       "type": "string"
@@ -740,14 +1189,41 @@
       "title": "Profile Id",
       "type": "string"
     },
+    "projection_entries": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CurationProjectionEntry"
+      },
+      "title": "Projection Entries",
+      "type": "array"
+    },
     "projection_policy": {
       "$ref": "#/$defs/ProjectionPolicy"
     },
+    "repository_evidence": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RepositoryEvidence"
+      },
+      "title": "Repository Evidence",
+      "type": "array"
+    },
     "schema_version": {
-      "const": "2.0",
-      "default": "2.0",
+      "default": "3.0",
+      "enum": [
+        "2.0",
+        "3.0"
+      ],
       "title": "Schema Version",
       "type": "string"
+    },
+    "screenings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CandidateScreening"
+      },
+      "title": "Screenings",
+      "type": "array"
     },
     "semantic_diff": {
       "$ref": "#/$defs/CurationSemanticDiff"

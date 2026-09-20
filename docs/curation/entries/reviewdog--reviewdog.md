@@ -2,33 +2,27 @@
 title: "reviewdog/reviewdog"
 description: "🐶 Automated code review tool integrated with any code analysis tools regardless of programming language"
 tags:
-  - "Reference"
   - "Software Supply Chain"
 ---
 # reviewdog/reviewdog
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">🐶 Automated code review tool integrated with any code analysis tools regardless of programming language</p>
 
 [Open repository](https://github.com/reviewdog/reviewdog){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 9,597 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** software supply\-chain and assurance prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
+**Domains:** <a href="../collections/software-supply-chain.md">Software Supply Chain</a>
 
-## Reconsider when
+## Contextual assessments
 
-A control is deprecated, archived, compromised, superseded by a stronger standard, or changes its trust boundary\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +31,7 @@ A control is deprecated, archived, compromised, superseded by a stronger standar
 - **Popularity:** 9,597 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

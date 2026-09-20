@@ -1,24 +1,31 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "profile_id": "shoulda-used-that",
-  "title": "Pradeep's ShouldaUsedThat OSS Curation",
-  "description": "A public, evidence-bound map of OSS worth considering across Pradeep Tathineni's engineering and creative interests before building another implementation.",
+  "title": "ShouldaUsedThat evidence corpus",
+  "description": "A public backing corpus of screened candidates and explicit problem-specific assessments used to build prior-art briefs; it is dogfood, not a universal catalog.",
   "public_owner_identity": "pradeeptathineni/shoulda-used-that",
   "visibility": "public",
   "source_specifications": [
     {
-      "kind": "public-json",
+      "kind": "public-corpus-json",
       "locator": "curation/entries/shoulda-used-that.json",
-      "content_sha256": "13039bd53a84d27856aa1c80041fce2796690b951471d2134513d8de07820e65",
+      "content_sha256": "51fbdd12a70d3737079d23d8e2af7f299a01e37ec5776cd2d166c26ec6595656",
       "license": "Apache-2.0",
       "attribution": "Repository-authored review records; individual entries retain any listed upstream attribution obligations."
     },
     {
-      "kind": "public-json",
+      "kind": "public-corpus-json",
       "locator": "curation/entries/personal-interests.json",
-      "content_sha256": "fc43e4cecf45ebf939d801ea3eeda56acb8197c9b8956cdb2ad7f85009036c0f",
+      "content_sha256": "01a372c4fe4cb89bfd256eac56ab39a098fa8115de6a70e8463bb7c776c2ee52",
       "license": "Apache-2.0",
       "attribution": "Maintainer-reviewed personal-interest selections enriched from dated public repository metadata and documented ecosystem discovery sources."
+    },
+    {
+      "kind": "public-context-json",
+      "locator": "curation/assessments/shoulda-used-that.json",
+      "content_sha256": "77faf8591d06bd7e48477147695a3872fc429401daf5da850139970c34c1bcfa",
+      "license": "Apache-2.0",
+      "attribution": "Repository-authored problem definitions and explicit problem-by-repository assessments backed by public decision evidence."
     }
   ],
   "collections": [
@@ -341,5 +348,5 @@
       "add_memberships": 600
     }
   },
-  "canonical_fingerprint": "profile_f2fa44daef8ee6ef85474f4d58aead502ddadee6f4d584a51fe064cf3a52f2a9"
+  "canonical_fingerprint": "profile_961d3751e725aaef097c2f48d87620853111952c4a87dd93d87fc86510df58ad"
 }

@@ -1,53 +1,50 @@
 ---
 title: ShouldaUsedThat
-description: Find existing open source before building from scratch, then keep the evidence behind the choice.
+description: Build an evidence-backed prior-art brief for a concrete software problem before writing another implementation.
 hide:
   - toc
 ---
 
-# Check before you build
+# Know the landscape before you build
 
-Start with the need, not a blank file. ShouldaUsedThat helps you find existing open-source options,
-see why they may fit, and keep the evidence that could change the decision later.
+Suppose you need stable JSON identity, safe local querying, or a mature CLI boundary. The useful
+answer is not a wall of repositories. It is a short, evidence-backed view of the credible options:
+what each covers, what to watch, what is still unknown, and which part may genuinely remain yours.
+
+ShouldaUsedThat is built around that prior-art brief. The current public Explore surface exposes
+the screened evidence corpus and explicit assessments used to prove the underlying model; it does
+not pretend every screened candidate has been assessed for your problem.
 
 <div class="home-actions" markdown>
 
-[Browse by need](curation/index.md){ .md-button .md-button--primary }
-[Try the CLI](getting-started.md){ .md-button }
-[See the project use itself](curation/dogfood.md){ .md-button }
+[Explore the evidence](curation/index.md){ .md-button .md-button--primary }
+[Try the deterministic CLI](getting-started.md){ .md-button }
 
 </div>
 
-## A useful entry answers four questions
+## What the evidence means
 
-1. **What need does this serve?** The catalog is organized around jobs, not a generic popularity
-   contest.
-2. **Why is it here?** Each entry states the contextual rationale and decision status.
-3. **How fresh is the evidence?** Observed facts are dated instead of presented as permanent.
-4. **What would change the decision?** Every reviewed choice carries a reconsideration trigger.
+- **Screened**: public source, metadata, and eligibility evidence made a candidate worth retaining.
+- **Assessed**: reviewed evidence supports contextual covers, watch, or unknown content for one
+  concrete problem.
 
-Open the [catalog overview](curation/index.md) to choose a collection, or search for a repository,
-technology, or need. Start with [what this project actually uses](curation/in-use.md) if you want a
-concrete example of decisions backed by repository evidence.
+The same repository may deserve different assessments for different problems. Domains help filter
+the backing corpus; they are not needs or recommendations.
 
-## The short version of the workflow
+## A local, revisitable workflow
 
 ```text
-find options → keep the exact result → record the choice → revisit when evidence changes
+find options → keep the exact result → record the choice → revisit material change
   checked           saved               remembered              rechecked
 ```
 
-The local workflow is deterministic and keeps its state outside the repository. A planning-only
-`used` record can describe an adoption without editing the target. The [getting-started guide](getting-started.md)
-walks through each step with a public fixture and no GitHub login.
+The CLI is deterministic and keeps state outside the target repository. Read and record commands
+do not mutate GitHub or a target project. Start with the [guided CLI journey](getting-started.md),
+or see the durable [product and evidence boundary](architecture/product-contract.md).
 
-## Claims stay bounded
+## Evidence stays available
 
-A star is a bookmark. “Reviewed” means the stated metadata and fit checks passed or a visible,
-narrow exception was recorded; it does not mean code audit, security approval, adoption, or a
-universal rank. Canonical JSON and immutable receipts sit beneath the readable pages.
-
-ShouldaUsedThat builds this site and its public GitHub Lists from the same profile. The
-[self-use story](curation/dogfood.md) explains the result in plain language. Exact approval and
-readback controls live in the [operator runbook](operations/github-curation.md), where readers who
-need that depth can find them without carrying the machinery through the first visit.
+Reader pages hide routine machinery, but the safe public corpus, dated observations, provenance,
+schemas, decision evidence, and reproducibility manifest remain inspectable. Operator controls and
+live readback evidence are available through the [runbook](operations/github-curation.md) without
+competing for first-visit navigation.

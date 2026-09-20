@@ -1,0 +1,400 @@
+{
+  "$defs": {
+    "CandidateScreening": {
+      "additionalProperties": false,
+      "description": "A candidate retained by eligibility evidence, not a contextual fit claim.",
+      "properties": {
+        "decision_receipt_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Decision Receipt Ids",
+          "type": "array"
+        },
+        "domain_tags": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Domain Tags",
+          "type": "array"
+        },
+        "evidence_receipt_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Receipt Ids",
+          "type": "array"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "screened_at": {
+          "format": "date-time",
+          "title": "Screened At",
+          "type": "string"
+        },
+        "screening_basis": {
+          "$ref": "#/$defs/ScreeningBasis"
+        }
+      },
+      "required": [
+        "repository",
+        "domain_tags",
+        "screening_basis",
+        "evidence_receipt_ids",
+        "screened_at"
+      ],
+      "title": "CandidateScreening",
+      "type": "object"
+    },
+    "CurationDisposition": {
+      "description": "Primary meaning of one repository in one curation context.",
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build",
+        "inbox"
+      ],
+      "title": "CurationDisposition",
+      "type": "string"
+    },
+    "CurationProjectionEntry": {
+      "additionalProperties": false,
+      "description": "Operator-only GitHub projection intent, separate from contextual assessment.",
+      "properties": {
+        "collection_memberships": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Collection Memberships",
+          "type": "array"
+        },
+        "primary_disposition": {
+          "$ref": "#/$defs/CurationDisposition"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "collection_memberships",
+        "primary_disposition"
+      ],
+      "title": "CurationProjectionEntry",
+      "type": "object"
+    },
+    "ExcludedCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "reason",
+        "source"
+      ],
+      "title": "ExcludedCandidate",
+      "type": "object"
+    },
+    "FreshnessState": {
+      "enum": [
+        "current",
+        "stale",
+        "partial",
+        "blocked"
+      ],
+      "title": "FreshnessState",
+      "type": "string"
+    },
+    "PopularitySnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "stars": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stars"
+        }
+      },
+      "title": "PopularitySnapshot",
+      "type": "object"
+    },
+    "RepositoryEvidence": {
+      "additionalProperties": false,
+      "description": "Reusable repository observations with no problem-specific judgment.",
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archived"
+        },
+        "attribution_obligations": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Attribution Obligations",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "field_classification": {
+          "const": "public",
+          "default": "public",
+          "title": "Field Classification",
+          "type": "string"
+        },
+        "freshness_state": {
+          "$ref": "#/$defs/FreshnessState"
+        },
+        "last_checked_at": {
+          "format": "date-time",
+          "title": "Last Checked At",
+          "type": "string"
+        },
+        "latest_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Commit"
+        },
+        "latest_release": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Release"
+        },
+        "observed_license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed License"
+        },
+        "popularity": {
+          "$ref": "#/$defs/PopularitySnapshot"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_provenance": {
+          "items": {
+            "$ref": "#/$defs/SourceProvenance"
+          },
+          "minItems": 1,
+          "title": "Source Provenance",
+          "type": "array"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "url",
+        "description",
+        "popularity",
+        "last_checked_at",
+        "freshness_state",
+        "source_provenance"
+      ],
+      "title": "RepositoryEvidence",
+      "type": "object"
+    },
+    "ScreeningBasis": {
+      "description": "Why a candidate is retained before contextual assessment.",
+      "enum": [
+        "metadata-and-eligibility",
+        "reviewed-use-and-prior-art",
+        "legacy-migration"
+      ],
+      "title": "ScreeningBasis",
+      "type": "string"
+    },
+    "SourceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "content_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Digest"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "locator",
+        "observed_at"
+      ],
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/curation-corpus-input.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Current source document with facts, screening, and projection intent separated.",
+  "properties": {
+    "excluded_candidates": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ExcludedCandidate"
+      },
+      "title": "Excluded Candidates",
+      "type": "array"
+    },
+    "projection_entries": {
+      "items": {
+        "$ref": "#/$defs/CurationProjectionEntry"
+      },
+      "title": "Projection Entries",
+      "type": "array"
+    },
+    "repository_evidence": {
+      "items": {
+        "$ref": "#/$defs/RepositoryEvidence"
+      },
+      "title": "Repository Evidence",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "3.0",
+      "default": "3.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenings": {
+      "items": {
+        "$ref": "#/$defs/CandidateScreening"
+      },
+      "title": "Screenings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "repository_evidence",
+    "screenings",
+    "projection_entries"
+  ],
+  "title": "CurationCorpusInput",
+  "type": "object"
+}

@@ -2,33 +2,27 @@
 title: "qdrant/qdrant"
 description: "Qdrant - High-performance, massive-scale Vector Database and Vector Search Engine for the next generation of AI. Also available in the cloud https://cloud.qdrant.io/"
 tags:
-  - "Reference"
   - "RAG, Search \u0026 Knowledge"
 ---
 # qdrant/qdrant
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Qdrant - High-performance, massive-scale Vector Database and Vector Search Engine for the next generation of AI. Also available in the cloud https://cloud.qdrant.io/</p>
 
 [Open repository](https://github.com/qdrant/qdrant){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 34,629 stars, a recent default\-branch push, and Apache\-2\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** retrieval, search, and knowledge\-system prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/rag-search-knowledge.md">RAG, Search &amp; Knowledge</a>
+**Domains:** <a href="../collections/rag-search-knowledge.md">RAG, Search &amp; Knowledge</a>
 
-## Reconsider when
+## Contextual assessments
 
-The project becomes inactive, archived, license\-incompatible, or ceases to fit an explicit retrieval or knowledge need\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** Apache-2.0
 - **Archived:** false
@@ -37,7 +31,7 @@ The project becomes inactive, archived, license\-incompatible, or ceases to fit 
 - **Popularity:** 34,629 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

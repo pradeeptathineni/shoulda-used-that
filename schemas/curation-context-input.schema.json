@@ -1,0 +1,190 @@
+{
+  "$defs": {
+    "Assessment": {
+      "additionalProperties": false,
+      "description": "Contextual judgment owned by exactly one problem and repository relation.",
+      "properties": {
+        "assessed_at": {
+          "format": "date-time",
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "assessment_basis": {
+          "$ref": "#/$defs/AssessmentBasis"
+        },
+        "covers": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Covers",
+          "type": "array"
+        },
+        "decision_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CurationDisposition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "publication_state": {
+          "const": "assessed",
+          "default": "assessed",
+          "title": "Publication State",
+          "type": "string"
+        },
+        "reconsider_when": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reconsider When",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unknowns": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknowns",
+          "type": "array"
+        },
+        "watch": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Watch",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "repository",
+        "assessment_basis",
+        "evidence_refs",
+        "assessed_at"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "AssessmentBasis": {
+      "description": "Evidence-bearing bases that can support contextual human judgment.",
+      "enum": [
+        "documented-use",
+        "capability-review",
+        "decision-record"
+      ],
+      "title": "AssessmentBasis",
+      "type": "string"
+    },
+    "CurationDisposition": {
+      "description": "Primary meaning of one repository in one curation context.",
+      "enum": [
+        "adopt",
+        "trial",
+        "reference",
+        "learn",
+        "watch",
+        "reject",
+        "build",
+        "inbox"
+      ],
+      "title": "CurationDisposition",
+      "type": "string"
+    },
+    "Problem": {
+      "additionalProperties": false,
+      "description": "One concrete build need or question; domains remain optional taxonomy.",
+      "properties": {
+        "domain_tags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Domain Tags",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 12,
+          "title": "Question",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "problem_id",
+        "question"
+      ],
+      "title": "Problem",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/pradeeptathineni/shoulda-used-that/blob/main/schemas/curation-context-input.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Explicit problem and problem-by-repository assessment source.",
+  "properties": {
+    "assessments": {
+      "items": {
+        "$ref": "#/$defs/Assessment"
+      },
+      "title": "Assessments",
+      "type": "array"
+    },
+    "problems": {
+      "items": {
+        "$ref": "#/$defs/Problem"
+      },
+      "title": "Problems",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "problems",
+    "assessments"
+  ],
+  "title": "CurationContextInput",
+  "type": "object"
+}

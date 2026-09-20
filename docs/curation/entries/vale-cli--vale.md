@@ -2,33 +2,52 @@
 title: "vale-cli/vale"
 description: "Markup-aware prose linter with project-owned styles and offline execution."
 tags:
-  - "Used here"
   - "OSS Curation \u0026 Prior Art"
 ---
 # vale\-cli/vale
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--adopt">Used here</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Markup-aware prose linter with project-owned styles and offline execution.</p>
 
 [Open repository](https://github.com/vale-cli/vale){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Catch repeated hype and filler across public prose without building a prose engine or making an editorial model authoritative\.<br>
-**Why:** Vale owns repeatable offline checks across hand\-authored public Markdown; First Reader, local ZeroSlop checks, and human fact\-and\-tone review retain the judgment roles it cannot supply\.<br>
-**Role:** deterministic public\-writing lint<br>
-**Status meaning:** Confirmed by repository evidence for the named role\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
-## Reconsider when
+## Contextual assessments
 
-The pinned version cannot lint the selected sources deterministically, or the project\-owned rules create repeated false positives\.
+### Catch repeated hype and filler across public prose without building a prose engine or making an editorial model authoritative\.
 
-## Observed facts
+**Decision in this context:** Used here<br>
+**Assessment basis:** documented\-use<br>
+**Assessed:** `2026-09-17T16:00:00+00:00`
+
+#### Covers
+
+- Vale owns repeatable offline checks across hand\-authored public Markdown; First Reader, local ZeroSlop checks, and human fact\-and\-tone review retain the judgment roles it cannot supply\.
+
+#### Watch
+
+- No watch item recorded.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/public-writing-v0.3.json">docs/decisions/public-writing-v0.3.json</a>
+- <a href="https://github.com/pradeeptathineni/shoulda-used-that/blob/main/.github/workflows/security.yml">.github/workflows/security.yml</a>
+
+#### Reconsider when
+
+- The pinned version cannot lint the selected sources deterministically, or the project\-owned rules create repeated false positives\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +56,7 @@ The pinned version cannot lint the selected sources deterministically, or the pr
 - **Popularity:** 6,108 stars observed at `2026-09-17T16:00:00+00:00`
 - **Last checked:** `2026-09-17T16:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="https://github.com/pradeeptathineni/shoulda-used-that/blob/main/.github/workflows/security.yml">.github/workflows/security.yml</a>
 - <a href="../../decisions/public-writing-v0.3.json">docs/decisions/public-writing-v0.3.json</a>

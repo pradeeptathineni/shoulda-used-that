@@ -10,13 +10,22 @@ import pytest
 from click.testing import CliRunner
 from pydantic import ValidationError
 
+from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.cli import cli
 from shoulda_used_that.curation import (
     MAX_SOURCE_BYTES,
+    CurationCounts,
+    CurationEntry,
     CurationProfile,
+    CurationSemanticDiff,
+    CurationSnapshot,
+    CurationSourceSnapshot,
+    ScreeningBasis,
+    _snapshot_semantic,
     compile_profile,
     load_profile,
     profile_fingerprint,
+    validate_curation_snapshot,
 )
 from shoulda_used_that.errors import StateError
 from shoulda_used_that.rendering import OutputFormat, render
@@ -26,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PROFILE = ROOT / "curation" / "profiles" / "shoulda-used-that.json"
 PUBLIC_ENTRIES = ROOT / "curation" / "entries" / "shoulda-used-that.json"
 PERSONAL_ENTRIES = ROOT / "curation" / "entries" / "personal-interests.json"
+PUBLIC_CONTEXT = ROOT / "curation" / "assessments" / "shoulda-used-that.json"
 
 
 def _payload(path: Path) -> dict[str, Any]:
@@ -39,13 +49,17 @@ def _write_tree(
     *,
     profile: dict[str, Any] | None = None,
     entries: dict[str, Any] | None = None,
+    context: dict[str, Any] | None = None,
 ) -> Path:
     profile_payload = deepcopy(profile or _payload(PUBLIC_PROFILE))
     entries_payload = deepcopy(entries or _payload(PUBLIC_ENTRIES))
+    context_payload = deepcopy(context or _payload(PUBLIC_CONTEXT))
     entries_path = root / "curation" / "entries" / "shoulda-used-that.json"
     personal_entries_path = root / "curation" / "entries" / "personal-interests.json"
     profile_path = root / "curation" / "profiles" / "shoulda-used-that.json"
+    context_path = root / "curation" / "assessments" / "shoulda-used-that.json"
     entries_path.parent.mkdir(parents=True)
+    context_path.parent.mkdir(parents=True)
     profile_path.parent.mkdir(parents=True)
     encoded_entries = (
         json.dumps(entries_payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
@@ -53,9 +67,14 @@ def _write_tree(
     entries_path.write_bytes(encoded_entries)
     personal_entries = PERSONAL_ENTRIES.read_bytes()
     personal_entries_path.write_bytes(personal_entries)
+    encoded_context = (
+        json.dumps(context_payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode()
+    context_path.write_bytes(encoded_context)
     source_payloads = {
         "curation/entries/shoulda-used-that.json": encoded_entries,
         "curation/entries/personal-interests.json": personal_entries,
+        "curation/assessments/shoulda-used-that.json": encoded_context,
     }
     for source in profile_payload["source_specifications"]:
         source["content_sha256"] = hashlib.sha256(source_payloads[source["locator"]]).hexdigest()
@@ -75,7 +94,7 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert second == first
     assert first.profile_fingerprint == profile.canonical_fingerprint
     assert first.counts.model_dump() == {
-        "sources": 2,
+        "sources": 3,
         "entries": 222,
         "excluded": 1,
         "inbox": 0,
@@ -86,7 +105,19 @@ def test_public_profile_compiles_deterministically_and_preserves_semantics() -> 
     assert first.semantic_diff.material is True
     assert first.semantic_diff.added_exclusions == ("morehao/starman",)
     assert tuple(first.collection_membership_map) == tuple(sorted(first.collection_membership_map))
-    assert first.entries == tuple(sorted(first.entries, key=lambda item: item.repository))
+    assert first.entries == ()
+    assert first.repository_evidence == tuple(
+        sorted(first.repository_evidence, key=lambda item: item.repository)
+    )
+    assert first.context_counts is not None
+    assert first.context_counts.model_dump() == {
+        "repositories": 222,
+        "screenings": 222,
+        "problems": 17,
+        "assessments": 17,
+        "screened_only_repositories": 205,
+        "assessed_repositories": 17,
+    }
     assert profile.projection_policy.selected_collection_slugs == (
         "generative-ai-agents",
         "rag-search-knowledge",
@@ -158,7 +189,7 @@ def test_source_drift_and_profile_fingerprint_drift_fail_closed(tmp_path: Path) 
 def test_changed_entries_exclusions_and_profile_are_a_material_diff(tmp_path: Path) -> None:
     previous = compile_profile(PUBLIC_PROFILE)
     entries = _payload(PUBLIC_ENTRIES)
-    entries["entries"][0]["rationale"] = "A newly reviewed rationale."
+    entries["repository_evidence"][0]["description"] = "A newly reviewed description."
     entries["excluded_candidates"][0]["reason"] = "A newly reviewed exclusion."
     profile_path = _write_tree(tmp_path, entries=entries)
 
@@ -220,7 +251,7 @@ def test_source_path_boundaries_and_size_are_typed(tmp_path: Path) -> None:
 
 def test_entry_review_time_cannot_be_after_profile_review_time(tmp_path: Path) -> None:
     entries = _payload(PUBLIC_ENTRIES)
-    entries["entries"][0]["last_checked_at"] = "2026-09-18T00:00:00Z"
+    entries["repository_evidence"][0]["last_checked_at"] = "2026-09-18T00:00:00Z"
     profile_path = _write_tree(tmp_path, entries=entries)
     with pytest.raises(StateError) as raised:
         compile_profile(profile_path)
@@ -231,18 +262,20 @@ def test_entry_review_time_cannot_be_after_profile_review_time(tmp_path: Path) -
     ("mutation", "code"),
     [
         ("unknown-collection", "curation_collection_unknown"),
+        ("unknown-projection", "curation_collection_unknown"),
         ("conflicting-disposition", "curation_disposition_conflict"),
     ],
 )
 def test_invalid_entry_relationships_are_typed(tmp_path: Path, mutation: str, code: str) -> None:
     entries = _payload(PUBLIC_ENTRIES)
     if mutation == "unknown-collection":
-        entries["entries"][0]["collection_memberships"].append("not-a-collection")
+        entries["screenings"][0]["domain_tags"].append("not-a-collection")
+    elif mutation == "unknown-projection":
+        entries["projection_entries"][0]["collection_memberships"].append("not-a-collection")
     else:
-        conflict = deepcopy(entries["entries"][0])
+        conflict = deepcopy(entries["projection_entries"][0])
         conflict["primary_disposition"] = "reject"
-        conflict["rationale"] = "Conflicting fixture claim."
-        entries["entries"].append(conflict)
+        entries["projection_entries"].append(conflict)
     profile_path = _write_tree(tmp_path, entries=entries)
 
     with pytest.raises(StateError) as raised:
@@ -283,6 +316,205 @@ def test_unknown_profile_and_input_schema_versions_fail_closed(tmp_path: Path) -
     with pytest.raises(StateError) as invalid_source:
         compile_profile(source_path)
     assert invalid_source.value.code == "curation_source_invalid"
+
+
+def test_screening_does_not_create_contextual_assessment() -> None:
+    snapshot = compile_profile(PUBLIC_PROFILE)
+
+    screening = next(
+        item for item in snapshot.screenings if item.repository == "langchain-ai/langchain"
+    )
+    assert screening.screening_basis is ScreeningBasis.METADATA_AND_ELIGIBILITY
+    assert all(item.repository != screening.repository for item in snapshot.assessments)
+    assert snapshot.context_counts is not None
+    assert snapshot.context_counts.screened_only_repositories == 205
+
+
+def test_metadata_is_not_a_valid_assessment_basis(tmp_path: Path) -> None:
+    context = _payload(PUBLIC_CONTEXT)
+    context["assessments"][0]["assessment_basis"] = "metadata-and-eligibility"
+
+    with pytest.raises(StateError) as raised:
+        compile_profile(_write_tree(tmp_path, context=context))
+    assert raised.value.code == "curation_source_invalid"
+
+
+def test_same_repository_keeps_distinct_problem_assessments(tmp_path: Path) -> None:
+    context = _payload(PUBLIC_CONTEXT)
+    original = next(
+        item for item in context["assessments"] if item["repository"] == "pallets/click"
+    )
+    context["problems"].append(
+        {
+            "problem_id": "consistent-cli-help",
+            "question": "Generate consistent command help without owning output formatting.",
+            "domain_tags": ["platform-engineering-delivery", "python-engineering"],
+        }
+    )
+    alternate = deepcopy(original)
+    alternate.update(
+        {
+            "problem_id": "consistent-cli-help",
+            "covers": ["Click supplies established help generation for declared commands."],
+            "watch": ["Project-specific examples still require local editorial review."],
+            "unknowns": ["Accessibility behavior has not been assessed for custom styling."],
+            "decision_state": "reference",
+            "reconsider_when": ["Help rendering moves to a different CLI owner."],
+        }
+    )
+    context["assessments"].append(alternate)
+    snapshot = compile_profile(_write_tree(tmp_path, context=context))
+
+    click_assessments = {
+        item.problem_id: item for item in snapshot.assessments if item.repository == "pallets/click"
+    }
+    assert click_assessments["mature-cli-parsing"].covers == tuple(original["covers"])
+    assert click_assessments["consistent-cli-help"].covers == (
+        "Click supplies established help generation for declared commands.",
+    )
+    assert (
+        click_assessments["consistent-cli-help"].watch
+        != click_assessments["mature-cli-parsing"].watch
+    )
+
+
+def test_domain_title_cannot_masquerade_as_a_problem(tmp_path: Path) -> None:
+    context = _payload(PUBLIC_CONTEXT)
+    context["problems"].append(
+        {
+            "problem_id": "domain-label-only",
+            "question": "Generative AI & Agents",
+            "domain_tags": ["generative-ai-agents"],
+        }
+    )
+
+    with pytest.raises(StateError) as raised:
+        compile_profile(_write_tree(tmp_path, context=context))
+    assert raised.value.code == "curation_problem_not_concrete"
+
+
+def test_legacy_source_migrates_evidence_without_inventing_assessment(tmp_path: Path) -> None:
+    current = _payload(PUBLIC_ENTRIES)
+    evidence = current["repository_evidence"][0]
+    screening = current["screenings"][0]
+    projection = current["projection_entries"][0]
+    legacy_entry = {
+        "schema_version": "2.0",
+        **evidence,
+        "collection_memberships": projection["collection_memberships"],
+        "primary_disposition": projection["primary_disposition"],
+        "role": "legacy command-line dependency",
+        "need": "Provide mature command parsing without a custom parser.",
+        "rationale": "Historical contextual prose retained only in the old input.",
+        "decision_receipt_ids": screening["decision_receipt_ids"],
+        "evidence_receipt_ids": screening["evidence_receipt_ids"],
+        "reconsideration_trigger": "The dependency no longer owns command parsing.",
+    }
+    legacy_payload = {
+        "schema_version": "2.0",
+        "entries": [legacy_entry],
+        "excluded_candidates": [],
+    }
+    encoded = (
+        json.dumps(legacy_payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode()
+    locator = "curation/entries/legacy.json"
+    source_path = tmp_path / locator
+    source_path.parent.mkdir(parents=True)
+    source_path.write_bytes(encoded)
+
+    profile = _payload(PUBLIC_PROFILE)
+    profile["source_specifications"] = [
+        {
+            "kind": "public-json",
+            "locator": locator,
+            "content_sha256": hashlib.sha256(encoded).hexdigest(),
+            "license": "Apache-2.0",
+            "attribution": "Synthetic historical compatibility fixture.",
+        }
+    ]
+    for collection in profile["collections"]:
+        collection["exact_bound_sources"] = [locator]
+    profile["canonical_fingerprint"] = profile_fingerprint(profile)
+    profile_path = tmp_path / "curation" / "profiles" / "legacy.json"
+    profile_path.parent.mkdir(parents=True)
+    profile_path.write_text(
+        json.dumps(profile, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    snapshot = compile_profile(profile_path, source_root=tmp_path)
+
+    assert snapshot.entries == ()
+    assert snapshot.repository_evidence[0].repository == evidence["repository"]
+    assert snapshot.repository_evidence[0].source_provenance
+    assert snapshot.screenings[0].screening_basis is ScreeningBasis.LEGACY_MIGRATION
+    assert snapshot.screenings[0].evidence_receipt_ids == tuple(screening["evidence_receipt_ids"])
+    assert snapshot.assessments == ()
+
+    legacy_record = CurationEntry.model_validate(legacy_entry)
+    profile_model = load_profile(profile_path)
+    membership_map = {
+        slug: ((legacy_record.repository,) if slug in legacy_record.collection_memberships else ())
+        for slug in sorted(item.slug for item in profile_model.collections)
+    }
+    counts = CurationCounts(
+        sources=1,
+        entries=1,
+        excluded=0,
+        inbox=0,
+        stale=0,
+        partial=0,
+        blocked=0,
+    )
+    source_snapshot = CurationSourceSnapshot(
+        kind="public-json",
+        locator=locator,
+        content_sha256=hashlib.sha256(encoded).hexdigest(),
+        entry_count=1,
+    )
+    semantic = _snapshot_semantic(
+        schema_version="2.0",
+        profile_fingerprint=profile_model.canonical_fingerprint,
+        compiler_version="0.3.0",
+        compiled_at=profile_model.review_policy.as_of,
+        collections=profile_model.collections,
+        projection_policy=profile_model.projection_policy,
+        mutation_policy=profile_model.mutation_policy,
+        source_snapshots=(source_snapshot,),
+        entries=(legacy_record,),
+        exclusions=(),
+        membership_map=membership_map,
+        counts=counts,
+    )
+    historical = CurationSnapshot(
+        schema_version="2.0",
+        curation_snapshot_id=short_id(semantic, prefix="cur"),
+        profile_id=profile_model.profile_id,
+        profile_fingerprint=profile_model.canonical_fingerprint,
+        compiler_version="0.3.0",
+        compiled_at=profile_model.review_policy.as_of,
+        collection_definitions=profile_model.collections,
+        projection_policy=profile_model.projection_policy,
+        mutation_policy=profile_model.mutation_policy,
+        source_snapshots=(source_snapshot,),
+        entries=(legacy_record,),
+        excluded_candidates=(),
+        unresolved_inbox_entries=(),
+        stale_entries=(),
+        partial_entries=(),
+        blocked_entries=(),
+        collection_membership_map=membership_map,
+        counts=counts,
+        semantic_diff=CurationSemanticDiff(
+            added_repositories=(legacy_record.repository,), material=True
+        ),
+        canonical_fingerprint=digest(semantic, prefix="curation"),
+    )
+    validate_curation_snapshot(historical)
+    store = StateStore(tmp_path / "legacy-state")
+    assert store.write_curation(historical) is True
+    assert store.latest_curation(profile_model.profile_id) == historical
 
 
 def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:

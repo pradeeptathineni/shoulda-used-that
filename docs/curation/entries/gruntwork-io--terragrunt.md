@@ -2,33 +2,27 @@
 title: "gruntwork-io/terragrunt"
 description: "Terragrunt is a flexible orchestration tool that allows Infrastructure as Code written in OpenTofu/Terraform to scale."
 tags:
-  - "Reference"
   - "Cloud Infrastructure \u0026 IaC"
 ---
 # gruntwork\-io/terragrunt
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Terragrunt is a flexible orchestration tool that allows Infrastructure as Code written in OpenTofu/Terraform to scale.</p>
 
 [Open repository](https://github.com/gruntwork-io/terragrunt){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 9,835 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** cloud infrastructure and infrastructure\-as\-code prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/cloud-infrastructure-iac.md">Cloud Infrastructure &amp; IaC</a>
+**Domains:** <a href="../collections/cloud-infrastructure-iac.md">Cloud Infrastructure &amp; IaC</a>
 
-## Reconsider when
+## Contextual assessments
 
-The project is archived, changes license or governance materially, or no longer supports the relevant infrastructure boundary\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +31,7 @@ The project is archived, changes license or governance materially, or no longer 
 - **Popularity:** 9,835 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

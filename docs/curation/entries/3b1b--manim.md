@@ -2,33 +2,27 @@
 title: "3b1b/manim"
 description: "Animation engine for explanatory math videos"
 tags:
-  - "Learn"
   - "Creative Coding \u0026 Visualization"
 ---
 # 3b1b/manim
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--learn">Learn</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Animation engine for explanatory math videos</p>
 
 [Open repository](https://github.com/3b1b/manim){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare established visual, generative, interactive, animation, and declarative\-visualization tools before building a custom rendering layer\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 94,000 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** creative\-coding and data\-visualization prior art<br>
-**Status meaning:** Kept for educational value without an integration claim\.<br>
-**Collections:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>
+**Domains:** <a href="../collections/creative-coding-visualization.md">Creative Coding &amp; Visualization</a>
 
-## Reconsider when
+## Contextual assessments
 
-The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +31,7 @@ The project becomes inactive, its rendering boundary changes materially, or a mo
 - **Popularity:** 94,000 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

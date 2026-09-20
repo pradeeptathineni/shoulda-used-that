@@ -2,33 +2,27 @@
 title: "microsoft/autogen"
 description: "A programming framework for agentic AI"
 tags:
-  - "Reference"
   - "Generative AI \u0026 Agents"
 ---
 # microsoft/autogen
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">A programming framework for agentic AI</p>
 
 [Open repository](https://github.com/microsoft/autogen){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 61,016 stars, a recent default\-branch push, and CC\-BY\-4\.0 licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** generative\-AI and agent\-system prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>
+**Domains:** <a href="../collections/generative-ai-agents.md">Generative AI &amp; Agents</a>
 
-## Reconsider when
+## Contextual assessments
 
-The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** CC-BY-4.0
 - **Archived:** false
@@ -37,7 +31,7 @@ The repository becomes archived, materially changes license, loses active mainte
 - **Popularity:** 61,016 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

@@ -13,13 +13,10 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_DESCRIPTION = (
-    "Find existing open source before building from scratch, record why it fits, and revisit "
-    "the choice when evidence changes."
+    "Build an evidence-backed prior-art brief for a concrete software problem before writing "
+    "another implementation."
 )
-EXPECTED_TAGLINE = (
-    "Before you build another tool, check what open source already exists "
-    "and what the evidence says."
-)
+EXPECTED_TAGLINE = "Before you build, get an evidence-backed brief on the open-source landscape."
 RECEIPT_FIELDS = {
     "schema_version",
     "receipt_id",

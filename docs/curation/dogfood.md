@@ -14,8 +14,10 @@ catalog you are reading and a set of GitHub Lists that make the same choices eas
 
 ## What you can inspect
 
-- **The choices:** [222 reviewed repositories](index.md) with needs, rationale, dates,
-  and reconsideration triggers.
+- **The corpus:** [222 screened repositories](index.md) with reusable evidence and domain
+  taxonomy.
+- **The contextual layer:** 17 explicit problem-by-repository assessments; screening
+  metadata alone creates none.
 - **The public navigation:** 12 GitHub Lists containing
   219 projectable repositories and 249 intentional memberships.
 - **The readback:** [sanitized live evidence](../operations/live-projection.md) for what was
@@ -33,8 +35,6 @@ freshness, rejection, or reconsideration evidence preserved by the catalog.
 5. `apply` rechecks identity, capability, drift, expiry, and operation caps before each allowed write.
 6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
 7. `exported` builds this allowlisted catalog and its deterministic manifest.
-
-The snapshot's canonical curation fingerprint is `curation_76126b448e0ffbb2028f47ff4c6947a9049c131de564312a4f16e472aa5d1249`.
 
 ## Native GitHub projection
 

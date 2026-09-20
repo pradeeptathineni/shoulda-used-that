@@ -2,33 +2,27 @@
 title: "python-pillow/pillow"
 description: "Python Imaging Library (fork)"
 tags:
-  - "Reference"
   - "Computer Vision \u0026 Multimodal"
 ---
 # python\-pillow/pillow
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Python Imaging Library (fork)</p>
 
 [Open repository](https://github.com/python-pillow/Pillow){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare established image, video, geometry, perception, and vision\-language components before creating a visual pipeline\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 13,818 stars, a recent default\-branch push, and HPND licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** computer\-vision and multimodal prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/computer-vision-multimodal.md">Computer Vision &amp; Multimodal</a>
+**Domains:** <a href="../collections/computer-vision-multimodal.md">Computer Vision &amp; Multimodal</a>
 
-## Reconsider when
+## Contextual assessments
 
-Maintenance, licensing, model provenance, or benchmark relevance changes materially\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** HPND
 - **Archived:** false
@@ -37,7 +31,7 @@ Maintenance, licensing, model provenance, or benchmark relevance changes materia
 - **Popularity:** 13,818 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

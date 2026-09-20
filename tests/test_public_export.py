@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PROFILE = ROOT / "curation" / "profiles" / "shoulda-used-that.json"
 PUBLIC_ENTRIES = ROOT / "curation" / "entries" / "shoulda-used-that.json"
 PERSONAL_ENTRIES = ROOT / "curation" / "entries" / "personal-interests.json"
+PUBLIC_CONTEXT = ROOT / "curation" / "assessments" / "shoulda-used-that.json"
 
 
 def _payload(path: Path) -> dict[str, Any]:
@@ -45,15 +46,21 @@ def _write_profile_tree(
     *,
     mutate_profile: Callable[[dict[str, Any]], None] | None = None,
     mutate_entries: Callable[[dict[str, Any]], None] | None = None,
+    mutate_context: Callable[[dict[str, Any]], None] | None = None,
 ) -> Path:
     profile = deepcopy(_payload(PUBLIC_PROFILE))
     entries = deepcopy(_payload(PUBLIC_ENTRIES))
+    context = deepcopy(_payload(PUBLIC_CONTEXT))
     if mutate_entries is not None:
         mutate_entries(entries)
+    if mutate_context is not None:
+        mutate_context(context)
     entries_path = root / "curation" / "entries" / "shoulda-used-that.json"
     personal_entries_path = root / "curation" / "entries" / "personal-interests.json"
     profile_path = root / "curation" / "profiles" / "shoulda-used-that.json"
+    context_path = root / "curation" / "assessments" / "shoulda-used-that.json"
     entries_path.parent.mkdir(parents=True)
+    context_path.parent.mkdir(parents=True)
     profile_path.parent.mkdir(parents=True)
     encoded_entries = (
         json.dumps(entries, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
@@ -61,9 +68,14 @@ def _write_profile_tree(
     entries_path.write_bytes(encoded_entries)
     personal_entries = PERSONAL_ENTRIES.read_bytes()
     personal_entries_path.write_bytes(personal_entries)
+    encoded_context = (
+        json.dumps(context, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode()
+    context_path.write_bytes(encoded_context)
     source_payloads = {
         "curation/entries/shoulda-used-that.json": encoded_entries,
         "curation/entries/personal-interests.json": personal_entries,
+        "curation/assessments/shoulda-used-that.json": encoded_context,
     }
     for source in profile["source_specifications"]:
         source["content_sha256"] = hashlib.sha256(source_payloads[source["locator"]]).hexdigest()
@@ -89,6 +101,9 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
     assert first_export.reproducibility_status == "verified-deterministic"
     assert len(first_export.exported_records) == 222
     assert len(first_export.collections) == 12
+    assert len(first_export.problems) == 17
+    assert len(first_export.assessments) == 17
+    assert sum(item.publication_state == "assessed" for item in first_export.exported_records) == 17
     assert set(first_export.omitted_private_field_counts.values()) == {0}
     assert {item.repository for item in first_export.license_attribution_inventory} == {
         item.repository for item in first_export.exported_records
@@ -99,24 +114,39 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
         *(item.path for item in first_export.generated_file_manifest),
     }
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
-    assert b"Browse by need" in first_files["index.md"]
+    assert b"Backing evidence, not the final answer" in first_files["index.md"]
     assert b"collections/cloud-infrastructure-iac.md" in first_files["index.md"]
-    assert b"not a code audit" in first_files["index.md"]
+    assert b"Screening never generates a fit claim" in first_files["index.md"]
     assert b"pallets/click" not in first_files["index.md"]
     assert b"../entries/pallets--click.md" in first_files["entries/index.md"]
-    assert b"DevOps" in first_files["collections/index.md"]
+    assert b"DevOps" not in first_files["collections/index.md"]
     assert b"opencv/opencv" in first_files["collections/computer-vision-multimodal.md"]
-    assert b"Use this collection when" in first_files["collections/computer-vision-multimodal.md"]
+    assert (
+        b"Browse the screened candidates"
+        in first_files["collections/computer-vision-multimodal.md"]
+    )
     assert b"curated" in first_files["dogfood.md"]
     assert b"projected" in first_files["dogfood.md"]
     assert b"verify" in first_files["dogfood.md"]
     assert b"**206 unique" in first_files["selection.md"]
     assert b"entries/browser-use--browser-use.md" in first_files["selection.md"]
     assert b"curation/selections/personal-interests.json" in first_files["selection.md"]
-    assert b"Why it is here" in first_files["entries/pallets--click.md"]
+    assert b"Contextual assessments" in first_files["entries/pallets--click.md"]
+    assert b"Click owns parsing" in first_files["entries/pallets--click.md"]
+    assert (
+        b"No explicit problem-specific assessment"
+        in first_files["entries/langchain-ai--langchain.md"]
+    )
     assert first_files["entries/pallets--click.md"].index(b"Reconsider when") < first_files[
         "entries/pallets--click.md"
-    ].index(b"Observed facts")
+    ].index(b"Observed repository facts")
+    assert b"freshness-chip--current" not in first_files["entries/index.md"]
+    assert b"status-chip--reference" not in first_files["entries/index.md"]
+    assert b"catalog-card__eyebrow" not in first_files["entries/index.md"]
+    assert b"Checked 2026-09-17 \xc2\xb7 <a" in first_files["entries/index.md"]
+    assert b"curation_" not in first_files["dogfood.md"]
+    entry_before_evidence = first_files["entries/3b1b--manim.md"].split(b"## Evidence", 1)[0]
+    assert b"fafa083a4fb274bba9cabde0b6e2f50ba6da0622" not in entry_before_evidence
     assert "public catalog ready" in render(first_export, OutputFormat.TABLE)
     assert "Private field classes omitted" in render(first_export, OutputFormat.MARKDOWN)
     combined = b"\n".join(first_files.values())
@@ -131,7 +161,7 @@ def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
 
     def change_click(entries: dict[str, Any]) -> None:
         click_entry = next(
-            item for item in entries["entries"] if item["repository"] == "pallets/click"
+            item for item in entries["repository_evidence"] if item["repository"] == "pallets/click"
         )
         click_entry["description"] = "A deliberately changed Click description."
 
@@ -146,10 +176,8 @@ def test_entry_change_has_a_bounded_generated_diff(tmp_path: Path) -> None:
         "collections/oss-curation-foundations.md",
         "collections/platform-engineering-delivery.md",
         "collections/python-engineering.md",
-        "dogfood.md",
         "entries/index.md",
         "entries/pallets--click.md",
-        "in-use.md",
         MANIFEST_NAME,
         "sources.md",
     }
@@ -174,12 +202,18 @@ def test_non_public_collections_are_omitted_instead_of_leaked(tmp_path: Path) ->
 
 def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
     def inject_markup(entries: dict[str, Any]) -> None:
-        entries["entries"][0]["description"] = '<script>alert("catalog")</script>'
-        entries["entries"][0]["rationale"] = (
-            "[steal](javascript:alert(1))\n# injected heading\n1. fake list"
-        )
+        entries["repository_evidence"][0]["description"] = '<script>alert("catalog")</script>'
 
-    profile_path = _write_profile_tree(tmp_path, mutate_entries=inject_markup)
+    def inject_context(context: dict[str, Any]) -> None:
+        context["assessments"][0]["covers"] = [
+            "[steal](javascript:alert(1))\n# injected heading\n1. fake list"
+        ]
+
+    profile_path = _write_profile_tree(
+        tmp_path,
+        mutate_entries=inject_markup,
+        mutate_context=inject_context,
+    )
     profile = load_profile(profile_path)
     snapshot = compile_profile(profile_path)
     _, files = render_public_catalog(snapshot, profile)
@@ -213,7 +247,9 @@ def test_private_mismatched_invalid_and_leaking_inputs_fail_closed(tmp_path: Pat
         render_public_catalog(snapshot, load_profile(changed_path))
     assert mismatch.value.code == "public_export_profile_mismatch"
 
-    invalid_snapshot = snapshot.model_copy(update={"entries": tuple(reversed(snapshot.entries))})
+    invalid_snapshot = snapshot.model_copy(
+        update={"repository_evidence": tuple(reversed(snapshot.repository_evidence))}
+    )
     with pytest.raises(StateError) as inconsistent:
         render_public_catalog(invalid_snapshot, profile)
     assert inconsistent.value.code == "curation_snapshot_inconsistent"

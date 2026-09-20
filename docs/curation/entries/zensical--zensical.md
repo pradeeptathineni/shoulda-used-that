@@ -2,34 +2,52 @@
 title: "zensical/zensical"
 description: "Static site generator for modern, searchable project documentation."
 tags:
-  - "Trialing"
   - "OSS Curation \u0026 Prior Art"
   - "Platform Engineering \u0026 Delivery"
 ---
 # zensical/zensical
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--trial">Trialing</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Static site generator for modern, searchable project documentation.</p>
 
 [Open repository](https://github.com/zensical/zensical){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Responsive Markdown rendering, tags, and private client\-side search without a custom frontend\.<br>
-**Why:** The exact pre\-1\.0 version is removable and must prove deterministic, accessible, no\-runtime\-network output\.<br>
-**Role:** development\-only static catalog view adapter<br>
-**Status meaning:** A bounded evaluation with an explicit removal trigger\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
 
-## Reconsider when
+## Contextual assessments
 
-Strict build, search, accessibility, or no\-third\-party\-request validation fails\.
+### Responsive Markdown rendering, tags, and private client\-side search without a custom frontend\.
 
-## Observed facts
+**Decision in this context:** Trialing<br>
+**Assessment basis:** capability\-review<br>
+**Assessed:** `2026-09-17T12:00:00+00:00`
+
+#### Covers
+
+- No covered capability recorded.
+
+#### Watch
+
+- The exact pre\-1\.0 version is removable and must prove deterministic, accessible, no\-runtime\-network output\.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/zensical-site.json">docs/decisions/zensical-site.json</a>
+
+#### Reconsider when
+
+- Strict build, search, accessibility, or no\-third\-party\-request validation fails\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -38,7 +56,7 @@ Strict build, search, accessibility, or no\-third\-party\-request validation fai
 - **Popularity:** 5,721 stars observed at `2026-09-17T12:00:00+00:00`
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/zensical-site.json">docs/decisions/zensical-site.json</a>
 

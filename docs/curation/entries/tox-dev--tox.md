@@ -2,33 +2,27 @@
 title: "tox-dev/tox"
 description: "Command line driven CI frontend and development task automation tool."
 tags:
-  - "Reference"
   - "Python Engineering"
 ---
 # tox\-dev/tox
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Command line driven CI frontend and development task automation tool.</p>
 
 [Open repository](https://github.com/tox-dev/tox){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 3,934 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** Python implementation and developer\-tooling prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/python-engineering.md">Python Engineering</a>
+**Domains:** <a href="../collections/python-engineering.md">Python Engineering</a>
 
-## Reconsider when
+## Contextual assessments
 
-Supported Python compatibility, maintenance, license, or the tool&#x27;s distinct role changes materially\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +31,7 @@ Supported Python compatibility, maintenance, license, or the tool&#x27;s distinc
 - **Popularity:** 3,934 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

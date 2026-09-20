@@ -12,7 +12,11 @@ from pydantic import BaseModel
 from rich.console import Console
 from rich.table import Table
 
-from shoulda_used_that.curation import CurationSnapshot
+from shoulda_used_that.curation import (
+    CurationSnapshot,
+    curation_projection_entries,
+    repository_evidence_records,
+)
 from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
     AdoptionPlan,
@@ -113,12 +117,16 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         table.add_column("Disposition")
         table.add_column("Collections")
         table.add_column("Freshness")
-        for entry in value.entries:
+        freshness_by_repository = {
+            item.repository: item.freshness_state.value
+            for item in repository_evidence_records(value)
+        }
+        for entry in curation_projection_entries(value):
             table.add_row(
                 entry.repository,
                 entry.primary_disposition.value,
                 ", ".join(entry.collection_memberships),
-                entry.freshness_state.value,
+                freshness_by_repository[entry.repository],
             )
         console.print(table)
         console.print(
@@ -393,10 +401,15 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                 "|---|---|---|---|",
             ]
         )
-        for entry in value.entries:
+        freshness_by_repository = {
+            item.repository: item.freshness_state.value
+            for item in repository_evidence_records(value)
+        }
+        for entry in curation_projection_entries(value):
             lines.append(
                 f"| `{entry.repository}` | {entry.primary_disposition.value} | "
-                f"{', '.join(entry.collection_memberships)} | {entry.freshness_state.value} |"
+                f"{', '.join(entry.collection_memberships)} | "
+                f"{freshness_by_repository[entry.repository]} |"
             )
     elif isinstance(value, ProjectSnapshot):
         lines.extend(

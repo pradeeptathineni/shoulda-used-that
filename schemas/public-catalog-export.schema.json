@@ -1,5 +1,15 @@
 {
   "$defs": {
+    "AssessmentBasis": {
+      "description": "Evidence-bearing bases that can support contextual human judgment.",
+      "enum": [
+        "documented-use",
+        "capability-review",
+        "decision-record"
+      ],
+      "title": "AssessmentBasis",
+      "type": "string"
+    },
     "CurationDisposition": {
       "description": "Primary meaning of one repository in one curation context.",
       "enum": [
@@ -110,6 +120,85 @@
       "title": "PopularitySnapshot",
       "type": "object"
     },
+    "PublicAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "assessed_at": {
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "assessment_basis": {
+          "$ref": "#/$defs/AssessmentBasis"
+        },
+        "covers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Covers",
+          "type": "array"
+        },
+        "decision_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CurationDisposition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "reconsider_when": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reconsider When",
+          "type": "array"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "unknowns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknowns",
+          "type": "array"
+        },
+        "watch": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Watch",
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem_id",
+        "repository",
+        "assessment_basis",
+        "covers",
+        "watch",
+        "unknowns",
+        "evidence_refs",
+        "decision_state",
+        "reconsider_when",
+        "assessed_at"
+      ],
+      "title": "PublicAssessment",
+      "type": "object"
+    },
     "PublicAttribution": {
       "additionalProperties": false,
       "properties": {
@@ -191,13 +280,6 @@
           "title": "Description",
           "type": "string"
         },
-        "disposition": {
-          "$ref": "#/$defs/CurationDisposition"
-        },
-        "disposition_label": {
-          "title": "Disposition Label",
-          "type": "string"
-        },
         "evidence_receipt_ids": {
           "items": {
             "type": "string"
@@ -234,10 +316,6 @@
           ],
           "title": "Latest Release"
         },
-        "need": {
-          "title": "Need",
-          "type": "string"
-        },
         "observed_license": {
           "anyOf": [
             {
@@ -249,24 +327,26 @@
           ],
           "title": "Observed License"
         },
+        "operator_disposition": {
+          "$ref": "#/$defs/CurationDisposition"
+        },
         "popularity": {
           "$ref": "#/$defs/PopularitySnapshot"
         },
-        "rationale": {
-          "title": "Rationale",
-          "type": "string"
-        },
-        "reconsideration_trigger": {
-          "title": "Reconsideration Trigger",
+        "publication_state": {
+          "enum": [
+            "screened",
+            "assessed"
+          ],
+          "title": "Publication State",
           "type": "string"
         },
         "repository": {
           "title": "Repository",
           "type": "string"
         },
-        "role": {
-          "title": "Role",
-          "type": "string"
+        "screening_basis": {
+          "$ref": "#/$defs/ScreeningBasis"
         },
         "source_provenance": {
           "items": {
@@ -285,11 +365,9 @@
         "url",
         "description",
         "collections",
-        "disposition",
-        "disposition_label",
-        "role",
-        "need",
-        "rationale",
+        "publication_state",
+        "screening_basis",
+        "operator_disposition",
         "decision_receipt_ids",
         "evidence_receipt_ids",
         "observed_license",
@@ -299,7 +377,6 @@
         "popularity",
         "last_checked_at",
         "freshness_state",
-        "reconsideration_trigger",
         "source_provenance",
         "attribution_obligations"
       ],
@@ -363,6 +440,43 @@
       "title": "PublicCollection",
       "type": "object"
     },
+    "PublicProblem": {
+      "additionalProperties": false,
+      "properties": {
+        "domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Domains",
+          "type": "array"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "problem_id",
+        "question",
+        "domains"
+      ],
+      "title": "PublicProblem",
+      "type": "object"
+    },
+    "ScreeningBasis": {
+      "description": "Why a candidate is retained before contextual assessment.",
+      "enum": [
+        "metadata-and-eligibility",
+        "reviewed-use-and-prior-art",
+        "legacy-migration"
+      ],
+      "title": "ScreeningBasis",
+      "type": "string"
+    },
     "SourceProvenance": {
       "additionalProperties": false,
       "properties": {
@@ -412,6 +526,13 @@
       "default": "1.0",
       "title": "Allowlist Schema Version",
       "type": "string"
+    },
+    "assessments": {
+      "items": {
+        "$ref": "#/$defs/PublicAssessment"
+      },
+      "title": "Assessments",
+      "type": "array"
     },
     "canonical_fingerprint": {
       "pattern": "^public_[0-9a-f]{64}$",
@@ -481,6 +602,13 @@
       "title": "Popularity Treatment",
       "type": "string"
     },
+    "problems": {
+      "items": {
+        "$ref": "#/$defs/PublicProblem"
+      },
+      "title": "Problems",
+      "type": "array"
+    },
     "public_owner_identity": {
       "title": "Public Owner Identity",
       "type": "string"
@@ -495,8 +623,8 @@
       "type": "string"
     },
     "schema_version": {
-      "const": "2.0",
-      "default": "2.0",
+      "const": "3.0",
+      "default": "3.0",
       "title": "Schema Version",
       "type": "string"
     },
@@ -533,6 +661,8 @@
     "non_ranking_disclaimer",
     "collections",
     "exported_records",
+    "problems",
+    "assessments",
     "excluded_candidates",
     "omitted_private_field_counts",
     "license_attribution_inventory",

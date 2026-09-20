@@ -2,33 +2,27 @@
 title: "actions/runner"
 description: "The Runner for GitHub Actions :rocket:"
 tags:
-  - "Reference"
   - "Platform Engineering \u0026 Delivery"
 ---
 # actions/runner
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reference">Reference</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">The Runner for GitHub Actions :rocket:</p>
 
 [Open repository](https://github.com/actions/runner){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Compare established build, workflow, GitOps, runtime, observability, and developer\-platform components before creating delivery machinery\.<br>
-**Why:** Included for this collection after public metadata and fit review; live metadata showed 6,263 stars, a recent default\-branch push, and MIT licensing\. These signals support discovery, not code, security, or adoption approval\.<br>
-**Role:** platform engineering and software\-delivery prior art<br>
-**Status meaning:** Recommended only as a reference for this named need, not as a universal best choice\.<br>
-**Collections:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
+**Domains:** <a href="../collections/platform-engineering-delivery.md">Platform Engineering &amp; Delivery</a>
 
-## Reconsider when
+## Contextual assessments
 
-The project loses active maintenance, changes its operational boundary, or a native platform capability removes the need\.
+No explicit problem-specific assessment is published for this candidate. Its metadata supports screening and evidence lookup only.
 
-## Observed facts
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +31,7 @@ The project loses active maintenance, changes its operational boundary, or a nat
 - **Popularity:** 6,263 stars observed at `2026-09-17T12:15:00+00:00`
 - **Last checked:** `2026-09-17T12:15:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/personal-oss-curation.json">docs/decisions/personal-oss-curation.json</a>
 

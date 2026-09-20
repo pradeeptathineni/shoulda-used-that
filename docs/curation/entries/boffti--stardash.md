@@ -2,33 +2,51 @@
 title: "boffti/stardash"
 description: "Dashboard for exploring and organizing GitHub stars."
 tags:
-  - "Rejected / deferred"
   - "OSS Curation \u0026 Prior Art"
 ---
 # boffti/stardash
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--reject">Rejected / deferred</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Dashboard for exploring and organizing GitHub stars.</p>
 
 [Open repository](https://github.com/boffti/stardash){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Keep the local\-first curation core free of a hosted backend and analytics surface\.<br>
-**Why:** Supabase, provider, telemetry, and direct mutation surfaces are disproportionate to this release\.<br>
-**Role:** hosted star dashboard runtime<br>
-**Status meaning:** Considered and not selected for this context; the reason is evidence\-bound\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>
 
-## Reconsider when
+## Contextual assessments
 
-A local static boundary with no direct mutation or analytics becomes the default\.
+### Keep the local\-first curation core free of a hosted backend and analytics surface\.
 
-## Observed facts
+**Decision in this context:** Rejected / deferred<br>
+**Assessment basis:** decision\-record<br>
+**Assessed:** `2026-09-17T12:00:00+00:00`
+
+#### Covers
+
+- No covered capability recorded.
+
+#### Watch
+
+- Supabase, provider, telemetry, and direct mutation surfaces are disproportionate to this release\.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a>
+
+#### Reconsider when
+
+- A local static boundary with no direct mutation or analytics becomes the default\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** MIT
 - **Archived:** false
@@ -37,7 +55,7 @@ A local static boundary with no direct mutation or analytics becomes the default
 - **Popularity:** No public star count is claimed by this snapshot.
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/curation-coordinator.json">docs/decisions/curation-coordinator.json</a>
 

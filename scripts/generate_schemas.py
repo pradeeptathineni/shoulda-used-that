@@ -9,7 +9,12 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from shoulda_used_that.curation import CurationProfile, CurationSnapshot
+from shoulda_used_that.curation import (
+    CurationContextInput,
+    CurationCorpusInput,
+    CurationProfile,
+    CurationSnapshot,
+)
 from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
     AdoptionPlan,
@@ -35,6 +40,8 @@ SCHEMAS: dict[str, type[BaseModel]] = {
     "recheck-receipt": RecheckReceipt,
     "save-receipt": SaveReceipt,
     "curation-profile": CurationProfile,
+    "curation-corpus-input": CurationCorpusInput,
+    "curation-context-input": CurationContextInput,
     "curation-snapshot": CurationSnapshot,
     "project-snapshot": ProjectSnapshot,
     "github-projection-plan": GitHubProjectionPlan,

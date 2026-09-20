@@ -2,34 +2,52 @@
 title: "trailofbits/rfc8785.py"
 description: "Python implementation of the RFC 8785 JSON Canonicalization Scheme."
 tags:
-  - "Used here"
   - "OSS Curation \u0026 Prior Art"
   - "Python Engineering"
 ---
 # trailofbits/rfc8785\.py
 
-<div class="entry-heading">
-  <span class="status-chip status-chip--adopt">Used here</span>
-  <span class="freshness-chip freshness-chip--current">current</span>
-</div>
+
 
 <p class="collection-deck">Python implementation of the RFC 8785 JSON Canonicalization Scheme.</p>
 
 [Open repository](https://github.com/trailofbits/rfc8785.py){ .md-button .md-button--primary }
 
-## Why it is here
+Checked 2026\-09\-17 · [Evidence](#evidence)
 
-**Need:** Interoperable content identity for immutable receipts\.<br>
-**Why:** A standards implementation avoids incomplete sorted\-JSON identity rules\.<br>
-**Role:** runtime canonical JSON<br>
-**Status meaning:** Confirmed by repository evidence for the named role\.<br>
-**Collections:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
+**Domains:** <a href="../collections/oss-curation-foundations.md">OSS Curation &amp; Prior Art</a>, <a href="../collections/python-engineering.md">Python Engineering</a>
 
-## Reconsider when
+## Contextual assessments
 
-Published RFC vectors fail or compatibility changes\.
+### Interoperable content identity for immutable receipts\.
 
-## Observed facts
+**Decision in this context:** Used here<br>
+**Assessment basis:** documented\-use<br>
+**Assessed:** `2026-09-17T12:00:00+00:00`
+
+#### Covers
+
+- A standards implementation avoids incomplete sorted\-JSON identity rules\.
+
+#### Watch
+
+- No watch item recorded.
+
+#### Unknowns
+
+- No unresolved question recorded.
+
+#### Assessment evidence
+
+- <a href="../../decisions/canonical-state.json">docs/decisions/canonical-state.json</a>
+
+#### Reconsider when
+
+- Published RFC vectors fail or compatibility changes\.
+
+## Evidence
+
+### Observed repository facts
 
 - **License:** Apache-2.0
 - **Archived:** false
@@ -38,7 +56,7 @@ Published RFC vectors fail or compatibility changes\.
 - **Popularity:** No public star count is claimed by this snapshot.
 - **Last checked:** `2026-09-17T12:00:00+00:00`
 
-## Evidence
+### Screening evidence
 
 - <a href="../../decisions/canonical-state.json">docs/decisions/canonical-state.json</a>
 
