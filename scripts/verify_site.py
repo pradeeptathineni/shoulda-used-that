@@ -13,11 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SITE = ROOT / "site"
 SITE_PREFIX = "/shoulda-used-that/"
 SEARCH_CASES = {
-    "repository": "pallets/click",
-    "need": "a mature direct command and option boundary",
-    "alias": "devops",
-    "disposition": "trialing",
-    "collection": "generative ai & agents",
+    "problem": "deterministic local python research core",
+    "candidate": "pallets/click",
+    "covers": "mature command parsing",
+    "unresolved": "problem-specific research plan",
+    "domain": "python-engineering",
 }
 RUNTIME_ELEMENTS = {
     "audio": "src",

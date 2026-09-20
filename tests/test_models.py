@@ -8,7 +8,6 @@ from pydantic import ValidationError
 from shoulda_used_that.models import (
     Candidate,
     FilterSpec,
-    SaveReceipt,
     SourceKind,
     SourceObservation,
     normalize_repository,
@@ -60,15 +59,6 @@ def test_naive_candidate_and_observation_times_are_rejected() -> None:
             tool_version="test/1",
             payload_fingerprint="payload_abc",
             candidate_count=0,
-        )
-    with pytest.raises(ValidationError, match="created_at must include a timezone"):
-        SaveReceipt(
-            save_id="save_example",
-            created_at=naive,
-            profile="default",
-            repositories=(),
-            created=(),
-            already_saved=(),
         )
 
 

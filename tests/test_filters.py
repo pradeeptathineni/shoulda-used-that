@@ -43,6 +43,12 @@ def _visible(candidates: list[Candidate], spec: FilterSpec) -> tuple[str, ...]:
     return tuple(item.repository for item in visible)
 
 
+def test_default_result_window_is_five() -> None:
+    candidates = [_candidate(str(index)) for index in range(7)]
+    assert FilterSpec().limit == 5
+    assert len(_visible(candidates, FilterSpec())) == 5
+
+
 def test_repeated_values_are_or_and_fields_are_and() -> None:
     candidates = [
         _candidate("python", language="Python", topics=("receipts",)),

@@ -1,46 +1,54 @@
 ---
-title: Get from a need to a revisitable decision
-description: A no-authentication walkthrough of the ShouldaUsedThat CLI and its evidence trail.
+title: Run an explicit prior-art check
+description: Find, inspect, decide, and recheck with a deterministic research plan.
 ---
 
-# Get from a need to a revisitable decision
+# Run an explicit prior-art check
 
-This walkthrough answers a small question: **which existing Python project could provide canonical
-JSON bytes for immutable receipts?** It uses a committed public fixture, writes state only to a
-temporary directory you choose, and needs no GitHub login.
+The CLI is the power-user research path. It executes the sources and queries you name; the problem
+text provides context and never silently expands or rewrites retrieval.
 
-## 1. Run one evidence-bound check
+## 1. Find candidates
 
-From a development checkout:
+This no-authentication example uses the committed public fixture and writes only to the state
+directory you choose:
 
 ```console
 uv sync --all-groups --frozen
-uv run shoulda --state-dir .tmp/try-shoulda checked \
+uv run shoulda --state-dir .tmp/try-shoulda check \
   "canonical JSON for immutable receipts" \
   --source fixture \
   --fixture fixtures/candidates.json \
   --language Python \
   --license Apache-2.0 \
-  --not-archived \
-  --explain-filter
+  --not-archived
 ```
 
-The output shows the surviving candidates, why other candidates were removed, and a receipt ID
-beginning with `chk_`. Copy that ID for the next step.
+The default answer contains at most five visible candidates, aggregate filter and limit counts,
+the upstream source position when one exists, and an exact inspection command. It also writes the
+complete immutable check receipt. Use `--explain` for candidate-level exclusions or
+`--format json` for all evidence, predicates, ordering, and fingerprints.
 
-## 2. Keep the exact visible result
+Zero results are diagnosed without broadening the plan: no source candidates, all candidates
+filtered, or required hard-gate evidence unavailable.
+
+## 2. Inspect one explicit candidate
+
+Live GitHub inspection uses the official `gh` authentication already present on the machine:
 
 ```console
-uv run shoulda --state-dir .tmp/try-shoulda saved --all --from chk_REPLACE_WITH_ID
+uv run shoulda inspect github:trailofbits/rfc8785.py
 ```
 
-`saved --all` means the exact post-filter set in that receipt. It does not refresh the source,
-reach beyond the result, star anything, or change a GitHub List.
+Inspection is read-only. Normal output prioritizes the target's available evidence and typed gaps;
+the complete source and SBOM record remains available through `--format json`.
 
-## 3. Record the decision in your own words
+## 3. Record a decision
+
+Use the `chk_` identifier from the check:
 
 ```console
-uv run shoulda --state-dir .tmp/try-shoulda remembered trailofbits/rfc8785.py \
+uv run shoulda --state-dir .tmp/try-shoulda remember trailofbits/rfc8785.py \
   --as adopt \
   --for "RFC 8785 canonical bytes" \
   --because "small standards-focused adapter" \
@@ -48,59 +56,36 @@ uv run shoulda --state-dir .tmp/try-shoulda remembered trailofbits/rfc8785.py \
   --from chk_REPLACE_WITH_ID
 ```
 
-The decision is immutable. If your judgment changes, create a new receipt with `--supersedes`
-instead of rewriting history.
+The decision is immutable. If judgment changes, create a new receipt with `--supersedes` rather
+than rewriting history.
 
-## 4. Ask what changed
+## 4. Recheck the evidence policy
 
 ```console
-uv run shoulda --state-dir .tmp/try-shoulda rechecked chk_REPLACE_WITH_ID
+uv run shoulda --state-dir .tmp/try-shoulda recheck chk_REPLACE_WITH_ID
 ```
 
-`rechecked` repeats the source policy stored with the receipt and classifies meaningful changes. A
-source failure is reported without replacing the last-known-good evidence.
+`recheck` repeats the stored source policy and classifies material changes. A source error is
+recorded without replacing last-known-good evidence.
 
-## 5. Describe adoption without touching the target
-
-```console
-uv run shoulda --state-dir .tmp/try-shoulda used trailofbits/rfc8785.py \
-  --for "RFC 8785 canonical bytes" \
-  --in another-project \
-  --postcondition "published vectors pass" \
-  --rollback "remove the dependency and adapter"
-```
-
-This is a plan, not an installer. It records what success and rollback would mean and never writes
-to `another-project`.
-
-## Command map
-
-| Command | Human question | Network or write boundary |
-| --- | --- | --- |
-| `inspected` | What public or supplied evidence does one project expose? | Explicit target; read-only |
-| `checked` | What matches this need and these gates? | Explicit sources; read-only |
-| `saved` | Which exact findings should I keep? | Local state only |
-| `remembered` | What did I decide, why, and when should I reconsider? | Local state only |
-| `rechecked` | Has meaningful evidence changed? | Replays the bound source policy |
-| `used` | How could I adopt this, prove it worked, and undo it? | Planning only; never edits the target |
-
-Catalog maintenance has its own advanced path: `curated` compiles a profile, `exported` writes an
-allowlisted site, and `projected` seals a plan without mutation. Only `apply` can perform live
-GitHub changes, and only for an approved, unexpired, exact-fingerprint additive plan in an
-interactive terminal. `verify` then reads every claimed postcondition back independently. Use the
-[GitHub curation runbook](operations/github-curation.md) before that path.
-
-## Use live GitHub discovery when you choose
-
-The official `gh` CLI must already be authenticated for live sources:
+## Use live discovery when you choose
 
 ```console
-uv run shoulda checked "canonical JSON" \
+uv run shoulda check "canonical JSON identity" \
   --source github-search \
   --query 'canonical json language:Python archived:false' \
   --not-archived
 ```
 
-The source is explicit; the command does not silently broaden to your Stars or refresh another
-receipt. Run `shoulda checked --help` for the complete filter vocabulary and `shoulda --help` for
-the whole journey.
+The query is exact and its upstream order is preserved separately from local filtering and sorting.
+Run `shoulda check --help` for the filter vocabulary.
+
+## Maintainer and historical boundaries
+
+The four research tasks stay at the top level. Catalog compilation and export live under
+`shoulda catalog`; GitHub planning, `apply`, and `verify` live under `shoulda github`, as documented
+in the [GitHub curation runbook](operations/github-curation.md).
+
+The old `saved` and `used` commands are retired. Existing version 1.0 save, List-preview, and
+adoption-plan JSON can still be validated with `shoulda_used_that.legacy`; current state and schema
+generation do not create those record kinds.

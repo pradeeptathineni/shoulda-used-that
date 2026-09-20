@@ -48,6 +48,12 @@ def test_state_permissions_and_symlink_boundaries(tmp_path: Path) -> None:
     store.initialize()
     if os.name == "posix":
         assert root.stat().st_mode & 0o777 == 0o700
+    assert not (store.profile_root / "saved").exists()
+    assert not (store.profile_root / "plans" / "adoptions").exists()
+    assert not (store.profile_root / "plans" / "projections").exists()
+    assert not (store.profile_root / "plans" / "github-curation").exists()
+    assert not (store.profile_root / "applies").exists()
+    assert not (store.profile_root / "curations").exists()
 
     link = tmp_path / "state-link"
     link.symlink_to(root, target_is_directory=True)
@@ -99,7 +105,7 @@ def test_invalid_ids_and_corrupt_state_are_typed(tmp_path: Path) -> None:
     assert not_file.value.code == "unsafe_state_path"
 
 
-def test_invalid_saved_schema_and_receipt_symlink_are_rejected(
+def test_invalid_current_schema_and_receipt_symlink_are_rejected(
     tmp_path: Path, fixture_path: Path
 ) -> None:
     store = StateStore(tmp_path / "state")

@@ -80,10 +80,10 @@
 .catalog-card h3 { margin: .8rem 0 .45rem; overflow-wrap: anywhere; }
 .catalog-card p { color: var(--sut-muted); margin: .35rem 0; }
 .catalog-card__meta, .entry-heading { align-items: center; display: flex; flex-wrap: wrap; gap: .4rem; }
-.catalog-card__role, .catalog-card__need { font-size: .82rem; }
-.catalog-card__need { border-top: 1px solid var(--sut-line); margin-top: auto !important; padding-top: .65rem; }
+.assessment-card__problem { color: var(--sut-accent-strong) !important; font-size: .82rem; font-weight: 700; }
+.catalog-card__evidence { border-top: 1px solid var(--sut-line); font-size: .82rem; margin-top: auto !important; padding-top: .65rem; }
 
-.status-chip, .freshness-chip, .projection-chip {
+.freshness-chip {
   border: 1px solid currentColor;
   border-radius: 999px;
   display: inline-flex;
@@ -95,10 +95,8 @@
   text-transform: uppercase;
 }
 
-.status-chip--adopt, .status-chip--build, .freshness-chip--current { color: var(--sut-accent-strong); }
-.status-chip--trial, .status-chip--watch, .freshness-chip--stale, .freshness-chip--partial { color: var(--sut-warm); }
-.status-chip--reject, .freshness-chip--blocked { color: #a32638; }
-.status-chip--reference, .status-chip--learn, .status-chip--inbox, .projection-chip { color: var(--sut-muted); }
+.freshness-chip--stale, .freshness-chip--partial { color: var(--sut-warm); }
+.freshness-chip--blocked { color: #a32638; }
 
 .catalog-empty {
   background: var(--sut-surface);

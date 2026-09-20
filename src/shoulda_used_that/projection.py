@@ -12,6 +12,7 @@ from shoulda_used_that.curation import (
     CurationDisposition,
     CurationSnapshot,
     OperationCaps,
+    curation_projection_entries,
     validate_curation_snapshot,
 )
 from shoulda_used_that.errors import StateError
@@ -280,7 +281,7 @@ def _project_lists(
 ) -> tuple[list[ProjectedList], dict[str, set[str]], list[ProjectionExclusion]]:
     collections = {item.slug: item for item in snapshot.collection_definitions}
     existing_by_name = _lists_by_name(state.lists)
-    entries = {item.repository: item for item in snapshot.entries}
+    entries = {item.repository: item for item in curation_projection_entries(snapshot)}
     desired_memberships: dict[str, set[str]] = {}
     exclusions: list[ProjectionExclusion] = []
     projected_lists: list[ProjectedList] = []
@@ -429,7 +430,7 @@ def desired_projection_repositories(snapshot: CurationSnapshot) -> tuple[str, ..
         sorted(
             {
                 normalize_repository(entry.repository)
-                for entry in snapshot.entries
+                for entry in curation_projection_entries(snapshot)
                 if entry.primary_disposition in PROJECTABLE_DISPOSITIONS
                 and selected.intersection(entry.collection_memberships)
             }

@@ -1,4 +1,4 @@
-"""The canonical ShouldaUsedThat participle command surface."""
+"""The deterministic ShouldaUsedThat command surface."""
 
 from __future__ import annotations
 
@@ -42,9 +42,9 @@ def _enum_choice(enum_type: type[StrEnum]) -> click.Choice[str]:
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
     epilog=(
-        "Start here: checked finds options; saved keeps the exact result; remembered records "
-        "your decision; rechecked tells you what changed. Run COMMAND --help for examples and "
-        "boundaries."
+        "Start here: check finds options from an explicit source/query plan; inspect opens "
+        "evidence for one target; remember records a decision; recheck tells you what changed. "
+        "Catalog and GitHub operations are grouped by what they affect."
     ),
 )
 @click.version_option(version=__version__, prog_name="shoulda")
@@ -63,8 +63,13 @@ def _enum_choice(enum_type: type[StrEnum]) -> click.Choice[str]:
     help="Choose a readable table or an authoritative JSON/YAML/Markdown rendering.",
 )
 @click.pass_context
-def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format: str) -> None:
-    """Find existing OSS, keep the evidence, and revisit the choice."""
+def cli(
+    ctx: click.Context,
+    state_dir: Path | None,
+    profile: str,
+    output_format: str,
+) -> None:
+    """Find, inspect, decide, and recheck evidence-backed OSS options."""
 
     ctx.obj = Runtime(
         store=StateStore(state_dir, profile=profile),
@@ -72,7 +77,7 @@ def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format:
     )
 
 
-@cli.command("inspected")
+@cli.command("inspect")
 @click.argument("target")
 @click.option(
     "--sbom",
@@ -81,7 +86,7 @@ def cli(ctx: click.Context, state_dir: Path | None, profile: str, output_format:
     help="Supplied SPDX or CycloneDX document to inspect with the project.",
 )
 @click.pass_obj
-def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> None:
+def inspect_command(runtime: Runtime, target: str, sbom_path: Path | None) -> None:
     """Inspect the available evidence for one explicit project."""
 
     try:
@@ -94,7 +99,7 @@ def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> 
         )
 
 
-@cli.command("checked")
+@cli.command("check")
 @click.argument("need")
 @click.option(
     "--source",
@@ -109,7 +114,11 @@ def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> 
     multiple=True,
     help="Public or synthetic fixture file used by --source fixture.",
 )
-@click.option("--query", multiple=True, help="Bounded GitHub repository-search query.")
+@click.option(
+    "--query",
+    multiple=True,
+    help="Exact GitHub repository-search query; NEED never expands or rewrites it.",
+)
 @click.option("--repo", multiple=True, help="Exact owner/repo seed.")
 @click.option("--role", multiple=True, help="Keep a matching role; repeat for OR within role.")
 @click.option(
@@ -160,18 +169,24 @@ def inspected_command(runtime: Runtime, target: str, sbom_path: Path | None) -> 
 @click.option(
     "--limit",
     type=click.IntRange(min=1, max=1000),
-    default=50,
+    default=5,
     show_default=True,
     help="Maximum visible results after filtering and stable ordering.",
 )
-@click.option("--explain-filter", is_flag=True, help="Show why candidates passed or were removed.")
+@click.option(
+    "--explain",
+    "--explain-filter",
+    "explain_filter",
+    is_flag=True,
+    help="Show candidate-level filter and limit reasons.",
+)
 @click.option(
     "--in",
     "project_context",
     help="Explicit psn_ snapshot ID, github:owner/repo target, or local project path.",
 )
 @click.pass_obj
-def checked_command(
+def check_command(
     runtime: Runtime,
     need: str,
     source: tuple[str, ...],
@@ -200,7 +215,7 @@ def checked_command(
     explain_filter: bool,
     project_context: str | None,
 ) -> None:
-    """Find candidates for a need and record the exact visible result."""
+    """Find candidates from an explicit source/query plan; NEED is context only."""
 
     try:
         requests = _source_requests(source, fixture=fixture, query=query, repo=repo)
@@ -244,45 +259,7 @@ def checked_command(
         _fail(runtime, ShouldaError("invalid_input", str(exc)))
 
 
-@cli.command("saved")
-@click.argument("repositories", nargs=-1)
-@click.option("--all", "save_all", is_flag=True, help="Use one check's exact visible result set.")
-@click.option("--from", "from_check_id", help="Explicit chk_ receipt identifier.")
-@click.option(
-    "--as", "disposition", type=_enum_choice(Disposition), help="Optional local decision status."
-)
-@click.option("--list", "list_name", help="Create a sealed, unapplied GitHub List plan.")
-@click.pass_obj
-def saved_command(
-    runtime: Runtime,
-    repositories: tuple[str, ...],
-    save_all: bool,
-    from_check_id: str | None,
-    disposition: str | None,
-    list_name: str | None,
-) -> None:
-    """Keep explicit findings locally without changing GitHub."""
-
-    try:
-        receipt, projection = services.saved(
-            runtime.store,
-            repositories=repositories,
-            save_all=save_all,
-            from_check_id=from_check_id,
-            disposition=Disposition(disposition) if disposition else None,
-            list_name=list_name,
-        )
-        click.echo(render(receipt, runtime.output_format), nl=False)
-        if projection:
-            click.echo(render(projection, runtime.output_format), nl=False)
-    except (ShouldaError, ValueError) as exc:
-        _fail(
-            runtime,
-            exc if isinstance(exc, ShouldaError) else ShouldaError("invalid_input", str(exc)),
-        )
-
-
-@cli.command("remembered")
+@cli.command("remember")
 @click.argument("repository")
 @click.option(
     "--as",
@@ -311,7 +288,7 @@ def saved_command(
 @click.option("--from", "from_check_id", help="Check receipt that supplied the candidates.")
 @click.option("--supersedes", help="Earlier decision receipt replaced by this judgment.")
 @click.pass_obj
-def remembered_command(
+def remember_command(
     runtime: Runtime,
     repository: str,
     disposition: str,
@@ -348,10 +325,10 @@ def remembered_command(
         )
 
 
-@cli.command("rechecked")
+@cli.command("recheck")
 @click.argument("target_id")
 @click.pass_obj
-def rechecked_command(runtime: Runtime, target_id: str) -> None:
+def recheck_command(runtime: Runtime, target_id: str) -> None:
     """Repeat the bound check and report meaningful evidence changes."""
 
     try:
@@ -361,22 +338,28 @@ def rechecked_command(runtime: Runtime, target_id: str) -> None:
         _fail(runtime, exc)
 
 
-@cli.command("curated")
+@cli.group("catalog")
+def catalog_group() -> None:
+    """Build and export the evidence-backed public catalog."""
+
+
+@catalog_group.command("build")
 @click.argument("profile_path", type=click.Path(path_type=Path, dir_okay=False, exists=True))
 @click.pass_obj
-def curated_command(runtime: Runtime, profile_path: Path) -> None:
+def catalog_build_command(runtime: Runtime, profile_path: Path) -> None:
     """Build one exact public profile into a deterministic snapshot."""
 
+    from shoulda_used_that import admin_services
+
     try:
-        snapshot = services.curated(runtime.store, profile_path=profile_path)
+        snapshot = admin_services.curated(runtime.store, profile_path=profile_path)
         click.echo(render(snapshot, runtime.output_format), nl=False)
     except ShouldaError as exc:
         _fail(runtime, exc)
 
 
-@cli.command("exported")
+@catalog_group.command("export")
 @click.argument("curation_id")
-@click.option("--public", "public_export", is_flag=True, help="Use the public allowlist boundary.")
 @click.option(
     "--output",
     type=click.Path(path_type=Path, file_okay=False),
@@ -384,19 +367,19 @@ def curated_command(runtime: Runtime, profile_path: Path) -> None:
     help="Dedicated generated catalog directory.",
 )
 @click.pass_obj
-def exported_command(
+def catalog_export_command(
     runtime: Runtime,
     curation_id: str,
-    public_export: bool,
     output: Path,
 ) -> None:
     """Write an allowlisted public catalog from one exact snapshot."""
 
+    from shoulda_used_that import admin_services
+
     try:
-        receipt = services.exported(
+        receipt = admin_services.exported(
             runtime.store,
             curation_snapshot_id=curation_id,
-            public=public_export,
             output=output,
         )
         click.echo(render(receipt, runtime.output_format), nl=False)
@@ -404,29 +387,26 @@ def exported_command(
         _fail(runtime, exc)
 
 
-@cli.command("projected")
+@cli.group("github")
+def github_group() -> None:
+    """Plan, apply, and verify additive GitHub curation changes."""
+
+
+@github_group.command("plan")
 @click.argument("curation_id")
-@click.option(
-    "--to",
-    "destination",
-    type=click.Choice(["github-lists"], case_sensitive=True),
-    required=True,
-    help="Native destination for the sealed additive plan.",
-)
 @click.option("--account", required=True, help="Exact GitHub login bound by the profile.")
 @click.pass_obj
-def projected_command(
+def github_plan_command(
     runtime: Runtime,
     curation_id: str,
-    destination: str,
     account: str,
 ) -> None:
     """Prepare an exact additive GitHub plan without changing GitHub."""
 
+    from shoulda_used_that import admin_services
+
     try:
-        if destination != "github-lists":  # pragma: no cover - guarded by Click
-            raise ShouldaError("unsupported_projection", "Unsupported projection target.")
-        plan = services.projected(
+        plan = admin_services.projected(
             runtime.store,
             curation_snapshot_id=curation_id,
             account=account,
@@ -436,76 +416,17 @@ def projected_command(
         _fail(runtime, exc)
 
 
-@cli.command("used")
-@click.argument("repository")
-@click.option("--for", "need", required=True, help="The concrete need the adoption serves.")
-@click.option(
-    "--in", "target", required=True, help="Named target project; never written by this command."
-)
-@click.option(
-    "--file", "proposed_files", multiple=True, help="File an adoption may change; repeat."
-)
-@click.option("--tool", "native_tools", multiple=True, help="Existing target-native tool; repeat.")
-@click.option("--test", "tests", multiple=True, help="Validation command or check; repeat.")
-@click.option(
-    "--postcondition",
-    "expected_postconditions",
-    multiple=True,
-    required=True,
-    help="Observable success condition; repeat.",
-)
-@click.option("--rollback", multiple=True, required=True, help="Reversal step; repeat.")
-@click.option(
-    "--needs-evidence",
-    "remaining_evidence",
-    multiple=True,
-    help="Unresolved evidence need; repeat.",
-)
-@click.pass_obj
-def used_command(
-    runtime: Runtime,
-    repository: str,
-    need: str,
-    target: str,
-    proposed_files: tuple[str, ...],
-    native_tools: tuple[str, ...],
-    tests: tuple[str, ...],
-    expected_postconditions: tuple[str, ...],
-    rollback: tuple[str, ...],
-    remaining_evidence: tuple[str, ...],
-) -> None:
-    """Describe a reversible adoption plan without editing the target."""
-
-    try:
-        plan = services.used(
-            runtime.store,
-            repository=repository,
-            need=need,
-            target=target,
-            proposed_files=proposed_files,
-            native_tools=native_tools,
-            tests=tests,
-            expected_postconditions=expected_postconditions,
-            rollback=rollback,
-            remaining_evidence=remaining_evidence,
-        )
-        click.echo(render(plan, runtime.output_format), nl=False)
-    except (ShouldaError, ValueError) as exc:
-        _fail(
-            runtime,
-            exc if isinstance(exc, ShouldaError) else ShouldaError("invalid_input", str(exc)),
-        )
-
-
-@cli.command("apply")
+@github_group.command("apply")
 @click.argument("plan_id")
 @click.option("--fingerprint", required=True, help="Exact canonical plan fingerprint.")
 @click.pass_obj
 def apply_command(runtime: Runtime, plan_id: str, fingerprint: str) -> None:
     """Run one approved additive GitHub plan in an interactive terminal."""
 
+    from shoulda_used_that import admin_services
+
     try:
-        receipt = services.applied(
+        receipt = admin_services.applied(
             runtime.store,
             plan_id=plan_id,
             fingerprint=fingerprint,
@@ -519,14 +440,16 @@ def apply_command(runtime: Runtime, plan_id: str, fingerprint: str) -> None:
         _fail(runtime, exc)
 
 
-@cli.command("verify")
+@github_group.command("verify")
 @click.argument("apply_id")
 @click.pass_obj
 def verify_command(runtime: Runtime, apply_id: str) -> None:
     """Read GitHub back and verify every claimed postcondition."""
 
+    from shoulda_used_that import admin_services
+
     try:
-        receipt = services.verified(runtime.store, apply_receipt_id=apply_id)
+        receipt = admin_services.verified(runtime.store, apply_receipt_id=apply_id)
         click.echo(render(receipt, runtime.output_format), nl=False)
         if receipt.status.value != "verified":
             raise click.exceptions.Exit(2)

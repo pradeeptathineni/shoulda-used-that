@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
+from shoulda_used_that.admin_services import applied, verified
 from shoulda_used_that.errors import GitHubError, GitHubRateLimitError, StateError
 from shoulda_used_that.github import GhAuthStatus, GhResult
 from shoulda_used_that.github_apply import (
@@ -31,7 +32,6 @@ from shoulda_used_that.github_mutations import (
 )
 from shoulda_used_that.projection import build_projection_plan
 from shoulda_used_that.rendering import OutputFormat, render
-from shoulda_used_that.services import applied, verified
 from shoulda_used_that.state import StateStore
 from tests.test_projection import (
     NOW,

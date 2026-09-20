@@ -6,3 +6,4 @@ sav = "sav"
 
 [default.extend-words]
 Shoulda = "Shoulda"
+sav = "sav"

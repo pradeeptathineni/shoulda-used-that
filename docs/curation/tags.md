@@ -1,11 +1,11 @@
 ---
 title: "Tags"
-description: "Browse catalog pages by status and collection."
+description: "Browse catalog pages by domain and evidence state."
 tags:
   - "tags"
 ---
 # Tags
 
-Use tags to combine collection, disposition, and evidence views.
+Use tags to combine domain and evidence views.
 
 <!-- material/tags -->

@@ -10,9 +10,13 @@ import pytest
 from click.testing import CliRunner
 from pydantic import ValidationError
 
+from shoulda_used_that.admin_services import projected
 from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.cli import cli
 from shoulda_used_that.curation import (
+    CONTEXT_MODEL_VERSION,
+    CURATION_SCHEMA_VERSION,
+    ContextCounts,
     CurationCounts,
     CurationSemanticDiff,
     CurationSnapshot,
@@ -20,7 +24,10 @@ from shoulda_used_that.curation import (
     OperationCaps,
     ProjectionPolicy,
     _snapshot_semantic,
+    candidate_screenings,
     compile_profile,
+    curation_projection_entries,
+    repository_evidence_records,
     validate_curation_snapshot,
 )
 from shoulda_used_that.errors import StateError
@@ -42,7 +49,6 @@ from shoulda_used_that.projection import (
     desired_projection_repositories,
 )
 from shoulda_used_that.rendering import OutputFormat, render
-from shoulda_used_that.services import projected
 from shoulda_used_that.state import StateStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,22 +78,48 @@ def _projection_snapshot() -> CurationSnapshot:
         for collection in source.collection_definitions
         if collection.slug in PROJECTION_COLLECTIONS
     )
-    entries = tuple(
+    evidence = tuple(
         sorted(
             (
-                entry.model_copy(
+                item
+                for item in repository_evidence_records(source)
+                if item.repository in PROJECTION_REPOSITORIES
+            ),
+            key=lambda item: item.repository,
+        )
+    )
+    screenings = tuple(
+        sorted(
+            (
+                item.model_copy(
+                    update={
+                        "domain_tags": tuple(
+                            slug for slug in PROJECTION_COLLECTIONS if slug in item.domain_tags
+                        )
+                    }
+                )
+                for item in candidate_screenings(source)
+                if item.repository in PROJECTION_REPOSITORIES
+            ),
+            key=lambda item: item.repository,
+        )
+    )
+    projection_entries = tuple(
+        sorted(
+            (
+                item.model_copy(
                     update={
                         "collection_memberships": tuple(
                             slug
                             for slug in PROJECTION_COLLECTIONS
-                            if slug in entry.collection_memberships
+                            if slug in item.collection_memberships
                         )
                     }
                 )
-                for entry in source.entries
-                if entry.repository in PROJECTION_REPOSITORIES
+                for item in curation_projection_entries(source)
+                if item.repository in PROJECTION_REPOSITORIES
             ),
-            key=lambda entry: entry.repository,
+            key=lambda item: item.repository,
         )
     )
     projection_policy = ProjectionPolicy(
@@ -106,19 +138,30 @@ def _projection_snapshot() -> CurationSnapshot:
         ),
     )
     membership_map = {
-        slug: tuple(entry.repository for entry in entries if slug in entry.collection_memberships)
+        slug: tuple(
+            entry.repository for entry in projection_entries if slug in entry.collection_memberships
+        )
         for slug in sorted(PROJECTION_COLLECTIONS)
     }
     counts = CurationCounts(
         sources=len(source.source_snapshots),
-        entries=len(entries),
+        entries=len(evidence),
         excluded=0,
         inbox=0,
         stale=0,
         partial=0,
         blocked=0,
     )
+    context_counts = ContextCounts(
+        repositories=len(evidence),
+        screenings=len(screenings),
+        problems=0,
+        assessments=0,
+        screened_only_repositories=len(screenings),
+        assessed_repositories=0,
+    )
     semantic = _snapshot_semantic(
+        schema_version=CURATION_SCHEMA_VERSION,
         profile_fingerprint=source.profile_fingerprint,
         compiler_version=source.compiler_version,
         compiled_at=source.compiled_at,
@@ -126,7 +169,15 @@ def _projection_snapshot() -> CurationSnapshot:
         projection_policy=projection_policy,
         mutation_policy=mutation_policy,
         source_snapshots=source.source_snapshots,
-        entries=entries,
+        entries=(),
+        context_model_version=CONTEXT_MODEL_VERSION,
+        repository_evidence=evidence,
+        screenings=screenings,
+        projection_entries=projection_entries,
+        problems=(),
+        assessments=(),
+        briefs=(),
+        context_counts=context_counts,
         exclusions=(),
         membership_map=membership_map,
         counts=counts,
@@ -137,7 +188,14 @@ def _projection_snapshot() -> CurationSnapshot:
             "collection_definitions": collections,
             "projection_policy": projection_policy,
             "mutation_policy": mutation_policy,
-            "entries": entries,
+            "entries": (),
+            "repository_evidence": evidence,
+            "screenings": screenings,
+            "projection_entries": projection_entries,
+            "problems": (),
+            "assessments": (),
+            "briefs": (),
+            "context_counts": context_counts,
             "excluded_candidates": (),
             "unresolved_inbox_entries": (),
             "stale_entries": (),
@@ -146,7 +204,7 @@ def _projection_snapshot() -> CurationSnapshot:
             "collection_membership_map": membership_map,
             "counts": counts,
             "semantic_diff": CurationSemanticDiff(
-                added_repositories=tuple(entry.repository for entry in entries),
+                added_repositories=tuple(entry.repository for entry in evidence),
                 material=True,
             ),
             "canonical_fingerprint": digest(semantic, prefix="curation"),
@@ -351,6 +409,7 @@ def _reseal_with_caps(snapshot: CurationSnapshot, caps: OperationCaps) -> Curati
         caps=caps,
     )
     semantic = _snapshot_semantic(
+        schema_version=snapshot.schema_version,
         profile_fingerprint=snapshot.profile_fingerprint,
         compiler_version=snapshot.compiler_version,
         compiled_at=snapshot.compiled_at,
@@ -359,6 +418,14 @@ def _reseal_with_caps(snapshot: CurationSnapshot, caps: OperationCaps) -> Curati
         mutation_policy=mutation_policy,
         source_snapshots=snapshot.source_snapshots,
         entries=snapshot.entries,
+        context_model_version=snapshot.context_model_version,
+        repository_evidence=snapshot.repository_evidence,
+        screenings=snapshot.screenings,
+        projection_entries=snapshot.projection_entries,
+        problems=snapshot.problems,
+        assessments=snapshot.assessments,
+        briefs=snapshot.briefs,
+        context_counts=snapshot.context_counts,
         exclusions=snapshot.excluded_candidates,
         membership_map=snapshot.collection_membership_map,
         counts=snapshot.counts,
@@ -398,7 +465,7 @@ def test_additive_projection_is_deterministic_bounded_and_explicit() -> None:
     expected_memberships = sum(
         entry.primary_disposition in PROJECTABLE_DISPOSITIONS
         and bool(selected.intersection(entry.collection_memberships))
-        for entry in snapshot.entries
+        for entry in curation_projection_entries(snapshot)
         for _ in selected.intersection(entry.collection_memberships)
     )
     expected_lists = len(selected)
@@ -691,7 +758,7 @@ def test_projected_cli_emits_the_sealed_machine_record(
     snapshot = _projection_snapshot()
     store.write_curation(snapshot)
     client = ReadOnlyProjectionClient()
-    monkeypatch.setattr("shoulda_used_that.services.GhClient", lambda: client)
+    monkeypatch.setattr("shoulda_used_that.admin_services.GhClient", lambda: client)
 
     result = CliRunner().invoke(
         cli,
@@ -700,10 +767,9 @@ def test_projected_cli_emits_the_sealed_machine_record(
             str(state_root),
             "--format",
             "json",
-            "projected",
+            "github",
+            "plan",
             snapshot.curation_snapshot_id,
-            "--to",
-            "github-lists",
             "--account",
             "pradeeptathineni",
         ],

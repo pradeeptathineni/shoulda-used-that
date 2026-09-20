@@ -12,19 +12,13 @@ from pydantic import BaseModel
 from rich.console import Console
 from rich.table import Table
 
-from shoulda_used_that.curation import CurationSnapshot
-from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
-    AdoptionPlan,
+    CandidateEvaluation,
     CheckReceipt,
     DecisionReceipt,
-    ProjectionPlan,
     RecheckReceipt,
-    SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
-from shoulda_used_that.projection import GitHubProjectionPlan
-from shoulda_used_that.public_export import PublicCatalogExport
 
 
 class OutputFormat(StrEnum):
@@ -35,12 +29,8 @@ class OutputFormat(StrEnum):
 
 
 LOCAL_WORKFLOW_TYPES = (
-    SaveReceipt,
-    ProjectionPlan,
     DecisionReceipt,
     RecheckReceipt,
-    AdoptionPlan,
-    PublicCatalogExport,
 )
 
 
@@ -66,80 +56,77 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         width=120,
     )
     if isinstance(value, CheckReceipt):
-        table = Table(title=f"{value.check_id} · {value.need}")
-        table.add_column("Repository")
-        table.add_column("Role")
-        table.add_column("License")
-        table.add_column("Evidence")
-        table.add_column("Result")
-        if explain:
-            table.add_column("Reasons")
-        if value.project_snapshot_id:
-            table.add_column("Project context")
-        for evaluation in value.evaluations:
-            row = [
-                evaluation.candidate.repository,
-                evaluation.candidate.role,
-                evaluation.candidate.license or "unknown",
-                evaluation.candidate.evidence_state.value,
-                "included" if evaluation.included else "excluded",
-            ]
-            if explain:
-                failed = [reason.reason for reason in evaluation.reasons if not reason.passed]
-                row.append("; ".join(failed) or "all predicates passed")
-            if value.project_snapshot_id:
-                row.append(
-                    "; ".join(
-                        f"{item.field}:{item.relationship}" for item in evaluation.applicability
-                    )
-                    or "unavailable"
-                )
-            table.add_row(*row)
-        console.print(table)
-        console.print(
-            f"Visible: {value.counts.visible} · Excluded: {value.counts.excluded} · "
-            f"Result fingerprint: {value.result_set_fingerprint}"
-            + (
-                f" · Project context: {value.project_snapshot_id}"
-                if value.project_snapshot_id
-                else ""
-            )
-        )
+        _check_table(value, console, explain=explain)
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         _local_workflow_table(value, console)
-    elif isinstance(value, CurationSnapshot):
+    elif isinstance(value, ProjectSnapshot):
+        table = Table(title=f"Evidence for {value.target_identity}", min_width=80)
+        table.add_column("Evidence")
+        table.add_column("Observed value")
+        if value.repository_metadata is not None:
+            table.add_row("license", value.repository_metadata.license or "unknown")
+            table.add_row("archived", str(value.repository_metadata.archived).lower())
+            table.add_row("default branch", value.repository_metadata.default_branch)
+        table.add_row("languages", ", ".join(item.name for item in value.languages) or "unknown")
+        table.add_row("ecosystems", ", ".join(value.ecosystems) or "unknown")
+        table.add_row(
+            "typed evidence gaps",
+            "; ".join(item.subject for item in value.evidence_gaps) or "none",
+        )
+        console.print(table)
+        console.print(
+            f"Use in a check: --in {value.project_snapshot_id} · "
+            "Full source, manifest, and SBOM evidence: --format json"
+        )
+    elif _admin_table(value, console):
+        pass
+    else:
+        table = Table(title=value.__class__.__name__)
+        table.add_column("Field")
+        table.add_column("Value")
+        for key, item in payload.items():
+            if isinstance(item, (dict, list)):
+                rendered = json.dumps(item, sort_keys=True, ensure_ascii=False)
+            else:
+                rendered = str(item)
+            table.add_row(key, rendered)
+        console.print(table)
+    return console.export_text(styles=False)
+
+
+def _admin_table(value: BaseModel, console: Console) -> bool:
+    """Render maintainer records without importing their modules on the public path."""
+
+    from shoulda_used_that.curation import (
+        CurationSnapshot,
+        curation_projection_entries,
+        repository_evidence_records,
+    )
+    from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
+    from shoulda_used_that.projection import GitHubProjectionPlan
+    from shoulda_used_that.public_export import PublicCatalogExport
+
+    if isinstance(value, CurationSnapshot):
         table = Table(title=f"{value.curation_snapshot_id} · {value.profile_id}")
         table.add_column("Repository")
         table.add_column("Disposition")
         table.add_column("Collections")
         table.add_column("Freshness")
-        for entry in value.entries:
+        freshness_by_repository = {
+            item.repository: item.freshness_state.value
+            for item in repository_evidence_records(value)
+        }
+        for entry in curation_projection_entries(value):
             table.add_row(
                 entry.repository,
                 entry.primary_disposition.value,
                 ", ".join(entry.collection_memberships),
-                entry.freshness_state.value,
+                freshness_by_repository[entry.repository],
             )
         console.print(table)
         console.print(
             f"Entries: {value.counts.entries} · Excluded: {value.counts.excluded} · "
             f"Inbox: {value.counts.inbox} · Stale: {value.counts.stale}"
-        )
-        console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
-    elif isinstance(value, ProjectSnapshot):
-        table = Table(title=f"{value.project_snapshot_id} · {value.target_identity}", min_width=80)
-        table.add_column("Evidence")
-        table.add_column("Count")
-        table.add_row("languages", str(len(value.languages)))
-        table.add_row("topics", str(len(value.topics)))
-        table.add_row("manifests", str(len(value.manifest_facts)))
-        table.add_row("dependency components", str(len(value.dependency_components)))
-        table.add_row("typed gaps", str(len(value.evidence_gaps)))
-        console.print(table)
-        console.print(
-            f"Files inspected: {value.inspected_file_count} · "
-            f"Bytes inspected: {value.inspected_byte_count} · "
-            f"SBOM: {value.sbom.format if value.sbom else 'unavailable'}"
         )
         console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
     elif isinstance(value, GitHubProjectionPlan):
@@ -229,59 +216,151 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         console.print(table)
         console.print(f"Observed login: {value.observed_login or 'unavailable'}")
         console.print(f"Receipt fingerprint: {value.canonical_fingerprint}")
-    else:
-        table = Table(title=value.__class__.__name__)
-        table.add_column("Field")
-        table.add_column("Value")
-        for key, item in payload.items():
-            if isinstance(item, (dict, list)):
-                rendered = json.dumps(item, sort_keys=True, ensure_ascii=False)
-            else:
-                rendered = str(item)
-            table.add_row(key, rendered)
+    elif isinstance(value, PublicCatalogExport):
+        table = Table(title=f"{value.export_id} · public catalog ready")
+        table.add_column("Public result")
+        table.add_column("Count or state")
+        table.add_row("Prior-art briefs", str(len(value.briefs)))
+        table.add_row("Assessed relations", str(len(value.assessments)))
+        table.add_row("Safe corpus records", str(len(value.exported_records)))
+        table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
+        table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
+        table.add_row("Reproducibility", value.reproducibility_status)
+        table.add_row("Renderer", value.renderer_version)
         console.print(table)
-    return console.export_text(styles=False)
+        console.print(
+            "Private field classes omitted: "
+            f"{sum(value.omitted_private_field_counts.values())} · "
+            f"Catalog fingerprint: {value.canonical_fingerprint}"
+        )
+    else:
+        return False
+    return True
+
+
+def _check_table(value: CheckReceipt, console: Console, *, explain: bool) -> None:
+    table = Table(title=f"Options for: {value.need}")
+    table.add_column("Repository", min_width=28, no_wrap=True)
+    for heading in ("Description", "Evidence", "Upstream position"):
+        table.add_column(heading)
+    if explain:
+        table.add_column("Why included")
+    if value.project_snapshot_id:
+        table.add_column("Project context")
+    evaluation_by_repository = {
+        evaluation.candidate.repository: evaluation for evaluation in value.evaluations
+    }
+    visible_evaluations = tuple(
+        evaluation_by_repository[repository] for repository in value.result_repositories
+    )
+    for evaluation in visible_evaluations:
+        source_rank = ", ".join(
+            f"{item.source} #{item.rank}" for item in evaluation.candidate.source_ranks
+        )
+        row = [
+            evaluation.candidate.repository,
+            evaluation.candidate.description or "No description supplied.",
+            evaluation.candidate.evidence_state.value,
+            source_rank or "not supplied",
+        ]
+        if explain:
+            failed = [reason.reason for reason in evaluation.reasons if not reason.passed]
+            row.append("; ".join(failed) or "all predicates passed")
+        if value.project_snapshot_id:
+            row.append(
+                "; ".join(f"{item.field}:{item.relationship}" for item in evaluation.applicability)
+                or "unavailable"
+            )
+        table.add_row(*row)
+    if not visible_evaluations:
+        empty = ["none", "No candidate survived the explicit plan.", "-", "-"]
+        if explain:
+            empty.append("see diagnosis below")
+        if value.project_snapshot_id:
+            empty.append("-")
+        table.add_row(*empty)
+    console.print(table)
+    predicate_excluded = tuple(
+        evaluation
+        for evaluation in value.evaluations
+        if not evaluation.included
+        and not any(reason.field == "limit" for reason in evaluation.reasons)
+    )
+    limit_excluded = tuple(
+        evaluation
+        for evaluation in value.evaluations
+        if any(not reason.passed and reason.field == "limit" for reason in evaluation.reasons)
+    )
+    console.print(
+        f"Visible: {value.counts.visible} · Filtered or gated: {len(predicate_excluded)} · "
+        f"Outside limit: {len(limit_excluded)}"
+        + (f" · Project context: {value.project_snapshot_id}" if value.project_snapshot_id else "")
+    )
+    console.print(
+        f"Plan: {len(value.source_requests)} explicit source request(s); "
+        "NEED is context only and never expands a query."
+    )
+    if not visible_evaluations:
+        console.print(_zero_result_diagnosis(value, predicate_excluded))
+    elif value.result_repositories:
+        console.print(f"Inspect: shoulda inspect github:{value.result_repositories[0]}")
+    if explain and (predicate_excluded or limit_excluded):
+        _excluded_table((*predicate_excluded, *limit_excluded), console)
+
+
+def _excluded_table(evaluations: tuple[CandidateEvaluation, ...], console: Console) -> None:
+    details = Table(title="Excluded candidates")
+    for heading in ("Repository", "Stage", "Reason"):
+        details.add_column(heading)
+    for evaluation in evaluations:
+        failures = tuple(reason for reason in evaluation.reasons if not reason.passed)
+        stage = (
+            "limit"
+            if any(reason.field == "limit" for reason in failures)
+            else "hard gate"
+            if any(reason.category == "hard-gate" for reason in failures)
+            else "filter"
+        )
+        details.add_row(
+            evaluation.candidate.repository,
+            stage,
+            "; ".join(reason.reason for reason in failures),
+        )
+    console.print(details)
+
+
+def _zero_result_diagnosis(
+    value: CheckReceipt, predicate_excluded: tuple[CandidateEvaluation, ...]
+) -> str:
+    if value.counts.deduplicated == 0:
+        return (
+            "Zero-result diagnosis: the explicit sources returned no candidates. "
+            "Review --source, --query, --repo, or fixture input; nothing was broadened."
+        )
+    missing_required_evidence = sum(
+        any(
+            not reason.passed and reason.category == "hard-gate" and reason.unknown
+            for reason in evaluation.reasons
+        )
+        for evaluation in predicate_excluded
+    )
+    if missing_required_evidence:
+        return (
+            "Zero-result diagnosis: "
+            f"{missing_required_evidence} candidate(s) lacked required hard-gate evidence. "
+            "Use --explain to inspect the missing facts; nothing was broadened."
+        )
+    return (
+        "Zero-result diagnosis: every source candidate was removed by the explicit gates or "
+        "filters. Use --explain to inspect reasons or edit the research plan; nothing was "
+        "broadened."
+    )
 
 
 def _local_workflow_table(value: BaseModel, console: Console) -> None:
     """Render the smaller local workflow records without exposing model field dumps."""
 
-    if isinstance(value, SaveReceipt):
-        table = Table(title=f"{value.save_id} · findings kept locally")
-        table.add_column("Repository")
-        table.add_column("Save result")
-        table.add_column("Decision status")
-        created = set(value.created)
-        for repository in value.repositories:
-            table.add_row(
-                repository,
-                "saved" if repository in created else "already saved",
-                value.disposition.value if value.disposition else "not set",
-            )
-        if not value.repositories:
-            table.add_row("none", "nothing requested", "not set")
-        console.print(table)
-        console.print(
-            f"Source check: {value.source_check_id or 'not supplied'} · "
-            f"GitHub changed: no · List plan: {value.projection_plan_id or 'none'}"
-        )
-    elif isinstance(value, ProjectionPlan):
-        table = Table(title=f"{value.plan_id} · sealed List preview")
-        table.add_column("Repository")
-        table.add_column("Current state")
-        table.add_column("Planned additive action")
-        for operation in value.operations:
-            table.add_row(
-                operation.repository,
-                operation.classification.replace("_", " "),
-                ", ".join(operation.operations) or "none",
-            )
-        console.print(table)
-        console.print(
-            f"List: {value.list_name} · GitHub changed: no · State: {value.mutation_state}"
-        )
-        console.print(f"Plan fingerprint: {value.plan_fingerprint}")
-    elif isinstance(value, DecisionReceipt):
+    if isinstance(value, DecisionReceipt):
         table = Table(title=f"{value.decision_id} · {value.repository}")
         table.add_column("Decision detail")
         table.add_column("Recorded value")
@@ -315,39 +394,6 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
             f"Last-known-good preserved: {'yes' if value.last_known_good_preserved else 'no'} · "
             f"Source errors: {'; '.join(value.source_errors) or 'none'}"
         )
-    elif isinstance(value, AdoptionPlan):
-        table = Table(title=f"{value.plan_id} · planning only")
-        table.add_column("Plan detail")
-        table.add_column("Recorded value")
-        table.add_row("Repository", value.repository)
-        table.add_row("Need", value.need)
-        table.add_row("Target", value.target)
-        table.add_row("Proposed files", "; ".join(value.proposed_files) or "none recorded")
-        table.add_row("Existing tools", "; ".join(value.native_tools) or "none recorded")
-        table.add_row("Validation", "; ".join(value.tests) or "none recorded")
-        table.add_row("Success means", "; ".join(value.expected_postconditions))
-        table.add_row("Rollback", "; ".join(value.rollback))
-        table.add_row(
-            "Evidence still needed", "; ".join(value.remaining_evidence) or "none recorded"
-        )
-        console.print(table)
-        console.print("Target changed: no · This record is a plan, not an installer.")
-    elif isinstance(value, PublicCatalogExport):
-        table = Table(title=f"{value.export_id} · public catalog ready")
-        table.add_column("Public result")
-        table.add_column("Count or state")
-        table.add_row("Reviewed records", str(len(value.exported_records)))
-        table.add_row("Collections", str(len(value.collections)))
-        table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
-        table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
-        table.add_row("Reproducibility", value.reproducibility_status)
-        table.add_row("Renderer", value.renderer_version)
-        console.print(table)
-        console.print(
-            "Private field classes omitted: "
-            f"{sum(value.omitted_private_field_counts.values())} · "
-            f"Catalog fingerprint: {value.canonical_fingerprint}"
-        )
     else:  # pragma: no cover - guarded by LOCAL_WORKFLOW_TYPES
         raise TypeError(f"unsupported local workflow record: {type(value).__name__}")
 
@@ -355,49 +401,58 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
 def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
     lines = [f"# {value.__class__.__name__}", ""]
     if isinstance(value, CheckReceipt):
+        evaluation_by_repository = {
+            evaluation.candidate.repository: evaluation for evaluation in value.evaluations
+        }
+        visible_evaluations = tuple(
+            evaluation_by_repository[repository] for repository in value.result_repositories
+        )
+        predicate_excluded = tuple(
+            evaluation
+            for evaluation in value.evaluations
+            if not evaluation.included
+            and not any(reason.field == "limit" for reason in evaluation.reasons)
+        )
+        limit_excluded = tuple(
+            evaluation
+            for evaluation in value.evaluations
+            if any(not reason.passed and reason.field == "limit" for reason in evaluation.reasons)
+        )
         lines.extend(
             [
                 f"- Check: `{value.check_id}`",
-                f"- Need: {value.need}",
-                f"- Result fingerprint: `{value.result_set_fingerprint}`",
+                f"- Problem context: {value.need}",
                 f"- Visible: {value.counts.visible}",
+                f"- Filtered or gated: {len(predicate_excluded)}",
+                f"- Outside limit: {len(limit_excluded)}",
+                "- Query behavior: explicit sources only; problem context never expands queries",
                 *(
                     [f"- Project context: `{value.project_snapshot_id}`"]
                     if value.project_snapshot_id
                     else []
                 ),
                 "",
-                "| Repository | Role | License | Result |",
+                "| Repository | Description | Evidence | Upstream position |",
                 "|---|---|---|---|",
             ]
         )
-        for evaluation in value.evaluations:
+        for evaluation in visible_evaluations:
             candidate = evaluation.candidate
-            lines.append(
-                f"| `{candidate.repository}` | {candidate.role} | "
-                f"{candidate.license or 'unknown'} | "
-                f"{'included' if evaluation.included else 'excluded'} |"
+            description = candidate.description or "No description supplied."
+            source_rank = ", ".join(
+                f"{item.source} #{item.rank}" for item in candidate.source_ranks
             )
+            lines.append(
+                f"| `{candidate.repository}` | {description} | "
+                f"{candidate.evidence_state.value} | {source_rank or 'not supplied'} |"
+            )
+        if not visible_evaluations:
+            lines.extend(["| none | No candidate survived the explicit plan. | - | - |", ""])
+            lines.append(_zero_result_diagnosis(value, predicate_excluded))
+        elif value.result_repositories:
+            lines.extend(["", f"Inspect: `shoulda inspect github:{value.result_repositories[0]}`"])
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         lines.extend(_local_workflow_markdown(value))
-    elif isinstance(value, CurationSnapshot):
-        lines.extend(
-            [
-                f"- Snapshot: `{value.curation_snapshot_id}`",
-                f"- Profile: `{value.profile_id}`",
-                f"- Canonical fingerprint: `{value.canonical_fingerprint}`",
-                f"- Entries: {value.counts.entries}",
-                f"- Excluded: {value.counts.excluded}",
-                "",
-                "| Repository | Disposition | Collections | Freshness |",
-                "|---|---|---|---|",
-            ]
-        )
-        for entry in value.entries:
-            lines.append(
-                f"| `{entry.repository}` | {entry.primary_disposition.value} | "
-                f"{', '.join(entry.collection_memberships)} | {entry.freshness_state.value} |"
-            )
     elif isinstance(value, ProjectSnapshot):
         lines.extend(
             [
@@ -415,6 +470,57 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
         for manifest in value.manifest_facts:
             lines.append(
                 f"| {manifest.ecosystem} | `{manifest.relative_path}` | {manifest.manifest_kind} |"
+            )
+    else:
+        admin_lines = _admin_markdown(value)
+        if admin_lines is not None:
+            lines.extend(admin_lines)
+        else:
+            for key, item in payload.items():
+                rendered = (
+                    f"`{json.dumps(item, sort_keys=True, ensure_ascii=False)}`"
+                    if isinstance(item, (dict, list))
+                    else f"`{item}`"
+                )
+                lines.append(f"- **{key}:** {rendered}")
+    return "\n".join(lines) + "\n"
+
+
+def _admin_markdown(value: BaseModel) -> list[str] | None:
+    """Return maintainer Markdown without loading admin modules for public records."""
+
+    from shoulda_used_that.curation import (
+        CurationSnapshot,
+        curation_projection_entries,
+        repository_evidence_records,
+    )
+    from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
+    from shoulda_used_that.projection import GitHubProjectionPlan
+    from shoulda_used_that.public_export import PublicCatalogExport
+
+    lines: list[str] = []
+    if isinstance(value, CurationSnapshot):
+        lines.extend(
+            [
+                f"- Snapshot: `{value.curation_snapshot_id}`",
+                f"- Profile: `{value.profile_id}`",
+                f"- Canonical fingerprint: `{value.canonical_fingerprint}`",
+                f"- Entries: {value.counts.entries}",
+                f"- Excluded: {value.counts.excluded}",
+                "",
+                "| Repository | Disposition | Collections | Freshness |",
+                "|---|---|---|---|",
+            ]
+        )
+        freshness_by_repository = {
+            item.repository: item.freshness_state.value
+            for item in repository_evidence_records(value)
+        }
+        for entry in curation_projection_entries(value):
+            lines.append(
+                f"| `{entry.repository}` | {entry.primary_disposition.value} | "
+                f"{', '.join(entry.collection_memberships)} | "
+                f"{freshness_by_repository[entry.repository]} |"
             )
     elif isinstance(value, GitHubProjectionPlan):
         lines.extend(
@@ -488,55 +594,27 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
         )
         for condition in value.postconditions:
             lines.append(f"| {condition.kind} | `{condition.subject}` | {condition.state.value} |")
+    elif isinstance(value, PublicCatalogExport):
+        return [
+            f"- Public export: `{value.export_id}`",
+            f"- Prior-art briefs: {len(value.briefs)}",
+            f"- Assessed relations: {len(value.assessments)}",
+            f"- Safe corpus records: {len(value.exported_records)}",
+            f"- Excluded candidates: {len(value.excluded_candidates)}",
+            f"- Generated files: {len(value.generated_file_manifest) + 1}",
+            f"- Reproducibility: {value.reproducibility_status}",
+            f"- Renderer: `{value.renderer_version}`",
+            f"- Private field classes omitted: {sum(value.omitted_private_field_counts.values())}",
+            f"- Catalog fingerprint: `{value.canonical_fingerprint}`",
+        ]
     else:
-        for key, item in payload.items():
-            rendered = (
-                f"`{json.dumps(item, sort_keys=True, ensure_ascii=False)}`"
-                if isinstance(item, (dict, list))
-                else f"`{item}`"
-            )
-            lines.append(f"- **{key}:** {rendered}")
-    return "\n".join(lines) + "\n"
+        return None
+    return lines
 
 
 def _local_workflow_markdown(value: BaseModel) -> list[str]:
     """Return reader-facing Markdown for local workflow records."""
 
-    if isinstance(value, SaveReceipt):
-        lines = [
-            f"- Save receipt: `{value.save_id}`",
-            f"- Source check: `{value.source_check_id or 'not supplied'}`",
-            "- GitHub changed: no",
-            "",
-            "| Repository | Save result | Decision status |",
-            "|---|---|---|",
-        ]
-        created = set(value.created)
-        for repository in value.repositories:
-            lines.append(
-                f"| `{repository}` | "
-                f"{'saved' if repository in created else 'already saved'} | "
-                f"{value.disposition.value if value.disposition else 'not set'} |"
-            )
-        if not value.repositories:
-            lines.append("| none | nothing requested | not set |")
-        return lines
-    if isinstance(value, ProjectionPlan):
-        lines = [
-            f"- Sealed List preview: `{value.plan_id}`",
-            f"- List: {value.list_name}",
-            "- GitHub changed: no",
-            f"- Plan fingerprint: `{value.plan_fingerprint}`",
-            "",
-            "| Repository | Current state | Planned additive action |",
-            "|---|---|---|",
-        ]
-        lines.extend(
-            f"| `{operation.repository}` | {operation.classification.replace('_', ' ')} | "
-            f"{', '.join(operation.operations) or 'none'} |"
-            for operation in value.operations
-        )
-        return lines
     if isinstance(value, DecisionReceipt):
         return [
             f"- Decision: `{value.decision_id}`",
@@ -570,32 +648,4 @@ def _local_workflow_markdown(value: BaseModel) -> list[str]:
         if not value.diffs:
             lines.append("| none | none | no difference | No typed differences found. |")
         return lines
-    if isinstance(value, AdoptionPlan):
-        return [
-            f"- Adoption plan: `{value.plan_id}`",
-            f"- Repository: `{value.repository}`",
-            f"- Need: {value.need}",
-            f"- Target: `{value.target}`",
-            "- Target changed: no",
-            f"- Proposed files: {'; '.join(value.proposed_files) or 'none recorded'}",
-            f"- Existing tools: {'; '.join(value.native_tools) or 'none recorded'}",
-            f"- Validation: {'; '.join(value.tests) or 'none recorded'}",
-            f"- Success means: {'; '.join(value.expected_postconditions)}",
-            f"- Rollback: {'; '.join(value.rollback)}",
-            f"- Evidence still needed: {'; '.join(value.remaining_evidence) or 'none recorded'}",
-            "",
-            "This record is a plan, not an installer.",
-        ]
-    if isinstance(value, PublicCatalogExport):
-        return [
-            f"- Public export: `{value.export_id}`",
-            f"- Reviewed records: {len(value.exported_records)}",
-            f"- Collections: {len(value.collections)}",
-            f"- Excluded candidates: {len(value.excluded_candidates)}",
-            f"- Generated files: {len(value.generated_file_manifest) + 1}",
-            f"- Reproducibility: {value.reproducibility_status}",
-            f"- Renderer: `{value.renderer_version}`",
-            f"- Private field classes omitted: {sum(value.omitted_private_field_counts.values())}",
-            f"- Catalog fingerprint: `{value.canonical_fingerprint}`",
-        ]
     raise TypeError(f"unsupported local workflow record: {type(value).__name__}")

@@ -1,7 +1,10 @@
 # GitHub curation operator runbook
 
-This runbook is for the only live mutation kind supported in `v0.3.0`: an explicitly approved,
+This runbook is for the only live mutation kind supported after `v0.3.0`: an explicitly approved,
 sealed `github-curation` plan. It never authorizes a Star or List change by itself.
+
+Catalog and GitHub operations are discoverable groups on the one `shoulda` CLI. Only
+`shoulda github apply` can mutate remote state; every other command here is local or read-only.
 
 ## Safety model
 
@@ -22,15 +25,14 @@ Use the same private state profile for compilation, projection, apply, and verif
 
 ```console
 uv run shoulda --profile personal --format json \
-  curated curation/profiles/shoulda-used-that.json
+  catalog build curation/profiles/shoulda-used-that.json
 
 uv run shoulda --profile personal --format markdown \
-  projected cur_REPLACE_WITH_CURRENT_ID \
-  --to github-lists \
+  github plan cur_REPLACE_WITH_CURRENT_ID \
   --account pradeeptathineni
 ```
 
-`projected` performs reads only. If the capability receipt reports a missing scope or unavailable
+`github plan` performs reads only. If the capability receipt reports a missing scope or unavailable
 preview, stop. Follow an operator command only after inspecting it; ShouldaUsedThat never refreshes
 authentication, requests a token, or runs `gh auth token` on the user's behalf. After any account,
 scope, source, or target-state change, discard the old plan and project again.
@@ -60,7 +62,7 @@ Only after exact approval, from a real terminal outside CI:
 
 ```console
 uv run shoulda --profile personal --format json \
-  apply gcp_REPLACE_WITH_APPROVED_ID \
+  github apply gcp_REPLACE_WITH_APPROVED_ID \
   --fingerprint plan_REPLACE_WITH_FULL_APPROVED_FINGERPRINT
 ```
 
@@ -77,7 +79,7 @@ Use the exact apply receipt ID:
 
 ```console
 uv run shoulda --profile personal --format json \
-  verify app_REPLACE_WITH_ID
+  github verify app_REPLACE_WITH_ID
 ```
 
 `verify` performs fresh reads of identity, target-state integrity, public List names/descriptions,

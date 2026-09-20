@@ -1,0 +1,300 @@
+{
+  "schema_version": "2.0",
+  "problems": [
+    {
+      "problem_id": "curated-oss-evidence-publishing",
+      "question": "Seed and publish a curated OSS evidence set without confusing popularity or catalog presence with contextual fit.",
+      "domain_tags": ["oss-curation-foundations", "platform-engineering-delivery"]
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "question": "Build a deterministic local Python research core without inventing command parsing, validation, safe querying, or canonical JSON.",
+      "domain_tags": ["oss-curation-foundations", "python-engineering"]
+    },
+    {
+      "problem_id": "local-first-prior-art-coordination",
+      "question": "Coordinate prior-art research locally without making a hosted backend or personal GitHub mutation the product core.",
+      "domain_tags": ["oss-curation-foundations", "platform-engineering-delivery"]
+    },
+    {
+      "problem_id": "reproducible-python-quality-gate",
+      "question": "Run a reproducible quality gate for a typed Python CLI across environments, behavior, and hosted source analysis.",
+      "domain_tags": ["platform-engineering-delivery", "python-engineering", "software-supply-chain"]
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "question": "Publish searchable static technical documentation and review its prose without making an editorial model authoritative.",
+      "domain_tags": ["generative-ai-agents", "oss-curation-foundations", "platform-engineering-delivery"]
+    }
+  ],
+  "assessments": [
+    {
+      "problem_id": "curated-oss-evidence-publishing",
+      "repository": "best-of-lists/best-of",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Provides human-curated public seed data and transparent ecosystem discovery inputs."],
+      "watch": ["Its scores and inclusion choices are discovery provenance, not evidence of fit for a concrete problem."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "decision_state": "reference",
+      "reconsider_when": ["License, published data shape, or attribution terms change."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "curated-oss-evidence-publishing",
+      "repository": "best-of-lists/best-of-generator",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Demonstrates a generator-backed catalog workflow and the maintenance concerns such a pipeline must own."],
+      "watch": ["GPL and content boundaries plus observed last-known-good failures make embedding it unjustified here."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "decision_state": "reject",
+      "reconsider_when": ["License documentation and fail-closed last-known-good behavior are resolved upstream."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "curated-oss-evidence-publishing",
+      "repository": "ejacobhayes/parsecio",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Shows how a lightweight static catalog can publish structured project information without a custom hosted application."],
+      "watch": ["Stable releases and an auditable deterministic export contract were not established in the reviewed evidence."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "decision_state": "watch",
+      "reconsider_when": ["A stable release and documented deterministic export contract exist."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "repository": "jmespath/jmespath.py",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Evaluates safe local expressions over one documented candidate view without arbitrary Python execution."],
+      "watch": ["It is only the advanced filter evaluator; native gates and the exposed query view remain project-owned."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/cli-filter.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["A required real-world filter cannot be expressed safely."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "repository": "pallets/click",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Owns mature command parsing and help generation while typed domain validation stays outside the parser."],
+      "watch": ["It does not define research semantics, evidence policy, or the command lifecycle."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/cli-filter.json", "docs/decisions/dependencies.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["The selected major version becomes incompatible or an already-used component fully owns parsing."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "repository": "pydantic/pydantic",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Validates strict versioned records and generates JSON Schema at the external data boundary."],
+      "watch": ["Workflow rules, canonical hashing, and state transitions must remain explicit outside model validation."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/dependencies.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["A major version breaks the strict immutable record boundary."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "repository": "trailofbits/rfc8785.py",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Supplies standards-based canonical JSON bytes so content identity does not rely on ordinary sorted JSON."],
+      "watch": ["It canonicalizes bytes only; immutable receipt policy and safe state persistence remain separate responsibilities."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/canonical-state.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["Published RFC vectors fail or compatibility changes."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "local-first-prior-art-coordination",
+      "repository": "amintacccp/githubstarsmanager",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Provides useful prior art for searching and organizing an existing GitHub Stars collection."],
+      "watch": ["Credential storage, provider, plugin, and release-provenance boundaries keep it out of this runtime."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "decision_state": "reference",
+      "reconsider_when": ["Credential storage, outbound boundaries, and verifiable release provenance are independently resolved."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "local-first-prior-art-coordination",
+      "repository": "boffti/stardash",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Demonstrates a hosted interface for browsing and organizing starred repositories."],
+      "watch": ["Supabase, provider, telemetry, and direct mutation surfaces are disproportionate to a local evidence core."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "decision_state": "reject",
+      "reconsider_when": ["A local static boundary with no direct mutation or analytics becomes the default."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "local-first-prior-art-coordination",
+      "repository": "pradeeptathineni/shoulda-used-that",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Owns the residual problem, evidence, decision, and freshness relation while established tools keep their native roles."],
+      "watch": ["Discovery still requires an explicit research plan; it is not a general natural-language recommendation engine."],
+      "unknowns": [],
+      "evidence_refs": ["docs/architecture/curation-v0.2.md", "docs/decisions/curation-coordinator.json"],
+      "decision_state": "build",
+      "reconsider_when": ["An established component supplies the complete residual under the same privacy and mutation guarantees."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "reproducible-python-quality-gate",
+      "repository": "astral-sh/uv",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Owns the reproducible Python environment, lock, execution, and build orchestration."],
+      "watch": ["It is the environment owner, not a replacement for tests, typing, linting, or hosted security analysis."],
+      "unknowns": [],
+      "evidence_refs": ["docs/architecture/dogfood-reuse-audit.md"],
+      "decision_state": "adopt",
+      "reconsider_when": ["The lock or cross-platform execution contract stops being reproducible."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "reproducible-python-quality-gate",
+      "repository": "github/codeql-action",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Supplies hosted repository-native source analysis and SARIF reporting in GitHub Actions."],
+      "watch": ["It is GitHub-hosted and does not replace dependency, workflow, typing, or behavior checks."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/quality-security.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["GitHub changes the supported action or the selected SHA is no longer valid."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "reproducible-python-quality-gate",
+      "repository": "pytest-dev/pytest",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Runs readable scenario and contract tests across supported Python versions."],
+      "watch": ["Property generation and branch visibility remain distinct Hypothesis and coverage.py roles."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/quality-security.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["Supported Python compatibility or plugin behavior becomes unsuitable."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "repository": "addyosmani/agent-skills",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Provides pinned selective-context and source-driven-development guidance for the editorial workflow."],
+      "watch": ["The skills are reviewed guidance only; they are neither runtime dependencies nor factual authorities."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/context.json", "docs/development/context-receipt.md"],
+      "decision_state": "reference",
+      "reconsider_when": ["A later pinned revision is fully reviewed and materially improves the workflow."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "repository": "shubhamsaboo/awesome-llm-apps",
+      "publication_state": "assessed",
+      "assessment_basis": "decision-record",
+      "covers": ["Supplies the pinned First Reader method used for context-free review of first-contact public surfaces."],
+      "watch": ["The parent repository is a learning map, not a production dependency or blanket endorsement."],
+      "unknowns": ["Simulated reader responses are hypotheses rather than measured user behavior."],
+      "evidence_refs": ["docs/decisions/public-writing-v0.3.json", "docs/development/public-surface-review-v0.3.0.md"],
+      "decision_state": "learn",
+      "reconsider_when": ["Reader reviews fail to find the primary path or require sending unpublished prose to a hosted service."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "repository": "vale-cli/vale",
+      "publication_state": "assessed",
+      "assessment_basis": "documented-use",
+      "covers": ["Runs repeatable offline prose checks across hand-authored public Markdown."],
+      "watch": ["It can flag deterministic patterns but cannot establish factual truth, reader usefulness, or editorial judgment."],
+      "unknowns": [],
+      "evidence_refs": [".github/workflows/security.yml", "docs/decisions/public-writing-v0.3.json"],
+      "decision_state": "adopt",
+      "reconsider_when": ["The pinned version cannot lint selected sources deterministically or project rules create repeated false positives."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "repository": "zensical/zensical",
+      "publication_state": "assessed",
+      "assessment_basis": "capability-review",
+      "covers": ["Builds responsive Markdown pages, tags, and private client-side search without a custom frontend."],
+      "watch": ["The pinned pre-1.0 version remains removable and must keep proving deterministic, accessible, no-runtime-network output."],
+      "unknowns": [],
+      "evidence_refs": ["docs/decisions/zensical-site.json"],
+      "decision_state": "trial",
+      "reconsider_when": ["Strict build, search, accessibility, or no-third-party-request validation fails."],
+      "assessed_at": "2026-09-17T16:00:00Z"
+    }
+  ],
+  "briefs": [
+    {
+      "problem_id": "curated-oss-evidence-publishing",
+      "title": "Publish a curated OSS evidence set",
+      "candidate_repositories": ["best-of-lists/best-of", "ejacobhayes/parsecio", "best-of-lists/best-of-generator"],
+      "what_appears_covered": ["Human-curated seed data can provide transparent discovery provenance.", "Static generation can publish structured project information without a bespoke hosted UI."],
+      "what_remains_unresolved": ["Catalog presence and popularity still do not establish problem-specific fit.", "A safe publisher still needs explicit source contracts and last-known-good failure behavior."],
+      "evidence_refs": ["docs/decisions/curation-coordinator.json"],
+      "checked_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "deterministic-python-research-core",
+      "title": "Build a deterministic Python research core",
+      "candidate_repositories": ["pallets/click", "pydantic/pydantic", "jmespath/jmespath.py", "trailofbits/rfc8785.py"],
+      "what_appears_covered": ["Mature libraries already own command parsing, strict records, safe local expressions, and canonical JSON bytes.", "Each capability can stay behind a narrow deterministic adapter."],
+      "what_remains_unresolved": ["The product-specific research plan, evidence gates, state transitions, and human answer still need a local coordinator."],
+      "evidence_refs": ["docs/decisions/canonical-state.json", "docs/decisions/cli-filter.json", "docs/decisions/dependencies.json"],
+      "checked_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "local-first-prior-art-coordination",
+      "title": "Keep prior-art coordination local-first",
+      "candidate_repositories": ["amintacccp/githubstarsmanager", "boffti/stardash", "pradeeptathineni/shoulda-used-that"],
+      "what_appears_covered": ["Existing products cover Stars browsing, organization, and hosted management interfaces.", "A local receipt layer can preserve explicit research context, evidence, decisions, and freshness."],
+      "what_remains_unresolved": ["General natural-language discovery remains outside the deterministic core.", "Personal GitHub organization must stay an optional sealed operator action, not a prerequisite for research."],
+      "evidence_refs": ["docs/architecture/curation-v0.2.md", "docs/decisions/curation-coordinator.json"],
+      "checked_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "reproducible-python-quality-gate",
+      "title": "Run a reproducible Python quality gate",
+      "candidate_repositories": ["astral-sh/uv", "pytest-dev/pytest", "github/codeql-action"],
+      "what_appears_covered": ["Environment locking, behavior tests, and hosted source analysis already have mature owners.", "Their boundaries can compose without inventing one universal quality tool."],
+      "what_remains_unresolved": ["The repository must still define its supported versions, typed postconditions, coverage target, and complete gate ordering."],
+      "evidence_refs": ["docs/architecture/dogfood-reuse-audit.md", "docs/decisions/quality-security.json"],
+      "checked_at": "2026-09-17T16:00:00Z"
+    },
+    {
+      "problem_id": "static-technical-docs-review",
+      "title": "Publish and review static technical documentation",
+      "candidate_repositories": ["zensical/zensical", "vale-cli/vale", "shubhamsaboo/awesome-llm-apps", "addyosmani/agent-skills"],
+      "what_appears_covered": ["Static rendering, private search, deterministic prose linting, and bounded review methods already exist.", "Editorial aids can remain separate from factual source and approval authority."],
+      "what_remains_unresolved": ["Human review must still decide whether claims are true, concise, useful, and supported by repository evidence.", "Simulated readers do not replace measured reader behavior."],
+      "evidence_refs": ["docs/decisions/context.json", "docs/decisions/public-writing-v0.3.json", "docs/decisions/zensical-site.json"],
+      "checked_at": "2026-09-17T16:00:00Z"
+    }
+  ]
+}

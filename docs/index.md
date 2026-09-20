@@ -1,53 +1,45 @@
 ---
 title: ShouldaUsedThat
-description: Find existing open source before building from scratch, then keep the evidence behind the choice.
+description: See the prior-art landscape for one concrete software build problem before writing another implementation.
 hide:
   - toc
 ---
 
-# Check before you build
+# Know the landscape before you build
 
-Start with the need, not a blank file. ShouldaUsedThat helps you find existing open-source options,
-see why they may fit, and keep the evidence that could change the decision later.
+ShouldaUsedThat turns one concrete software build problem into a short, evidence-backed brief:
+the few existing approaches worth knowing, what each covers, where it stops, and what still appears
+worth building.
 
 <div class="home-actions" markdown>
 
-[Browse by need](curation/index.md){ .md-button .md-button--primary }
-[Try the CLI](getting-started.md){ .md-button }
-[See the project use itself](curation/dogfood.md){ .md-button }
+[Explore prior-art briefs](curation/index.md){ .md-button .md-button--primary }
+[Use the research CLI](getting-started.md){ .md-button }
 
 </div>
 
-## A useful entry answers four questions
+## Example: build a deterministic Python research core
 
-1. **What need does this serve?** The catalog is organized around jobs, not a generic popularity
-   contest.
-2. **Why is it here?** Each entry states the contextual rationale and decision status.
-3. **How fresh is the evidence?** Observed facts are dated instead of presented as permanent.
-4. **What would change the decision?** Every reviewed choice carries a reconsideration trigger.
+Four established pieces already cover much of the foundation:
 
-Open the [catalog overview](curation/index.md) to choose a collection, or search for a repository,
-technology, or need. Start with [what this project actually uses](curation/in-use.md) if you want a
-concrete example of decisions backed by repository evidence.
+- **Click** — mature parsing and help; it does not define research semantics.
+- **Pydantic** — strict versioned records; workflow rules remain explicit.
+- **JMESPath** — safe expressions over a documented view; native gates stay project-owned.
+- **rfc8785.py** — canonical JSON bytes; receipt and state policy remain separate.
 
-## The short version of the workflow
+**What appears covered:** parsing, validation, safe local querying, and stable content identity.
 
-```text
-find options → keep the exact result → record the choice → revisit when evidence changes
-  checked           saved               remembered              rechecked
-```
+**What remains:** the problem-specific research plan, evidence gates, state transitions, and compact
+human answer.
 
-The local workflow is deterministic and keeps its state outside the repository. A planning-only
-`used` record can describe an adoption without editing the target. The [getting-started guide](getting-started.md)
-walks through each step with a public fixture and no GitHub login.
+[Open the full brief](curation/briefs/deterministic-python-research-core.md)
 
-## Claims stay bounded
+## How trust stays out of the way
 
-A star is a bookmark. “Reviewed” means the stated metadata and fit checks passed or a visible,
-narrow exception was recorded; it does not mean code audit, security approval, adoption, or a
-universal rank. Canonical JSON and immutable receipts sit beneath the readable pages.
+Every visible claim links to dated evidence. The complete screened corpus, provenance, and canonical
+JSON remain available underneath, but metadata never becomes contextual fit and screened-only
+candidates do not receive rich pages.
 
-ShouldaUsedThat builds this site and its public GitHub Lists from the same profile. The
-[self-use story](curation/dogfood.md) explains the result in plain language. Exact approval and
-readback controls live in the [operator runbook](operations/github-curation.md), where readers who
-need that depth can find them without carrying the machinery through the first visit.
+The CLI executes only explicit sources, queries, filters, and ordering. It records the complete
+result while keeping normal output to five candidates. Read, research, and record commands do not
+mutate GitHub or a target repository.

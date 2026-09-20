@@ -97,6 +97,13 @@ class RecheckOutcome(StrEnum):
     MATERIAL_REVIEW_REQUIRED = "material-review-required"
 
 
+class SourceRank(FrozenModel):
+    """One upstream position preserved independently of local filtering and sorting."""
+
+    source: str = Field(min_length=1)
+    rank: int = Field(gt=0)
+
+
 class Candidate(FrozenModel):
     """Canonical, source-neutral candidate used by filters and receipts."""
 
@@ -122,6 +129,7 @@ class Candidate(FrozenModel):
     stars: int | None = Field(default=None, ge=0)
     url: str | None = None
     sources: tuple[str, ...] = ()
+    source_ranks: tuple[SourceRank, ...] = ()
     conflicts: tuple[str, ...] = ()
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -146,6 +154,14 @@ class Candidate(FrozenModel):
         return tuple(
             sorted({str(item).strip() for item in items if str(item).strip()}, key=str.casefold)
         )
+
+    @field_validator("source_ranks")
+    @classmethod
+    def stable_source_ranks(cls, value: tuple[SourceRank, ...]) -> tuple[SourceRank, ...]:
+        sources = [item.source for item in value]
+        if len(sources) != len(set(sources)):
+            raise ValueError("source ranks must contain at most one position per source")
+        return tuple(sorted(value, key=lambda item: (item.source, item.rank)))
 
     def filter_view(self) -> dict[str, Any]:
         """Return the stable public shape exposed to JMESPath."""
@@ -221,7 +237,7 @@ class FilterSpec(FrozenModel):
     min_stars: int | None = Field(default=None, ge=0)
     where: str | None = None
     sort: tuple[str, ...] = ("repo",)
-    limit: int = Field(default=50, gt=0, le=1000)
+    limit: int = Field(default=5, gt=0, le=1000)
 
     _string_fields: ClassVar[tuple[str, ...]] = (
         "roles",
@@ -338,53 +354,6 @@ class CheckReceipt(FrozenModel):
         return self
 
 
-class SavedItem(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    repository: str
-    candidate: Candidate
-    saved_at: datetime
-    disposition: Disposition | None = None
-    source_check_id: str | None = None
-    source_result_fingerprint: str | None = None
-
-    _normalize_repository = field_validator("repository")(normalize_repository)
-
-
-class SaveReceipt(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    save_id: str
-    created_at: datetime
-    profile: str
-    repositories: tuple[str, ...]
-    created: tuple[str, ...]
-    already_saved: tuple[str, ...]
-    disposition: Disposition | None = None
-    source_check_id: str | None = None
-    source_result_fingerprint: str | None = None
-    projection_plan_id: str | None = None
-
-
-class ProjectionOperation(FrozenModel):
-    repository: str
-    classification: Literal["already_starred", "requires_star"]
-    status: Literal["planned", "blocked"]
-    operations: tuple[str, ...]
-
-
-class ProjectionPlan(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    plan_id: str
-    plan_fingerprint: str
-    created_at: datetime
-    profile: str
-    list_name: str = Field(min_length=1, max_length=100)
-    source_check_id: str
-    source_result_fingerprint: str
-    source_state_fingerprint: str
-    operations: tuple[ProjectionOperation, ...]
-    mutation_state: Literal["sealed-unapplied"] = "sealed-unapplied"
-
-
 class DecisionReceipt(FrozenModel):
     schema_version: Literal["1.0"] = SCHEMA_VERSION
     decision_id: str
@@ -428,23 +397,3 @@ class RecheckReceipt(FrozenModel):
     source_observations: tuple[SourceObservation, ...]
     diffs: tuple[FieldDiff, ...]
     source_errors: tuple[str, ...] = ()
-
-
-class AdoptionPlan(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    plan_id: str
-    plan_fingerprint: str
-    created_at: datetime
-    profile: str
-    repository: str
-    need: str = Field(min_length=1)
-    target: str = Field(min_length=1)
-    proposed_files: tuple[str, ...] = ()
-    native_tools: tuple[str, ...] = ()
-    tests: tuple[str, ...] = ()
-    expected_postconditions: tuple[str, ...]
-    rollback: tuple[str, ...]
-    remaining_evidence: tuple[str, ...] = ()
-    mutation_state: Literal["planning-only"] = "planning-only"
-
-    _normalize_repository = field_validator("repository")(normalize_repository)

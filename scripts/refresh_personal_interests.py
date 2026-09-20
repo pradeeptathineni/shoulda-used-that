@@ -51,7 +51,7 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(encoded)
     _reseal_profile(args.profile)
-    print(f"refreshed {len(payload['entries'])} reviewed repositories -> {args.output}")
+    print(f"refreshed {len(payload['repository_evidence'])} screened repositories -> {args.output}")
     return 0
 
 
@@ -60,6 +60,7 @@ def build_entries(
     memberships: dict[str, tuple[str, ...]],
     metadata: dict[str, Any],
 ) -> dict[str, Any]:
+    _reject_retired_context_fields(selection)
     reviewed_at = _timestamp(selection.get("reviewed_at"), "reviewed_at")
     minimum_stars = _integer(selection.get("minimum_stars"), "minimum_stars")
     maximum_staleness_days = _integer(
@@ -67,22 +68,24 @@ def build_entries(
     )
     evidence_receipt = _string(selection.get("evidence_receipt"), "evidence_receipt")
     decision_receipt_id = _string(selection.get("decision_receipt_id"), "decision_receipt_id")
-    collection_priority = _string_list(selection.get("collection_priority"), "collection_priority")
-    collection_payload = _object(selection.get("collections"), "collections")
     disposition_overrides = _object(
         selection.get("disposition_overrides", {}), "disposition_overrides"
     )
-    rationale_overrides = _object(selection.get("rationale_overrides", {}), "rationale_overrides")
     license_overrides = _object(selection.get("license_overrides", {}), "license_overrides")
     exceptions = _object(selection.get("gate_exceptions", {}), "gate_exceptions")
-    entries: list[dict[str, Any]] = []
+    selected_repositories = set(memberships)
+    for label, overrides in (
+        ("disposition_overrides", disposition_overrides),
+        ("license_overrides", license_overrides),
+        ("gate_exceptions", exceptions),
+    ):
+        unknown = sorted(set(overrides) - selected_repositories, key=str.casefold)
+        if unknown:
+            raise SystemExit(f"{label} names unselected repositories: {', '.join(unknown)}")
+    repository_evidence: list[dict[str, Any]] = []
+    screenings: list[dict[str, Any]] = []
+    projection_entries: list[dict[str, Any]] = []
     failures: list[str] = []
-    unknown_rationale_overrides = sorted(set(rationale_overrides) - set(memberships))
-    if unknown_rationale_overrides:
-        raise SystemExit(
-            "rationale_overrides reference unselected repositories: "
-            + ", ".join(unknown_rationale_overrides)
-        )
     cutoff = reviewed_at - timedelta(days=maximum_staleness_days)
 
     for requested_repository in sorted(memberships, key=str.casefold):
@@ -145,10 +148,6 @@ def build_entries(
             failures.append(f"{requested_repository}: failed gates {failed}")
             continue
 
-        primary_slug = next(
-            slug for slug in collection_priority if slug in memberships[requested_repository]
-        )
-        collection = _object(collection_payload.get(primary_slug), primary_slug)
         disposition = disposition_overrides.get(requested_repository, "reference")
         if disposition not in {"learn", "reference", "trial"}:
             failures.append(f"{requested_repository}: unsupported disposition {disposition!r}")
@@ -170,12 +169,6 @@ def build_entries(
         evidence_digest = hashlib.sha256(
             json.dumps(evidence, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
-        metric_phrase = (
-            f"live metadata showed {stars:,} stars, a recent default-branch push, "
-            f"and {license_id} licensing"
-        )
-        if reason:
-            metric_phrase = f"{metric_phrase}; the reviewed exception was: {reason}"
         provenance = [
             {
                 "source": "live GitHub repository metadata",
@@ -199,28 +192,11 @@ def build_entries(
                     "content_digest": None,
                 }
             )
-        rationale_override = rationale_overrides.get(requested_repository)
-        rationale = (
-            _string(rationale_override, f"{requested_repository}.rationale_override")
-            if rationale_override is not None
-            else (
-                f"Included for this collection after public metadata and fit review; "
-                f"{metric_phrase}. These signals support discovery, not code, security, "
-                f"or adoption approval."
-            )
-        )
-        entries.append(
+        repository_evidence.append(
             {
                 "repository": repository,
                 "url": facts["url"],
                 "description": facts["description"].strip(),
-                "collection_memberships": list(memberships[requested_repository]),
-                "primary_disposition": disposition,
-                "role": _string(collection.get("role"), f"{primary_slug}.role"),
-                "need": _string(collection.get("need"), f"{primary_slug}.need"),
-                "rationale": rationale,
-                "decision_receipt_ids": [decision_receipt_id],
-                "evidence_receipt_ids": [evidence_receipt],
                 "observed_license": license_id,
                 "archived": False,
                 "latest_release": latest_tag,
@@ -231,19 +207,58 @@ def build_entries(
                 },
                 "last_checked_at": _render_timestamp(reviewed_at),
                 "freshness_state": "current",
-                "reconsideration_trigger": _string(
-                    collection.get("reconsideration_trigger"),
-                    f"{primary_slug}.reconsideration_trigger",
-                ),
                 "source_provenance": provenance,
                 "attribution_obligations": [],
                 "field_classification": "public",
             }
         )
+        screenings.append(
+            {
+                "repository": repository,
+                "domain_tags": list(memberships[requested_repository]),
+                "screening_basis": "metadata-and-eligibility",
+                "decision_receipt_ids": [decision_receipt_id],
+                "evidence_receipt_ids": [evidence_receipt],
+                "notes": [reason] if reason else [],
+                "screened_at": _render_timestamp(reviewed_at),
+            }
+        )
+        projection_entries.append(
+            {
+                "repository": repository,
+                "collection_memberships": list(memberships[requested_repository]),
+                "primary_disposition": disposition,
+            }
+        )
 
     if failures:
         raise SystemExit("personal-interest refresh failed:\n- " + "\n- ".join(failures))
-    return {"schema_version": "2.0", "entries": entries, "excluded_candidates": []}
+    return {
+        "schema_version": "3.0",
+        "repository_evidence": repository_evidence,
+        "screenings": screenings,
+        "projection_entries": projection_entries,
+        "excluded_candidates": [],
+    }
+
+
+def _reject_retired_context_fields(selection: dict[str, Any]) -> None:
+    retired: list[str] = []
+    if "rationale_overrides" in selection:
+        retired.append("rationale_overrides")
+    collections = selection.get("collections")
+    if isinstance(collections, dict):
+        for slug, value in collections.items():
+            if not isinstance(value, dict):
+                continue
+            for field in ("need", "reconsideration_trigger", "role"):
+                if field in value:
+                    retired.append(f"collections.{slug}.{field}")
+    if retired:
+        raise SystemExit(
+            "retired contextual selection fields must move to explicit problem assessments: "
+            + ", ".join(sorted(retired))
+        )
 
 
 def _selection_repositories(

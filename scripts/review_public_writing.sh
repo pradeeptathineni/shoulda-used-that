@@ -26,18 +26,16 @@ while IFS= read -r path; do
   public_files+=("$path")
 done < <(find docs -type f -name '*.md' ! -path 'docs/curation/*' | LC_ALL=C sort)
 
-# These pages are generated, but every sentence in their frame is owned here. Entry and
-# collection bodies also contain imported repository descriptions, so their prose is reviewed at
-# the generator and representative-sample boundary instead of treated as project-authored copy.
+# These generated pages are the small human product. Review their authored brief, assessment, and
+# evidence frames directly now that screened-only candidates no longer create hundreds of pages.
 public_files+=(
   docs/curation/index.md
-  docs/curation/selection.md
-  docs/curation/dogfood.md
-  docs/curation/in-use.md
-  docs/curation/freshness.md
   docs/curation/sources.md
-  docs/curation/collections/index.md
   docs/curation/tags.md
 )
+
+while IFS= read -r path; do
+  public_files+=("$path")
+done < <(find docs/curation/briefs docs/curation/evidence -type f -name '*.md' | LC_ALL=C sort)
 
 "$vale_bin" --config=.vale.ini --minAlertLevel=warning "${public_files[@]}"

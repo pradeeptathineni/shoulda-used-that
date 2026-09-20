@@ -9,16 +9,18 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from shoulda_used_that.curation import CurationProfile, CurationSnapshot
+from shoulda_used_that.curation import (
+    CurationContextInput,
+    CurationCorpusInput,
+    CurationProfile,
+    CurationSnapshot,
+)
 from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
-    AdoptionPlan,
     Candidate,
     CheckReceipt,
     DecisionReceipt,
-    ProjectionPlan,
     RecheckReceipt,
-    SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
 from shoulda_used_that.projection import GitHubProjectionPlan
@@ -27,14 +29,13 @@ from shoulda_used_that.public_export import PublicCatalogExport
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "schemas"
 SCHEMAS: dict[str, type[BaseModel]] = {
-    "adoption-plan": AdoptionPlan,
     "candidate": Candidate,
     "check-receipt": CheckReceipt,
     "decision-receipt": DecisionReceipt,
-    "projection-plan": ProjectionPlan,
     "recheck-receipt": RecheckReceipt,
-    "save-receipt": SaveReceipt,
     "curation-profile": CurationProfile,
+    "curation-corpus-input": CurationCorpusInput,
+    "curation-context-input": CurationContextInput,
     "curation-snapshot": CurationSnapshot,
     "project-snapshot": ProjectSnapshot,
     "github-projection-plan": GitHubProjectionPlan,

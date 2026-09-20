@@ -21,9 +21,6 @@
   ],
   "collections": {
     "generative-ai-agents": {
-      "role": "generative-AI and agent-system prior art",
-      "need": "Compare mature model, inference, orchestration, evaluation, memory, and agent components before building an AI subsystem.",
-      "reconsideration_trigger": "The repository becomes archived, materially changes license, loses active maintenance, or a stronger fit replaces its role.",
       "repositories": [
         "OpenHands/OpenHands",
         "Comfy-Org/ComfyUI",
@@ -54,9 +51,6 @@
       ]
     },
     "rag-search-knowledge": {
-      "role": "retrieval, search, and knowledge-system prior art",
-      "need": "Compare proven retrieval, indexing, vector, graph, and RAG components before implementing a knowledge layer.",
-      "reconsideration_trigger": "The project becomes inactive, archived, license-incompatible, or ceases to fit an explicit retrieval or knowledge need.",
       "repositories": [
         "chroma-core/chroma",
         "deepset-ai/haystack",
@@ -76,9 +70,6 @@
       ]
     },
     "computer-vision-multimodal": {
-      "role": "computer-vision and multimodal prior art",
-      "need": "Compare established image, video, geometry, perception, and vision-language components before creating a visual pipeline.",
-      "reconsideration_trigger": "Maintenance, licensing, model provenance, or benchmark relevance changes materially.",
       "repositories": [
         "AUTOMATIC1111/stable-diffusion-webui",
         "Comfy-Org/ComfyUI",
@@ -97,9 +88,6 @@
       ]
     },
     "cloud-infrastructure-iac": {
-      "role": "cloud infrastructure and infrastructure-as-code prior art",
-      "need": "Compare mature provisioning, policy, cost, emulation, and orchestration tools before building cloud automation.",
-      "reconsideration_trigger": "The project is archived, changes license or governance materially, or no longer supports the relevant infrastructure boundary.",
       "repositories": [
         "ansible/ansible",
         "aquasecurity/trivy",
@@ -120,9 +108,6 @@
       ]
     },
     "platform-engineering-delivery": {
-      "role": "platform engineering and software-delivery prior art",
-      "need": "Compare established build, workflow, GitOps, runtime, observability, and developer-platform components before creating delivery machinery.",
-      "reconsideration_trigger": "The project loses active maintenance, changes its operational boundary, or a native platform capability removes the need.",
       "repositories": [
         "actions/runner",
         "apache/airflow",
@@ -148,9 +133,6 @@
       ]
     },
     "software-supply-chain": {
-      "role": "software supply-chain and assurance prior art",
-      "need": "Compare established testing, analysis, signing, SBOM, provenance, dependency, and workflow controls before writing a security mechanism.",
-      "reconsideration_trigger": "A control is deprecated, archived, compromised, superseded by a stronger standard, or changes its trust boundary.",
       "repositories": [
         "CycloneDX/cyclonedx-python",
         "actions/attest-build-provenance",
@@ -177,9 +159,6 @@
       ]
     },
     "python-engineering": {
-      "role": "Python implementation and developer-tooling prior art",
-      "need": "Compare mature Python runtimes, libraries, frameworks, packaging, typing, linting, and test tools before adding custom code.",
-      "reconsideration_trigger": "Supported Python compatibility, maintenance, license, or the tool's distinct role changes materially.",
       "repositories": [
         "HypothesisWorks/hypothesis",
         "PyCQA/isort",
@@ -206,9 +185,6 @@
       ]
     },
     "homelab-self-hosting": {
-      "role": "homelab and self-hosted operations prior art",
-      "need": "Compare widely used self-hosted services, networking, storage, monitoring, and deployment tools before operating a home service.",
-      "reconsideration_trigger": "The project becomes inactive, materially changes its self-hosted or license terms, or no longer has a maintainable deployment path.",
       "repositories": [
         "AdguardTeam/AdGuardHome",
         "NginxProxyManager/nginx-proxy-manager",
@@ -238,9 +214,6 @@
       ]
     },
     "creative-coding-visualization": {
-      "role": "creative-coding and data-visualization prior art",
-      "need": "Compare established visual, generative, interactive, animation, and declarative-visualization tools before building a custom rendering layer.",
-      "reconsideration_trigger": "The project becomes inactive, its rendering boundary changes materially, or a more accessible and actively maintained tool supersedes it.",
       "repositories": [
         "3b1b/manim",
         "BabylonJS/Babylon.js",
@@ -264,9 +237,6 @@
       ]
     },
     "nature-physics-simulation": {
-      "role": "nature, physics, and simulation prior art",
-      "need": "Compare simulation engines and learning references before implementing physical, agent-based, emergent, or reinforcement-learning environments.",
-      "reconsideration_trigger": "The engine or reference becomes inactive, incompatible, archived, or no longer fits the intended simulation scale.",
       "repositories": [
         "Farama-Foundation/Gymnasium",
         "bevyengine/bevy",
@@ -284,9 +254,6 @@
       ]
     },
     "web-engineering-interfaces": {
-      "role": "web engineering and interface-system prior art",
-      "need": "Compare mature browser, server, framework, routing, styling, and runtime components before creating a web foundation.",
-      "reconsideration_trigger": "Maintenance, browser support, runtime compatibility, licensing, or the intended interface boundary changes materially.",
       "repositories": [
         "angular/angular",
         "bigskysoftware/htmx",
@@ -310,9 +277,6 @@
       ]
     },
     "oss-curation-foundations": {
-      "role": "OSS discovery, comparison, and learning prior art",
-      "need": "Consult maintained catalogs, learning maps, and repository-evaluation tools before inventing another component or curation surface.",
-      "reconsideration_trigger": "The catalog becomes stale, loses transparent methodology, changes license, or no longer supplies evidence useful to a named decision.",
       "repositories": [
         "analysis-tools-dev/static-analysis",
         "awesome-selfhosted/awesome-selfhosted",
@@ -339,9 +303,6 @@
     "practical-tutorials/project-based-learning": "learn",
     "rasbt/LLMs-from-scratch": "learn",
     "nature-of-code/noc-examples-processing": "learn"
-  },
-  "rationale_overrides": {
-    "Shubhamsaboo/awesome-llm-apps": "Use this broad learning map to discover examples and techniques, not as a production dependency or a blanket endorsement of its many subprojects. This review inspected the First Reader skill at commit f163bb5a92111cee4610ac98e5dce4c6a2a09c26; every example still needs its own dependency, security, and fit review."
   },
   "license_overrides": {
     "HypothesisWorks/hypothesis": {
@@ -431,19 +392,27 @@
   },
   "gate_exceptions": {
     "CycloneDX/cyclonedx-python": {
-      "waive": ["popularity"],
+      "waive": [
+        "popularity"
+      ],
       "reason": "Official CycloneDX Python tooling is a standards implementation with direct supply-chain relevance despite a sub-1,000 star count."
     },
     "processing/processing4": {
-      "waive": ["popularity"],
+      "waive": [
+        "popularity"
+      ],
       "reason": "Processing is the foundation-backed canonical creative-coding environment and a direct stated personal interest."
     },
     "nature-of-code/noc-examples-processing": {
-      "waive": ["freshness"],
+      "waive": [
+        "freshness"
+      ],
       "reason": "This stable MIT-licensed example corpus is the canonical Processing companion to a directly stated creative-simulation interest."
     },
     "slsa-framework/slsa-github-generator": {
-      "waive": ["popularity"],
+      "waive": [
+        "popularity"
+      ],
       "reason": "The official SLSA GitHub generator implements a named provenance standard and is included for that bounded control role."
     }
   }

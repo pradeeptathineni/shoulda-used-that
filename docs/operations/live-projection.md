@@ -61,8 +61,9 @@ and every List fit in one complete readback page at verification time.
 `pradeeptathineni/shoulda-used-that` is itself reviewed in the catalog and publicly appears in
 [OSS Curation & Prior Art](https://github.com/stars/pradeeptathineni/lists/oss-curation-prior-art)
 and [Platform Engineering & Delivery](https://github.com/stars/pradeeptathineni/lists/platform-engineering-delivery).
-The same executable produced the catalog, the live projection, the apply receipts, the independent
-verification, and the public export that renders this page.
+The same installed distribution produced the evidence corpus and, through the `shoulda catalog`
+and `shoulda github` command groups, the live projection, apply receipts, independent verification,
+and public export that underpin this page.
 
 ## Evidence boundary
 

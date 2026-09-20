@@ -18,25 +18,35 @@ from pydantic import Field, field_validator, model_validator
 
 from shoulda_used_that.canonical import canonical_bytes, digest, short_id
 from shoulda_used_that.curation import (
+    Assessment,
+    AssessmentBasis,
+    Brief,
+    CandidateScreening,
     CollectionDefinition,
     CurationDisposition,
-    CurationEntry,
     CurationProfile,
+    CurationProjectionEntry,
     CurationSnapshot,
     CurationVisibility,
     ExcludedCandidate,
     FreshnessState,
     PopularitySnapshot,
+    Problem,
+    RepositoryEvidence,
+    ScreeningBasis,
     SourceProvenance,
+    candidate_screenings,
+    curation_projection_entries,
+    repository_evidence_records,
     validate_curation_profile,
     validate_curation_snapshot,
 )
 from shoulda_used_that.errors import StateError
 from shoulda_used_that.models import FrozenModel
 
-PUBLIC_EXPORT_SCHEMA_VERSION: Literal["2.0"] = "2.0"
+PUBLIC_EXPORT_SCHEMA_VERSION: Literal["4.0"] = "4.0"
 PUBLIC_ALLOWLIST_SCHEMA_VERSION: Literal["1.0"] = "1.0"
-PUBLIC_RENDERER_VERSION = "shoulda-public-catalog/2.0"
+PUBLIC_RENDERER_VERSION = "shoulda-public-briefs/4.0"
 MANIFEST_NAME = "manifest.json"
 
 PRIVATE_FIELD_CLASSES = (
@@ -48,65 +58,6 @@ PRIVATE_FIELD_CLASSES = (
     "raw_api_responses",
     "scope_details",
     "unreviewed_model_output",
-)
-
-DISPOSITION_LABELS = {
-    CurationDisposition.ADOPT: "Used here",
-    CurationDisposition.TRIAL: "Trialing",
-    CurationDisposition.REFERENCE: "Reference",
-    CurationDisposition.LEARN: "Learn",
-    CurationDisposition.WATCH: "Watch",
-    CurationDisposition.REJECT: "Rejected / deferred",
-    CurationDisposition.BUILD: "Built here",
-    CurationDisposition.INBOX: "Inbox",
-}
-
-DISPOSITION_MEANINGS = {
-    CurationDisposition.ADOPT: "Confirmed by repository evidence for the named role.",
-    CurationDisposition.TRIAL: "A bounded evaluation with an explicit removal trigger.",
-    CurationDisposition.REFERENCE: (
-        "Recommended only as a reference for this named need, not as a universal best choice."
-    ),
-    CurationDisposition.LEARN: "Kept for educational value without an integration claim.",
-    CurationDisposition.WATCH: "Not selected; a concrete future trigger can reopen the decision.",
-    CurationDisposition.REJECT: (
-        "Considered and not selected for this context; the reason is evidence-bound."
-    ),
-    CurationDisposition.BUILD: "The residual capability this repository deliberately owns.",
-    CurationDisposition.INBOX: "Discovered or bookmarked but not yet reviewed.",
-}
-
-TOOLCHAIN_GROUPS = (
-    (
-        "Runtime",
-        "Click, Pydantic, JMESPath, platformdirs, PyYAML, Rich, and rfc8785",
-        "../decisions/dependencies.json",
-    ),
-    (
-        "Development",
-        "uv, pytest, Hypothesis, coverage.py, Ruff, strict mypy, pre-commit, and Vale",
-        "../architecture/dogfood-reuse-audit.md",
-    ),
-    (
-        "CI",
-        "GitHub Actions, checkout, setup-uv, and tested distribution artifacts",
-        "../architecture/dogfood-reuse-audit.md",
-    ),
-    (
-        "Security",
-        "pip-audit, CodeQL, dependency review, actionlint, zizmor, and Scorecard",
-        "../decisions/quality-security.json",
-    ),
-    (
-        "Docs",
-        "Generated Markdown/JSON, First Reader, local ZeroSlop checks, Vale, typos, lychee, and Zensical",
-        "../decisions/public-writing-v0.3.json",
-    ),
-    (
-        "Release",
-        "Hatchling, CycloneDX, checksums, GitHub Releases, and artifact attestations",
-        "../decisions/sbom-release.json",
-    ),
 )
 
 LOCAL_PATH_PATTERN = re.compile(
@@ -134,11 +85,9 @@ class PublicCatalogRecord(FrozenModel):
     url: str
     description: str
     collections: tuple[str, ...]
-    disposition: CurationDisposition
-    disposition_label: str
-    role: str
-    need: str
-    rationale: str
+    publication_state: Literal["screened", "assessed"]
+    screening_basis: ScreeningBasis
+    operator_disposition: CurationDisposition
     decision_receipt_ids: tuple[str, ...]
     evidence_receipt_ids: tuple[str, ...]
     observed_license: str | None
@@ -148,9 +97,37 @@ class PublicCatalogRecord(FrozenModel):
     popularity: PopularitySnapshot
     last_checked_at: str
     freshness_state: FreshnessState
-    reconsideration_trigger: str
     source_provenance: tuple[SourceProvenance, ...]
     attribution_obligations: tuple[str, ...]
+
+
+class PublicProblem(FrozenModel):
+    problem_id: str
+    question: str
+    domains: tuple[str, ...]
+
+
+class PublicAssessment(FrozenModel):
+    problem_id: str
+    repository: str
+    assessment_basis: AssessmentBasis
+    covers: tuple[str, ...]
+    watch: tuple[str, ...]
+    unknowns: tuple[str, ...]
+    evidence_refs: tuple[str, ...]
+    decision_state: CurationDisposition | None
+    reconsider_when: tuple[str, ...]
+    assessed_at: str
+
+
+class PublicBrief(FrozenModel):
+    problem_id: str
+    title: str
+    candidate_repositories: tuple[str, ...]
+    what_appears_covered: tuple[str, ...]
+    what_remains_unresolved: tuple[str, ...]
+    evidence_refs: tuple[str, ...]
+    checked_at: str
 
 
 class PublicAttribution(FrozenModel):
@@ -175,7 +152,7 @@ class GeneratedFileDigest(FrozenModel):
 
 
 class PublicCatalogExport(FrozenModel):
-    schema_version: Literal["2.0"] = PUBLIC_EXPORT_SCHEMA_VERSION
+    schema_version: Literal["4.0"] = PUBLIC_EXPORT_SCHEMA_VERSION
     export_id: str = Field(pattern=r"^pcx_[0-9a-f]{24}$")
     source_curation_snapshot_id: str = Field(pattern=r"^cur_[0-9a-f]{24}$")
     source_curation_fingerprint: str = Field(pattern=r"^curation_[0-9a-f]{64}$")
@@ -189,6 +166,9 @@ class PublicCatalogExport(FrozenModel):
     non_ranking_disclaimer: str
     collections: tuple[PublicCollection, ...]
     exported_records: tuple[PublicCatalogRecord, ...]
+    problems: tuple[PublicProblem, ...]
+    assessments: tuple[PublicAssessment, ...]
+    briefs: tuple[PublicBrief, ...]
     excluded_candidates: tuple[ExcludedCandidate, ...]
     omitted_private_field_counts: dict[str, int]
     license_attribution_inventory: tuple[PublicAttribution, ...]
@@ -203,10 +183,47 @@ class PublicCatalogExport(FrozenModel):
             raise ValueError("private-field count classes do not match the export allowlist")
         if any(value < 0 for value in self.omitted_private_field_counts.values()):
             raise ValueError("private-field counts cannot be negative")
-        if tuple(item.repository for item in self.exported_records) != tuple(
-            sorted(item.repository for item in self.exported_records)
+        record_ids = tuple(item.repository for item in self.exported_records)
+        if record_ids != tuple(sorted(set(record_ids))):
+            raise ValueError("public catalog records must use unique canonical repository order")
+        problem_ids_in_order = tuple(item.problem_id for item in self.problems)
+        if problem_ids_in_order != tuple(sorted(set(problem_ids_in_order))):
+            raise ValueError("public problems must use unique canonical problem order")
+        relations = tuple((item.problem_id, item.repository) for item in self.assessments)
+        if relations != tuple(sorted(set(relations))):
+            raise ValueError("public assessments must use unique canonical relation order")
+        repositories = {item.repository for item in self.exported_records}
+        assessed_repositories = {item.repository for item in self.assessments}
+        problem_ids = {item.problem_id for item in self.problems}
+        if any(
+            item.repository not in repositories or item.problem_id not in problem_ids
+            for item in self.assessments
         ):
-            raise ValueError("public catalog records must use canonical repository order")
+            raise ValueError("public assessments must reference exported problems and repositories")
+        brief_problem_ids = tuple(item.problem_id for item in self.briefs)
+        if brief_problem_ids != tuple(sorted(set(brief_problem_ids))):
+            raise ValueError("public briefs must use unique canonical problem order")
+        assessment_relations = set(relations)
+        for brief in self.briefs:
+            if (
+                brief.problem_id not in problem_ids
+                or not 3 <= len(brief.candidate_repositories) <= 5
+                or len(brief.candidate_repositories) != len(set(brief.candidate_repositories))
+            ):
+                raise ValueError(
+                    "public briefs require one known problem and 3-5 unique candidates"
+                )
+            if any(
+                (brief.problem_id, repository) not in assessment_relations
+                for repository in brief.candidate_repositories
+            ):
+                raise ValueError("public brief candidates require contextual assessments")
+        if any(
+            item.publication_state
+            != ("assessed" if item.repository in assessed_repositories else "screened")
+            for item in self.exported_records
+        ):
+            raise ValueError("public record state must be derived from explicit assessments")
         paths = tuple(item.path for item in self.generated_file_manifest)
         if paths != tuple(sorted(set(paths))) or MANIFEST_NAME in paths:
             raise ValueError("generated file manifest must be unique, sorted, and non-recursive")
@@ -231,7 +248,35 @@ def render_public_catalog(
         if item.public_site_visibility
     )
     visible_collection_slugs = frozenset(item.slug for item in collections)
-    records = tuple(_public_record(item, visible_collection_slugs) for item in snapshot.entries)
+    screenings = candidate_screenings(snapshot)
+    screening_by_repository = {item.repository: item for item in screenings}
+    projection_by_repository = {
+        item.repository: item for item in curation_projection_entries(snapshot)
+    }
+    assessed_repositories = {item.repository for item in snapshot.assessments}
+    records = tuple(
+        _public_record(
+            item,
+            screening_by_repository[item.repository],
+            projection_by_repository[item.repository],
+            visible_collection_slugs,
+            assessed=item.repository in assessed_repositories,
+        )
+        for item in repository_evidence_records(snapshot)
+    )
+    problems = tuple(
+        _public_problem(item, visible_collection_slugs)
+        for item in sorted(snapshot.problems, key=lambda item: item.problem_id)
+    )
+    assessments = tuple(
+        _public_assessment(item)
+        for item in sorted(
+            snapshot.assessments, key=lambda item: (item.problem_id, item.repository)
+        )
+    )
+    briefs = tuple(
+        _public_brief(item) for item in sorted(snapshot.briefs, key=lambda item: item.problem_id)
+    )
     excluded = tuple(sorted(snapshot.excluded_candidates, key=lambda item: item.repository))
     attributions = tuple(
         PublicAttribution(
@@ -242,7 +287,17 @@ def render_public_catalog(
         )
         for record in records
     )
-    files = _render_files(snapshot, profile, collections, records, excluded, attributions)
+    files = _render_files(
+        snapshot,
+        profile,
+        collections,
+        records,
+        problems,
+        assessments,
+        briefs,
+        excluded,
+        attributions,
+    )
     file_manifest = tuple(
         GeneratedFileDigest(
             path=path,
@@ -254,8 +309,8 @@ def render_public_catalog(
     omitted_counts = dict.fromkeys(PRIVATE_FIELD_CLASSES, 0)
     omitted_counts["non_public_collections"] = sum(
         slug not in visible_collection_slugs
-        for entry in snapshot.entries
-        for slug in entry.collection_memberships
+        for screening in screenings
+        for slug in screening.domain_tags
     )
     semantic: dict[str, Any] = {
         "schema_version": PUBLIC_EXPORT_SCHEMA_VERSION,
@@ -271,6 +326,9 @@ def render_public_catalog(
         "non_ranking_disclaimer": profile.non_ranking_disclaimer,
         "collections": [item.model_dump(mode="json") for item in collections],
         "exported_records": [item.model_dump(mode="json") for item in records],
+        "problems": [item.model_dump(mode="json") for item in problems],
+        "assessments": [item.model_dump(mode="json") for item in assessments],
+        "briefs": [item.model_dump(mode="json") for item in briefs],
         "excluded_candidates": [item.model_dump(mode="json") for item in excluded],
         "omitted_private_field_counts": omitted_counts,
         "license_attribution_inventory": [item.model_dump(mode="json") for item in attributions],
@@ -291,6 +349,9 @@ def render_public_catalog(
         non_ranking_disclaimer=profile.non_ranking_disclaimer,
         collections=collections,
         exported_records=records,
+        problems=problems,
+        assessments=assessments,
+        briefs=briefs,
         excluded_candidates=excluded,
         omitted_private_field_counts=omitted_counts,
         license_attribution_inventory=attributions,
@@ -444,21 +505,42 @@ def _validate_public_inputs(snapshot: CurationSnapshot, profile: CurationProfile
             code="public_export_private_profile",
             message="Only an explicitly public profile may enter the public exporter.",
         )
-    for entry in snapshot.entries:
-        if entry.field_classification != "public":  # pragma: no cover - literal model guard
+    for evidence in repository_evidence_records(snapshot):
+        if evidence.field_classification != "public":  # pragma: no cover - literal model guard
             raise StateError(
                 code="public_export_private_record",
                 message="Private records are rejected rather than redacted during export.",
             )
-        for locator in (
-            *entry.evidence_receipt_ids,
-            *(item.locator for item in entry.source_provenance),
-        ):
+        for locator in (item.locator for item in evidence.source_provenance):
             if Path(locator).is_absolute() and not locator.startswith(("https://", "http://")):
                 raise StateError(
                     code="public_export_local_path_leak",
-                    message=f"Public evidence locator is a local absolute path: {entry.repository}",
+                    message=(
+                        f"Public evidence locator is a local absolute path: {evidence.repository}"
+                    ),
                 )
+    for locator in (
+        ref
+        for screening in candidate_screenings(snapshot)
+        for ref in screening.evidence_receipt_ids
+    ):
+        if Path(locator).is_absolute() and not locator.startswith(("https://", "http://")):
+            raise StateError(
+                code="public_export_local_path_leak",
+                message="Public screening evidence contains a local absolute path.",
+            )
+    for locator in (ref for assessment in snapshot.assessments for ref in assessment.evidence_refs):
+        if Path(locator).is_absolute() and not locator.startswith(("https://", "http://")):
+            raise StateError(
+                code="public_export_local_path_leak",
+                message="Public assessment evidence contains a local absolute path.",
+            )
+    for locator in (ref for brief in snapshot.briefs for ref in brief.evidence_refs):
+        if Path(locator).is_absolute() and not locator.startswith(("https://", "http://")):
+            raise StateError(
+                code="public_export_local_path_leak",
+                message="Public brief evidence contains a local absolute path.",
+            )
 
 
 def _public_collection(value: CollectionDefinition) -> PublicCollection:
@@ -476,23 +558,25 @@ def _public_collection(value: CollectionDefinition) -> PublicCollection:
 
 
 def _public_record(
-    value: CurationEntry,
+    value: RepositoryEvidence,
+    screening: CandidateScreening,
+    projection_entry: CurationProjectionEntry,
     visible_collection_slugs: frozenset[str],
+    *,
+    assessed: bool,
 ) -> PublicCatalogRecord:
     return PublicCatalogRecord(
         repository=value.repository,
         url=value.url,
         description=value.description,
         collections=tuple(
-            slug for slug in value.collection_memberships if slug in visible_collection_slugs
+            slug for slug in screening.domain_tags if slug in visible_collection_slugs
         ),
-        disposition=value.primary_disposition,
-        disposition_label=DISPOSITION_LABELS[value.primary_disposition],
-        role=value.role,
-        need=value.need,
-        rationale=value.rationale,
-        decision_receipt_ids=value.decision_receipt_ids,
-        evidence_receipt_ids=value.evidence_receipt_ids,
+        publication_state="assessed" if assessed else "screened",
+        screening_basis=screening.screening_basis,
+        operator_disposition=projection_entry.primary_disposition,
+        decision_receipt_ids=screening.decision_receipt_ids,
+        evidence_receipt_ids=screening.evidence_receipt_ids,
         observed_license=value.observed_license,
         archived=value.archived,
         latest_release=value.latest_release,
@@ -500,9 +584,43 @@ def _public_record(
         popularity=value.popularity,
         last_checked_at=value.last_checked_at.isoformat(),
         freshness_state=value.freshness_state,
-        reconsideration_trigger=value.reconsideration_trigger,
         source_provenance=value.source_provenance,
         attribution_obligations=value.attribution_obligations,
+    )
+
+
+def _public_problem(value: Problem, visible_collection_slugs: frozenset[str]) -> PublicProblem:
+    return PublicProblem(
+        problem_id=value.problem_id,
+        question=value.question,
+        domains=tuple(slug for slug in value.domain_tags if slug in visible_collection_slugs),
+    )
+
+
+def _public_assessment(value: Assessment) -> PublicAssessment:
+    return PublicAssessment(
+        problem_id=value.problem_id,
+        repository=value.repository,
+        assessment_basis=value.assessment_basis,
+        covers=value.covers,
+        watch=value.watch,
+        unknowns=value.unknowns,
+        evidence_refs=value.evidence_refs,
+        decision_state=value.decision_state,
+        reconsider_when=value.reconsider_when,
+        assessed_at=value.assessed_at.isoformat(),
+    )
+
+
+def _public_brief(value: Brief) -> PublicBrief:
+    return PublicBrief(
+        problem_id=value.problem_id,
+        title=value.title,
+        candidate_repositories=value.candidate_repositories,
+        what_appears_covered=value.what_appears_covered,
+        what_remains_unresolved=value.what_remains_unresolved,
+        evidence_refs=value.evidence_refs,
+        checked_at=value.checked_at.isoformat(),
     )
 
 
@@ -511,6 +629,9 @@ def _render_files(
     profile: CurationProfile,
     collections: tuple[PublicCollection, ...],
     records: tuple[PublicCatalogRecord, ...],
+    problems: tuple[PublicProblem, ...],
+    assessments: tuple[PublicAssessment, ...],
+    briefs: tuple[PublicBrief, ...],
     excluded: tuple[ExcludedCandidate, ...],
     attributions: tuple[PublicAttribution, ...],
 ) -> dict[str, bytes]:
@@ -527,34 +648,39 @@ def _render_files(
         "popularity_treatment": profile.popularity_treatment,
         "non_ranking_disclaimer": profile.non_ranking_disclaimer,
         "collections": [item.model_dump(mode="json") for item in collections],
-        "records": [item.model_dump(mode="json") for item in records],
+        "corpus_records": [item.model_dump(mode="json") for item in records],
+        "problems": [item.model_dump(mode="json") for item in problems],
+        "assessments": [item.model_dump(mode="json") for item in assessments],
+        "briefs": [item.model_dump(mode="json") for item in briefs],
         "excluded_candidates": [item.model_dump(mode="json") for item in excluded],
         "renderer_version": PUBLIC_RENDERER_VERSION,
     }
+    record_by_repository = {item.repository: item for item in records}
+    problem_by_id = {item.problem_id: item for item in problems}
+    assessment_by_relation = {(item.problem_id, item.repository): item for item in assessments}
     files: dict[str, bytes] = {
         "catalog.json": canonical_bytes(catalog_payload) + b"\n",
-        "index.md": _index_markdown(profile, snapshot, collections, records).encode(),
-        "selection.md": _selection_markdown(profile, collections, records).encode(),
-        "dogfood.md": _dogfood_markdown(profile, snapshot, collections, records).encode(),
-        "in-use.md": _in_use_markdown(profile, records).encode(),
-        "considered.md": _considered_markdown(profile, records, excluded).encode(),
-        "freshness.md": _freshness_markdown(profile, snapshot, records).encode(),
+        "index.md": _briefs_index_markdown(profile, snapshot, problems, briefs).encode(),
         "sources.md": _sources_markdown(profile, snapshot, attributions).encode(),
         "tags.md": _tags_markdown().encode(),
         "assets/catalog.css": _catalog_css().encode(),
-        "collections/index.md": _collections_index_markdown(profile, collections, records).encode(),
-        "entries/index.md": _entries_index_markdown(profile, records).encode(),
     }
-    for collection in collections:
-        collection_records = tuple(
-            record for record in records if collection.slug in record.collections
-        )
-        files[f"collections/{collection.slug}.md"] = _collection_markdown(
-            collection, collection_records
+    for brief in briefs:
+        files[f"briefs/{brief.problem_id}.md"] = _brief_markdown(
+            brief,
+            problem_by_id[brief.problem_id],
+            record_by_repository,
+            assessment_by_relation,
         ).encode()
-    for record in records:
-        files[f"entries/{_repository_slug(record.repository)}.md"] = _entry_markdown(
-            record, collections
+    assessed_repositories = sorted(
+        {repository for brief in briefs for repository in brief.candidate_repositories}
+    )
+    for repository in assessed_repositories:
+        files[f"evidence/{_repository_slug(repository)}.md"] = _evidence_markdown(
+            record_by_repository[repository],
+            briefs,
+            problem_by_id,
+            assessment_by_relation,
         ).encode()
     return files
 
@@ -588,359 +714,199 @@ def _markdown_text(value: str) -> str:
     return html.escape(markdown_escaped)
 
 
-def _index_markdown(
+def _briefs_index_markdown(
     profile: CurationProfile,
     snapshot: CurationSnapshot,
-    collections: tuple[PublicCollection, ...],
-    records: tuple[PublicCatalogRecord, ...],
+    problems: tuple[PublicProblem, ...],
+    briefs: tuple[PublicBrief, ...],
 ) -> str:
-    current = sum(record.freshness_state is FreshnessState.CURRENT for record in records)
+    problem_by_id = {item.problem_id: item for item in problems}
     cards = "\n".join(
-        _collection_card(
-            collection,
-            sum(collection.slug in record.collections for record in records),
-            entry_prefix="collections/",
-            show_eligibility=False,
-        )
-        for collection in collections
+        f"""<article class="catalog-card brief-card">
+  <h2><a href="briefs/{html.escape(brief.problem_id, quote=True)}.md">{html.escape(brief.title)}</a></h2>
+  <p>{html.escape(problem_by_id[brief.problem_id].question)}</p>
+  <p><strong>{len(brief.candidate_repositories)} approaches worth knowing</strong></p>
+  <p class="catalog-card__evidence">Checked {html.escape(_checked_date(brief.checked_at))} · <a href="briefs/{html.escape(brief.problem_id, quote=True)}.md">Open brief</a></p>
+</article>"""
+        for brief in briefs
     )
     return (
-        _frontmatter(profile.title, profile.description, ("OSS curation", "evidence"))
-        + f"""# {_markdown_text(profile.title)}
+        _frontmatter(
+            "Explore prior-art briefs",
+            "Concrete software build problems with assessed options, tradeoffs, and residual gaps.",
+            ("prior art", "software architecture"),
+        )
+        + f"""# Explore prior-art briefs
 
-<div class="catalog-hero">
-  <p class="catalog-kicker">Check before you build</p>
-  <p class="catalog-lead">Name the job. Find credible open-source options. See why each one is here and what could change the decision.</p>
-  <div class="catalog-actions">
-    <a class="md-button md-button--primary" href="collections/index.md">Browse by need</a>
-    <a class="md-button" href="entries/index.md">Find a repository</a>
-    <a class="md-button" href="in-use.md">See a worked example</a>
-  </div>
-</div>
-
-!!! info "What reviewed means"
-    Each entry passed its stated metadata and fit checks or carries a visible exception. This is not a code audit, security approval, adoption claim, or universal ranking. A GitHub star is only a bookmark.
-
-## How to read an entry
-
-Start with **Need** and **Why it is here**. The status says how this repository treats the option:
-used here, trialing, reference, learning, watch, rejected, built here, or inbox. Then check the
-evidence date and **Reconsider when** trigger before relying on the choice.
-
-## Choose a need
-
-These **{len(collections)} collections** contain **{len(records)} reviewed records**. Open the domain
-closest to your problem, or use site search for a repository, technology, or phrase.
-
-**{current} records** were inside the profile's **{profile.review_policy.default_freshness_days}-day
-review window** at **{_display_timestamp(snapshot.compiled_at)}**. “Current” describes the review
-date, not a security result or guarantee of active maintenance.
+Start with a build problem. Each brief shows the few existing approaches worth knowing, what they
+cover, where they stop, and what still appears unresolved. No brief chooses a universal winner.
 
 <div class="catalog-grid">
 {cards}
 </div>
 
-## Want to see the method on itself?
+## Evidence boundary
 
-Read [what ShouldaUsedThat uses](in-use.md) for concrete choices, or follow the
-[catalog-to-GitHub self-use story](dogfood.md). The complete [entry index](entries/index.md) is
-available when you already know what you want.
+These {len(briefs)} briefs use explicit problem-by-repository assessments. The complete safe corpus
+of {snapshot.counts.entries} screened repositories remains available in [machine-readable JSON](catalog.json),
+but screened metadata never becomes contextual fit copy or a rich reader page.
 
-## Download or audit the evidence
-
-- [Canonical public JSON](catalog.json)
-- [Digest and reproducibility manifest](manifest.json)
-- [Sources and attribution](sources.md)
-- [Freshness and reconsideration](freshness.md)
+Checked {_display_timestamp(snapshot.compiled_at)} · [Sources and attribution](sources.md) ·
+[Reproducibility manifest](manifest.json)
 """
     )
 
 
-def _dogfood_markdown(
-    profile: CurationProfile,
-    snapshot: CurationSnapshot,
-    collections: tuple[PublicCollection, ...],
-    records: tuple[PublicCatalogRecord, ...],
+def _brief_markdown(
+    brief: PublicBrief,
+    problem: PublicProblem,
+    records: dict[str, PublicCatalogRecord],
+    assessments: dict[tuple[str, str], PublicAssessment],
 ) -> str:
-    selected = set(snapshot.projection_policy.selected_collection_slugs)
-    projected_collections = tuple(item for item in collections if item.slug in selected)
-    projectable_dispositions = {
-        CurationDisposition.ADOPT,
-        CurationDisposition.BUILD,
-        CurationDisposition.LEARN,
-        CurationDisposition.REFERENCE,
-        CurationDisposition.TRIAL,
-    }
-    projectable = tuple(
-        record
-        for record in records
-        if record.disposition in projectable_dispositions
-        and selected.intersection(record.collections)
-    )
-    memberships = sum(
-        collection.slug in record.collections
-        for collection in projected_collections
-        for record in projectable
-    )
-    account = profile.public_owner_identity.split("/", 1)[0]
-    list_rows = "\n".join(
-        "<tr>"
-        f'<th scope="row"><a href="https://github.com/stars/{quote(account)}/lists/{_github_list_slug(collection.title)}">{html.escape(collection.title)}</a></th>'
-        f"<td>{sum(collection.slug in record.collections for record in projectable)}</td>"
-        f"<td>{html.escape(collection.description)}</td>"
-        "</tr>"
-        for collection in projected_collections
+    cards: list[str] = []
+    for repository in brief.candidate_repositories:
+        record = records[repository]
+        assessment = assessments[(brief.problem_id, repository)]
+        covers = "; ".join(assessment.covers)
+        watch = "; ".join(assessment.watch)
+        unknowns = "; ".join(assessment.unknowns)
+        caution_label = "Watch" if watch else "Unknown"
+        caution = watch or unknowns
+        if watch and unknowns:
+            caution = f"{watch} Unknown: {unknowns}"
+        cards.append(
+            f"""<article class="catalog-card assessment-card">
+  <h2>{html.escape(repository)}</h2>
+  <p>{html.escape(record.description)}</p>
+  <p><strong>Covers:</strong> {html.escape(covers)}</p>
+  <p><strong>{caution_label}:</strong> {html.escape(caution)}</p>
+  <p class="catalog-card__evidence">Checked {html.escape(_checked_date(record.last_checked_at))} · <a href="{html.escape(record.url, quote=True)}">Repository</a> · <a href="../evidence/{_repository_slug(repository)}.md#{html.escape(brief.problem_id, quote=True)}">Evidence</a></p>
+</article>"""
+        )
+    covered = "\n".join(f"- {_markdown_text(item)}" for item in brief.what_appears_covered)
+    unresolved = "\n".join(f"- {_markdown_text(item)}" for item in brief.what_remains_unresolved)
+    evidence = "\n".join(
+        f"- {_evidence_anchor(locator, depth=2)}" for locator in brief.evidence_refs
     )
     return (
-        _frontmatter(
-            "ShouldaUsedThat uses itself",
-            "The catalog, additive GitHub projection, independent readback, and public export form one dogfood chain.",
-            ("dogfood", "GitHub Lists", "verification"),
-        )
-        + f"""# ShouldaUsedThat uses itself
+        _frontmatter(brief.title, problem.question, problem.domains)
+        + f"""# {_markdown_text(brief.title)}
 
-This repository uses its own workflow to answer a practical question: **what existing tools should
-own each job, and what small residual capability is worth building here?** The result is the public
-catalog you are reading and a set of GitHub Lists that make the same choices easier to revisit.
+## Problem
 
-## What you can inspect
+{_markdown_text(problem.question)}
 
-- **The choices:** [{len(records)} reviewed repositories](index.md) with needs, rationale, dates,
-  and reconsideration triggers.
-- **The public navigation:** {len(projected_collections)} GitHub Lists containing
-  {len(projectable)} projectable repositories and {memberships} intentional memberships.
-- **The readback:** [sanitized live evidence](../operations/live-projection.md) for what was
-  actually applied and independently verified.
+## Approaches worth knowing
 
-GitHub is a convenient view, not the ledger. Lists cannot carry the full rationale, provenance,
-freshness, rejection, or reconsideration evidence preserved by the catalog.
-
-## How the result is produced
-
-1. A human-readable [interest selection](selection.md) exposes the domains and exact repositories compiled from `curation/selections/personal-interests.json`.
-2. A [cross-source decision receipt](../decisions/personal-oss-curation.json) records discovery sources, hard gates, rejected shortcuts, unknowns, and reconsideration triggers.
-3. `curated` compiles those public inputs with the repository's own dependency and prior-art receipts into immutable canonical JSON.
-4. `projected` reads the current GitHub account and seals only additive Star and List operations.
-5. `apply` rechecks identity, capability, drift, expiry, and operation caps before each allowed write.
-6. `verify` independently reads back every claimed public List, star, description, membership, and preserved membership.
-7. `exported` builds this allowlisted catalog and its deterministic manifest.
-
-The snapshot's canonical curation fingerprint is `{snapshot.canonical_fingerprint}`.
-
-## Native GitHub projection
-
-Use the Lists for browsing; use the catalog when the reason or evidence matters.
-
-<div class="table-scroll" role="region" aria-label="Projected GitHub Lists" tabindex="0">
-<table>
-  <caption>Public Lists generated from the reviewed profile</caption>
-  <thead><tr><th scope="col">GitHub List</th><th scope="col">Reviewed repositories</th><th scope="col">Meaning</th></tr></thead>
-  <tbody>
-{list_rows}
-  </tbody>
-</table>
+<div class="catalog-grid">
+{chr(10).join(cards)}
 </div>
 
-Private state, account node IDs, token scopes, raw API payloads, and operation receipts stay outside
-the repository.
+## What appears covered
 
-## What this proves—and what it does not
+{covered}
 
-- It proves the repository can compile a substantial reviewed catalog, preserve meaningful multi-list membership, execute its bounded additive projection, and verify public postconditions.
-- It does not claim that stars equal adoption, that popularity equals quality, or that one list is a universal ranking.
-- It does not silently unstar, remove memberships, rename or delete Lists, expose private repositories, or grant scheduled jobs personal mutation authority.
+## What still appears unresolved
+
+{unresolved}
+
+Based on the reviewed evidence, that residual work may still justify a focused build. This brief
+does not rank the candidates or imply certainty beyond the cited evidence.
+
+Checked {_markdown_text(_checked_date(brief.checked_at))} · [Explore all briefs](../index.md)
+
+<details>
+<summary>Brief research evidence</summary>
+
+{evidence}
+
+</details>
 """
     )
 
 
-def _selection_markdown(
-    profile: CurationProfile,
-    collections: tuple[PublicCollection, ...],
-    records: tuple[PublicCatalogRecord, ...],
+def _evidence_markdown(
+    record: PublicCatalogRecord,
+    briefs: tuple[PublicBrief, ...],
+    problems: dict[str, PublicProblem],
+    assessments: dict[tuple[str, str], PublicAssessment],
 ) -> str:
-    receipt = "docs/decisions/personal-oss-curation.json"
-    selected = tuple(record for record in records if receipt in record.evidence_receipt_ids)
-    memberships = sum(len(record.collections) for record in selected)
-    multi_collection = sum(len(record.collections) > 1 for record in selected)
-    collection_by_slug = {item.slug: item for item in collections}
     sections: list[str] = []
-    for slug in (
-        collection.slug
-        for collection in collections
-        if any(collection.slug in record.collections for record in selected)
-    ):
-        collection = collection_by_slug[slug]
-        members = tuple(record for record in selected if slug in record.collections)
-        rows = "\n".join(
-            f"- [{_markdown_text(record.repository)}](entries/{_repository_slug(record.repository)}.md) — {_markdown_text(record.disposition_label)}"
-            for record in members
+    for brief in briefs:
+        if record.repository not in brief.candidate_repositories:
+            continue
+        assessment = assessments[(brief.problem_id, record.repository)]
+        covers = "\n".join(f"- {_markdown_text(item)}" for item in assessment.covers)
+        watch = "\n".join(f"- {_markdown_text(item)}" for item in assessment.watch)
+        unknowns = "\n".join(f"- {_markdown_text(item)}" for item in assessment.unknowns)
+        evidence = "\n".join(
+            f"- {_evidence_anchor(locator, depth=2)}" for locator in assessment.evidence_refs
         )
         sections.append(
-            f"## [{_markdown_text(collection.title)}](collections/{collection.slug}.md) — {len(members)}\n\n"
-            f"{_markdown_text(collection.description)}\n\n{rows}"
+            f"""<a id="{html.escape(brief.problem_id, quote=True)}"></a>
+## {_markdown_text(brief.title)}
+
+**Problem:** {_markdown_text(problems[brief.problem_id].question)}
+
+### Covers
+
+{covers}
+
+### Watch
+
+{watch or "- No separate watch item; see explicit uncertainty below."}
+
+### Unknowns
+
+{unknowns or "- No additional unknown recorded."}
+
+### Assessment evidence
+
+{evidence}
+
+Assessed {_markdown_text(_checked_date(assessment.assessed_at))} ·
+[Return to brief](../briefs/{brief.problem_id}.md)
+"""
         )
+    source_links = "\n".join(
+        f"- {_evidence_anchor(source.locator, depth=2)} — observed `{source.observed_at.isoformat()}`"
+        for source in record.source_provenance
+    )
+    screening_links = "\n".join(
+        f"- {_evidence_anchor(locator, depth=2)}" for locator in record.evidence_receipt_ids
+    )
     return (
         _frontmatter(
-            "Personal OSS interest selection",
-            "The exact reviewed repositories grouped by the human-authored interest domains that drive the public GitHub projection.",
-            ("OSS curation", "interests", "prior art"),
+            f"Evidence for {record.repository}",
+            f"Problem-relative assessment and observed repository facts for {record.repository}.",
+            record.collections,
         )
-        + f"""# Personal OSS interest selection
+        + f"""# Evidence for {_markdown_text(record.repository)}
 
-Use this page when you want the exact personal-interest set behind the public GitHub Lists, grouped
-by the problem domains it was chosen to explore. It contains **{len(selected)} unique
-repositories**, **{memberships} domain memberships**, and **{multi_collection} repositories with
-intentional multi-domain membership**.
+{_markdown_text(record.description)}
 
-Selection means **consider this before building**; it is not a code audit, security approval, or
-automatic adoption. Every entry passed the selection's public-identity, archive, description,
-license, popularity, and freshness gates or carries a narrow written exception. The
-[decision receipt](../decisions/personal-oss-curation.json) preserves sources, limits, rejected
-shortcuts, and reconsideration triggers.
+[Open repository]({html.escape(record.url, quote=True)}){{ .md-button .md-button--primary }}
 
 {(chr(10) * 2).join(sections)}
 
-## Relationship to the full catalog
+<details>
+<summary>Observed repository and provenance details</summary>
 
-The [complete catalog](index.md) also includes ShouldaUsedThat's own dependency, prior-art, trial, rejection, and build records. The interest selection is kept separate so personal discovery intent remains readable while the compiled catalog remains authoritative for evidence and decision state.
+- **License:** {_markdown_text(record.observed_license or "unknown")}
+- **Archived:** {_markdown_text(str(record.archived).lower() if record.archived is not None else "unknown")}
+- **Latest release:** {_markdown_text(record.latest_release or "not recorded")}
+- **Latest commit:** `{html.escape(record.latest_commit or "not recorded")}`
+- **Last checked:** `{html.escape(record.last_checked_at)}`
 
-Source selection: `curation/selections/personal-interests.json`.
-"""
-    )
+### Screening evidence
 
+{screening_links or "- No separate screening evidence link recorded."}
 
-def _in_use_markdown(profile: CurationProfile, records: tuple[PublicCatalogRecord, ...]) -> str:
-    used = tuple(
-        record
-        for record in records
-        if record.disposition in {CurationDisposition.ADOPT, CurationDisposition.BUILD}
-    )
-    rows = "\n".join(
-        "<tr>"
-        f'<th scope="row">{html.escape(group)}</th>'
-        f"<td>{html.escape(tools)}</td>"
-        f'<td><a href="{html.escape(evidence, quote=True)}">decision evidence</a></td>'
-        "</tr>"
-        for group, tools, evidence in TOOLCHAIN_GROUPS
-    )
-    cards = "\n".join(_record_card(record, "") for record in used)
-    return (
-        _frontmatter(
-            "What ShouldaUsedThat uses",
-            "Runtime, development, CI, security, documentation, and release roles.",
-            ("Used here", "toolchain"),
-        )
-        + f"""# What ShouldaUsedThat uses
+### Source provenance
 
-This is the catalog's clearest worked example: every item below owns a named job in this repository,
-and repository or configuration evidence confirms that use. It answers “what did this project use
-instead of rebuilding?”—not “what should every project use?”
+{source_links}
 
-<div class="table-scroll" role="region" aria-label="Toolchain role inventory" tabindex="0">
-<table>
-  <caption>Complete evidenced toolchain roles</caption>
-  <thead><tr><th scope="col">Role family</th><th scope="col">Current owners</th><th scope="col">Evidence</th></tr></thead>
-  <tbody>
-{rows}
-  </tbody>
-</table>
-</div>
-
-## Catalog records marked used or built
-
-<div class="catalog-grid">
-{cards}
-</div>
-
-The [full implementation reuse gate](../architecture/dogfood-reuse-audit.md) records versions, boundaries, alternatives, and removal conditions for the wider toolchain. The catalog source remains {_markdown_text(profile.public_owner_identity)}'s reviewed public profile.
-"""
-    )
-
-
-def _considered_markdown(
-    profile: CurationProfile,
-    records: tuple[PublicCatalogRecord, ...],
-    excluded: tuple[ExcludedCandidate, ...],
-) -> str:
-    sections: list[str] = []
-    for disposition in (
-        CurationDisposition.TRIAL,
-        CurationDisposition.REFERENCE,
-        CurationDisposition.LEARN,
-        CurationDisposition.WATCH,
-        CurationDisposition.REJECT,
-        CurationDisposition.INBOX,
-    ):
-        selected = tuple(record for record in records if record.disposition is disposition)
-        cards = "\n".join(_record_card(record, "") for record in selected)
-        body = (
-            f'<div class="catalog-grid">\n{cards}\n</div>'
-            if selected
-            else '<p class="catalog-empty">No reviewed records currently have this status.</p>'
-        )
-        sections.append(
-            f"## {DISPOSITION_LABELS[disposition]}\n\n{DISPOSITION_MEANINGS[disposition]}\n\n{body}"
-        )
-    excluded_rows = "\n".join(
-        f"<li><strong>{html.escape(item.repository)}</strong> — {html.escape(item.reason)} "
-        f"<em>Source: {html.escape(item.source)}.</em></li>"
-        for item in excluded
-    )
-    excluded_list = f"<ul>\n{excluded_rows}\n</ul>" if excluded_rows else ""
-    return (
-        _frontmatter(
-            "Considered choices",
-            "Trials, references, watches, rejections, learning records, and inbox state.",
-            ("Trialing", "Reference", "Watch", "Rejected", "Inbox"),
-        )
-        + "# Considered choices\n\n"
-        + "Not every useful discovery becomes a dependency. Browse **Trialing** for active "
-        + "evaluations, **Reference** or **Learn** for ideas, **Watch** for deferred choices, and "
-        + "**Rejected / deferred** for options considered but not selected here.\n\n"
-        + _markdown_text(profile.non_ranking_disclaimer)
-        + "\n\n"
-        + "\n\n".join(sections)
-        + "\n\n## Excluded before catalog entry\n\n"
-        + (excluded_list or "No candidates are currently recorded in the exclusion ledger.")
-        + "\n"
-    )
-
-
-def _freshness_markdown(
-    profile: CurationProfile,
-    snapshot: CurationSnapshot,
-    records: tuple[PublicCatalogRecord, ...],
-) -> str:
-    rows = "\n".join(
-        "<tr>"
-        f'<th scope="row"><a href="entries/{_repository_slug(record.repository)}.md">{html.escape(record.repository)}</a></th>'
-        f"<td>{html.escape(record.freshness_state.value)}</td>"
-        f'<td><time datetime="{html.escape(record.last_checked_at, quote=True)}">{html.escape(record.last_checked_at)}</time></td>'
-        f"<td>{html.escape(record.reconsideration_trigger)}</td>"
-        "</tr>"
-        for record in records
-    )
-    return (
-        _frontmatter(
-            "Freshness and reconsideration",
-            "Dated evidence state and the exact triggers that reopen a decision.",
-            ("freshness", "reconsideration"),
-        )
-        + f"""# Freshness and reconsideration
-
-This snapshot was compiled at **{_display_timestamp(snapshot.compiled_at)}**. “Current” means current under this profile's dated review policy, not permanently correct.
-
-{_markdown_text(profile.popularity_treatment)}
-
-<div class="table-scroll" role="region" aria-label="Catalog freshness" tabindex="0">
-<table>
-  <caption>Evidence freshness and next review trigger</caption>
-  <thead><tr><th scope="col">Repository</th><th scope="col">State</th><th scope="col">Last checked</th><th scope="col">Reconsider when</th></tr></thead>
-  <tbody>
-{rows}
-  </tbody>
-</table>
-</div>
+</details>
 """
     )
 
@@ -952,7 +918,7 @@ def _sources_markdown(
 ) -> str:
     sources = "\n".join(
         f"<li><code>{html.escape(item.locator)}</code> — SHA-256 "
-        f"<code>{item.content_sha256}</code>; {item.entry_count} entries</li>"
+        f"<code>{item.content_sha256}</code>; {item.entry_count} records</li>"
         for item in snapshot.source_snapshots
     )
     attribution_rows = "\n".join(
@@ -997,235 +963,10 @@ The profile source is Apache-2.0 repository-authored review data. Upstream mater
     )
 
 
-def _collections_index_markdown(
-    profile: CurationProfile,
-    collections: tuple[PublicCollection, ...],
-    records: tuple[PublicCatalogRecord, ...],
-) -> str:
-    cards = "\n".join(
-        _collection_card(
-            collection,
-            sum(collection.slug in record.collections for record in records),
-        )
-        for collection in collections
-    )
-    return (
-        _frontmatter(
-            "Collections",
-            "Durable domains and cross-cutting necessities with explicit aliases and rules.",
-            ("collections",),
-        )
-        + f"""# Collections
-
-Choose the collection closest to the job you are trying to solve. A repository may belong to more
-than one collection when it genuinely serves more than one need.
-
-Collections organize evidence; they do not rank repositories. Aliases are searchable, and an empty
-collection stays visible as an intentional area rather than disappearing from the catalog.
-
-<div class="catalog-grid">
-{cards}
-</div>
-
-Only collections explicitly marked “GitHub List eligible” can enter a sealed projection. Eligibility does not mean the List exists or has been approved. Source profile: **{_markdown_text(profile.profile_id)}**.
-"""
-    )
-
-
-def _collection_markdown(
-    collection: PublicCollection,
-    records: tuple[PublicCatalogRecord, ...],
-) -> str:
-    cards = "\n".join(_record_card(record, "../") for record in records)
-    body = (
-        f'<div class="catalog-grid">\n{cards}\n</div>'
-        if records
-        else (
-            '<div class="catalog-empty"><strong>No reviewed entries yet.</strong> '
-            "The collection stays searchable as intent; no candidate is invented to fill it.</div>"
-        )
-    )
-    tags = (collection.title, *collection.aliases)
-    return (
-        _frontmatter(collection.title, collection.description, tags)
-        + f"""# {_markdown_text(collection.title)}
-
-<p class="collection-deck">{html.escape(collection.description)}</p>
-
-## Use this collection when
-
-{_markdown_text(collection.semantics)}
-
-Browse the reviewed entries below first. The rules after them explain the exact boundary used to
-keep this collection coherent.
-
-## Reviewed entries
-
-{body}
-
-## Collection boundary
-
-**Aliases:** {_markdown_text(", ".join(collection.aliases) or "none")}<br>
-**GitHub List eligibility:** {"eligible for a sealed plan" if collection.github_list_projection else "site only"}<br>
-**Review cadence:** {collection.reconsideration_cadence_days} days
-
-- **Include:** {_markdown_text(collection.inclusion_rule)}
-- **Exclude:** {_markdown_text(collection.exclusion_rule)}
-"""
-    )
-
-
-def _entries_index_markdown(
-    profile: CurationProfile, records: tuple[PublicCatalogRecord, ...]
-) -> str:
-    cards = "\n".join(_record_card(record, "../") for record in records)
-    return (
-        _frontmatter(
-            "Catalog entries",
-            "Every public repository record with its contextual disposition and evidence.",
-            ("repositories", "evidence"),
-        )
-        + f"""# Catalog entries
-
-Use site search when you know a repository name, technology, or phrase. If you are still naming the
-problem, [browse collections](../collections/index.md) instead.
-
-Every card is a contextual decision, not a universal endorsement. {_markdown_text(profile.non_ranking_disclaimer)}
-
-<div class="catalog-grid">
-{cards}
-</div>
-"""
-    )
-
-
-def _entry_markdown(
-    record: PublicCatalogRecord,
-    collections: tuple[PublicCollection, ...],
-) -> str:
-    titles = {item.slug: item.title for item in collections}
-    collection_links = ", ".join(
-        f'<a href="../collections/{html.escape(slug, quote=True)}.md">{html.escape(titles.get(slug, slug))}</a>'
-        for slug in record.collections
-    )
-    evidence_links = (
-        "\n".join(
-            f"- {_evidence_anchor(locator, depth=2)}" for locator in record.evidence_receipt_ids
-        )
-        or "- No separate evidence link recorded."
-    )
-    source_links = "\n".join(
-        f"- {_evidence_anchor(source.locator, depth=2)} — observed `{source.observed_at.isoformat()}`"
-        for source in record.source_provenance
-    )
-    popularity = (
-        f"{record.popularity.stars:,} stars observed at "
-        f"`{record.popularity.observed_at.isoformat()}`"
-        if record.popularity.stars is not None and record.popularity.observed_at is not None
-        else "No public star count is claimed by this snapshot."
-    )
-    return (
-        _frontmatter(
-            record.repository,
-            record.description,
-            (record.disposition_label, *(titles.get(slug, slug) for slug in record.collections)),
-        )
-        + f"""# {_markdown_text(record.repository)}
-
-<div class="entry-heading">
-  {_status_chip(record)}
-  {_freshness_chip(record.freshness_state)}
-</div>
-
-<p class="collection-deck">{html.escape(record.description)}</p>
-
-[Open repository]({html.escape(record.url, quote=True)}){{ .md-button .md-button--primary }}
-
-## Why it is here
-
-**Need:** {_markdown_text(record.need)}<br>
-**Why:** {_markdown_text(record.rationale)}<br>
-**Role:** {_markdown_text(record.role)}<br>
-**Status meaning:** {_markdown_text(DISPOSITION_MEANINGS[record.disposition])}<br>
-**Collections:** {collection_links}
-
-## Reconsider when
-
-{_markdown_text(record.reconsideration_trigger)}
-
-## Observed facts
-
-- **License:** {html.escape(record.observed_license or "unknown")}
-- **Archived:** {html.escape(str(record.archived).lower() if record.archived is not None else "unknown")}
-- **Latest release:** {_markdown_text(record.latest_release or "not recorded")}
-- **Latest commit:** <code>{html.escape(record.latest_commit or "not recorded")}</code>
-- **Popularity:** {popularity}
-- **Last checked:** `{html.escape(record.last_checked_at)}`
-
-## Evidence
-
-{evidence_links}
-
-### Source provenance
-
-{source_links}
-
-## Attribution
-
-{_markdown_text("; ".join(record.attribution_obligations) or "No additional catalog obligation recorded.")}
-"""
-    )
-
-
 def _tags_markdown() -> str:
-    return _frontmatter("Tags", "Browse catalog pages by status and collection.", ("tags",)) + (
-        "# Tags\n\nUse tags to combine collection, disposition, and evidence views.\n\n"
-        "<!-- material/tags -->\n"
+    return _frontmatter("Tags", "Browse catalog pages by domain and evidence state.", ("tags",)) + (
+        "# Tags\n\nUse tags to combine domain and evidence views.\n\n<!-- material/tags -->\n"
     )
-
-
-def _record_card(record: PublicCatalogRecord, entry_prefix: str) -> str:
-    return f"""<article class="catalog-card">
-  <div class="catalog-card__meta">{_status_chip(record)} {_freshness_chip(record.freshness_state)}</div>
-  <h3><a href="{entry_prefix}entries/{_repository_slug(record.repository)}.md">{html.escape(record.repository)}</a></h3>
-  <p>{html.escape(record.description)}</p>
-  <p class="catalog-card__role"><strong>Role</strong> {html.escape(record.role)}</p>
-  <p class="catalog-card__need"><strong>Need</strong> {html.escape(record.need)}</p>
-</article>"""
-
-
-def _collection_card(
-    collection: PublicCollection,
-    count: int,
-    *,
-    entry_prefix: str = "",
-    show_eligibility: bool = True,
-) -> str:
-    eligibility = "GitHub List eligible" if collection.github_list_projection else "Site collection"
-    meta = (
-        f'  <div class="catalog-card__meta"><span class="projection-chip">{eligibility}</span></div>\n'
-        if show_eligibility
-        else ""
-    )
-    return f"""<article class="catalog-card collection-card">
-{meta}  <h3><a href="{html.escape(entry_prefix + collection.slug, quote=True)}.md">{html.escape(collection.title)}</a></h3>
-  <p>{html.escape(collection.description)}</p>
-  <p><strong>{count}</strong> reviewed {"entry" if count == 1 else "entries"}</p>
-  <p class="catalog-aliases"><strong>Aliases</strong> {html.escape(", ".join(collection.aliases) or "none")}</p>
-</article>"""
-
-
-def _status_chip(record: PublicCatalogRecord) -> str:
-    value = html.escape(record.disposition.value, quote=True)
-    return (
-        f'<span class="status-chip status-chip--{value}">'
-        f"{html.escape(record.disposition_label)}</span>"
-    )
-
-
-def _freshness_chip(state: FreshnessState) -> str:
-    value = html.escape(state.value, quote=True)
-    return f'<span class="freshness-chip freshness-chip--{value}">{value}</span>'
 
 
 def _repository_slug(repository: str) -> str:
@@ -1237,8 +978,8 @@ def _display_timestamp(value: datetime) -> str:
     return f"{rendered.removesuffix('+00:00')} UTC" if rendered.endswith("+00:00") else rendered
 
 
-def _github_list_slug(name: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+def _checked_date(value: str) -> str:
+    return value.split("T", 1)[0]
 
 
 def _evidence_anchor(locator: str, *, depth: int) -> str:
@@ -1336,10 +1077,10 @@ def _catalog_css() -> str:
 .catalog-card h3 { margin: .8rem 0 .45rem; overflow-wrap: anywhere; }
 .catalog-card p { color: var(--sut-muted); margin: .35rem 0; }
 .catalog-card__meta, .entry-heading { align-items: center; display: flex; flex-wrap: wrap; gap: .4rem; }
-.catalog-card__role, .catalog-card__need { font-size: .82rem; }
-.catalog-card__need { border-top: 1px solid var(--sut-line); margin-top: auto !important; padding-top: .65rem; }
+.assessment-card__problem { color: var(--sut-accent-strong) !important; font-size: .82rem; font-weight: 700; }
+.catalog-card__evidence { border-top: 1px solid var(--sut-line); font-size: .82rem; margin-top: auto !important; padding-top: .65rem; }
 
-.status-chip, .freshness-chip, .projection-chip {
+.freshness-chip {
   border: 1px solid currentColor;
   border-radius: 999px;
   display: inline-flex;
@@ -1351,10 +1092,8 @@ def _catalog_css() -> str:
   text-transform: uppercase;
 }
 
-.status-chip--adopt, .status-chip--build, .freshness-chip--current { color: var(--sut-accent-strong); }
-.status-chip--trial, .status-chip--watch, .freshness-chip--stale, .freshness-chip--partial { color: var(--sut-warm); }
-.status-chip--reject, .freshness-chip--blocked { color: #a32638; }
-.status-chip--reference, .status-chip--learn, .status-chip--inbox, .projection-chip { color: var(--sut-muted); }
+.freshness-chip--stale, .freshness-chip--partial { color: var(--sut-warm); }
+.freshness-chip--blocked { color: #a32638; }
 
 .catalog-empty {
   background: var(--sut-surface);
