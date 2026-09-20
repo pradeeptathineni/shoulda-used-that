@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for pyda
 tags:
   - "oss-curation-foundations"
   - "python-engineering"
+search:
+  exclude: true
 ---
 # Evidence for pydantic/pydantic
 

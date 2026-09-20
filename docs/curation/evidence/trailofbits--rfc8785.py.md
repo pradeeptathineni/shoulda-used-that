@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for trai
 tags:
   - "oss-curation-foundations"
   - "python-engineering"
+search:
+  exclude: true
 ---
 # Evidence for trailofbits/rfc8785\.py
 

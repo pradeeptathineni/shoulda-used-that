@@ -5,6 +5,8 @@ tags:
   - "oss-curation-foundations"
   - "platform-engineering-delivery"
   - "python-engineering"
+search:
+  exclude: true
 ---
 # Evidence for pallets/click
 

@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for astr
 tags:
   - "platform-engineering-delivery"
   - "python-engineering"
+search:
+  exclude: true
 ---
 # Evidence for astral\-sh/uv
 

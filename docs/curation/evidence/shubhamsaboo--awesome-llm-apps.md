@@ -3,6 +3,8 @@ title: "Evidence for shubhamsaboo/awesome-llm-apps"
 description: "Problem-relative assessment and observed repository facts for shubhamsaboo/awesome-llm-apps."
 tags:
   - "generative-ai-agents"
+search:
+  exclude: true
 ---
 # Evidence for shubhamsaboo/awesome\-llm\-apps
 

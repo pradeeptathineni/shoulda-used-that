@@ -685,12 +685,20 @@ def _render_files(
     return files
 
 
-def _frontmatter(title: str, description: str, tags: tuple[str, ...] = ()) -> str:
+def _frontmatter(
+    title: str,
+    description: str,
+    tags: tuple[str, ...] = (),
+    *,
+    exclude_from_search: bool = False,
+) -> str:
     lines = ["---", f"title: {_frontmatter_string(title)}"]
     lines.append(f"description: {_frontmatter_string(description)}")
     if tags:
         lines.append("tags:")
         lines.extend(f"  - {_frontmatter_string(tag)}" for tag in tags)
+    if exclude_from_search:
+        lines.extend(("search:", "  exclude: true"))
     lines.extend(["---", ""])
     return "\n".join(lines)
 
@@ -880,6 +888,7 @@ Assessed {_markdown_text(_checked_date(assessment.assessed_at))} ·
             f"Evidence for {record.repository}",
             f"Problem-relative assessment and observed repository facts for {record.repository}.",
             record.collections,
+            exclude_from_search=True,
         )
         + f"""# Evidence for {_markdown_text(record.repository)}
 

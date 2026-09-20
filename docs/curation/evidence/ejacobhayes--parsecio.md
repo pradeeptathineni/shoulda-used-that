@@ -3,6 +3,8 @@ title: "Evidence for ejacobhayes/parsecio"
 description: "Problem-relative assessment and observed repository facts for ejacobhayes/parsecio."
 tags:
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for ejacobhayes/parsecio
 

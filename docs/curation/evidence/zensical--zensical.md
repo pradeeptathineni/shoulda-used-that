@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for zens
 tags:
   - "oss-curation-foundations"
   - "platform-engineering-delivery"
+search:
+  exclude: true
 ---
 # Evidence for zensical/zensical
 

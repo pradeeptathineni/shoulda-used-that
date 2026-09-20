@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for pyte
 tags:
   - "python-engineering"
   - "software-supply-chain"
+search:
+  exclude: true
 ---
 # Evidence for pytest\-dev/pytest
 

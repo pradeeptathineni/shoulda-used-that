@@ -4,6 +4,8 @@ description: "Problem-relative assessment and observed repository facts for addy
 tags:
   - "generative-ai-agents"
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for addyosmani/agent\-skills
 

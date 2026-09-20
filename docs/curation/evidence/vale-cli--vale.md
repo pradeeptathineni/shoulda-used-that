@@ -3,6 +3,8 @@ title: "Evidence for vale-cli/vale"
 description: "Problem-relative assessment and observed repository facts for vale-cli/vale."
 tags:
   - "oss-curation-foundations"
+search:
+  exclude: true
 ---
 # Evidence for vale\-cli/vale
 
