@@ -1,45 +1,69 @@
 ---
 title: ShouldaUsedThat
-description: See the prior-art landscape for one concrete software build problem before writing another implementation.
+description: See what to reuse, what to skip, and what is genuinely left to build.
 hide:
   - toc
 ---
 
-# Know the landscape before you build
+<div class="catalog-hero" markdown>
 
-ShouldaUsedThat turns one concrete software build problem into a short, evidence-backed brief:
-the few existing approaches worth knowing, what each covers, where it stops, and what still appears
-worth building.
+<p class="catalog-kicker">Open-source build decisions</p>
+
+# Reuse what fits. Build only what is missing.
+
+Before you spend days implementing a software idea, see the established projects that already own
+parts of it, the limits that matter, and the exact custom work still worth doing.
 
 <div class="home-actions" markdown>
 
-[Explore prior-art briefs](curation/index.md){ .md-button .md-button--primary }
-[Use the research CLI](getting-started.md){ .md-button }
+[See 5 reviewed decisions](curation/index.md){ .md-button .md-button--primary }
+[Run your own evidence check](getting-started.md){ .md-button }
 
 </div>
 
-## Example: build a deterministic Python research core
+</div>
 
-Four established pieces already cover much of the foundation:
+<div class="catalog-grid">
+<article class="catalog-card home-value-card">
+  <p class="decision-chip decision-chip--adopt">Use</p>
+  <h2>Reuse proven parts</h2>
+  <p>See which project owns each capability and why it fits this specific problem.</p>
+</article>
+<article class="catalog-card home-value-card">
+  <p class="decision-chip decision-chip--reject">Skip or watch</p>
+  <h2>Avoid the wrong fit</h2>
+  <p>See the boundary, risk, or missing evidence before adding another dependency.</p>
+</article>
+<article class="catalog-card home-value-card">
+  <p class="decision-chip decision-chip--build">Build</p>
+  <h2>Keep the justified gap</h2>
+  <p>Separate solved infrastructure from the product-specific work that remains yours.</p>
+</article>
+</div>
 
-- **Click** — mature parsing and help; it does not define research semantics.
-- **Pydantic** — strict versioned records; workflow rules remain explicit.
-- **JMESPath** — safe expressions over a documented view; native gates stay project-owned.
-- **rfc8785.py** — canonical JSON bytes; receipt and state policy remain separate.
+## A real answer, not a repository list
 
-**What appears covered:** parsing, validation, safe local querying, and stable content identity.
+**Problem:** run a reproducible quality gate for a typed Python CLI.
 
-**What remains:** the problem-specific research plan, evidence gates, state transitions, and compact
-human answer.
+<div class="decision-summary">
+  <p><strong>Use:</strong> <code>uv</code> for the locked environment and builds, <code>pytest</code> for behavior, and CodeQL for hosted source analysis.</p>
+  <p><strong>Do not expect:</strong> any one of them to define the whole quality policy.</p>
+  <p><strong>You still own:</strong> supported versions, typed postconditions, coverage targets, and gate ordering.</p>
+  <p><strong>Bottom line:</strong> compose three mature tools; build only the repository-specific policy around them.</p>
+</div>
 
-[Open the full brief](curation/briefs/deterministic-python-research-core.md)
+[Open the decision and its evidence](curation/briefs/reproducible-python-quality-gate.md)
 
-## How trust stays out of the way
+## What you can do today
 
-Every visible claim links to dated evidence. The complete screened corpus, provenance, and canonical
-JSON remain available underneath, but metadata never becomes contextual fit and screened-only
-candidates do not receive rich pages.
+- Browse five reviewed build decisions with explicit **use**, **try**, **study**, **watch**, **skip**,
+  and **build** actions.
+- Run a deterministic CLI check against exact repositories, GitHub searches, Stars, or public
+  fixtures, then record and recheck your decision.
+- Inspect dated evidence and reconsideration triggers instead of trusting an unexplained score.
 
-The CLI executes only explicit sources, queries, filters, and ordering. It records the complete
-result while keeping normal output to five candidates. Read, research, and record commands do not
-mutate GitHub or a target repository.
+!!! note "Current boundary"
+
+    This is not a prompt box that searches the whole internet. The public decisions are a small,
+    reviewed demonstration. The CLI executes the sources, queries, filters, and ordering you name;
+    it never silently invents a research plan.

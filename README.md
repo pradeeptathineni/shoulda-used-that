@@ -1,24 +1,23 @@
 # ShouldaUsedThat
 
-**Before you build, get an evidence-backed brief on the open-source landscape.**
+**Know what to reuse, what to skip, and what is genuinely left to build.**
 
-Know what already covers your software idea, where those approaches stop, and what may still be
-worth building.
+ShouldaUsedThat turns one concrete software problem into an evidence-backed decision: which
+projects fit, what their limits are, and what custom work remains justified.
 
-[Explore the prior-art briefs](https://pradeeptathineni.github.io/shoulda-used-that/curation/).
+[See the reviewed build decisions](https://pradeeptathineni.github.io/shoulda-used-that/curation/).
 
-## A tiny real brief
+## A real decision
 
-For a deterministic local Python research core, the reviewed landscape already supplies:
+For a reproducible quality gate around a typed Python CLI:
 
-- **Click** for mature command parsing and help;
-- **Pydantic** for strict versioned records and JSON Schema;
-- **JMESPath** for safe expressions over a documented view;
-- **rfc8785.py** for standards-based canonical JSON bytes.
+- **Use `uv`** for the locked environment, execution, and builds.
+- **Use `pytest`** for readable behavior and contract tests.
+- **Use CodeQL** for hosted source analysis and SARIF reporting.
 
-Those pieces cover the foundation. They do not own the problem-specific research plan, evidence
-gates, state transitions, or the compact human answer. That residual is the part still worth
-building here. [Read the evidence-backed brief](docs/curation/briefs/deterministic-python-research-core.md).
+None of them defines supported versions, typed postconditions, coverage targets, or complete gate
+ordering. Compose the mature tools; keep that repository-specific policy explicit. [Read the
+decision and its evidence](docs/curation/briefs/reproducible-python-quality-gate.md).
 
 ## Use the deterministic research CLI
 
@@ -61,8 +60,8 @@ discoverable `shoulda catalog` and `shoulda github` groups and are not product p
 
 - Repository observations are reusable evidence.
 - A contextual assessment belongs to one `problem × candidate` relation.
-- A brief selects three to five assessed candidates, then states what appears covered and what
-  remains unresolved.
+- A brief selects three to five assessed candidates, gives each a problem-specific action, and
+  states what is already covered and what remains unresolved.
 - Screened-only candidates remain in machine-readable evidence without receiving rich pages.
 - JSON and RFC 8785 canonical bytes remain authoritative for hashed state; Markdown, terminal
   tables, and the site are validated renderings.

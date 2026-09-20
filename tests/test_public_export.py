@@ -122,15 +122,33 @@ def test_public_catalog_is_complete_deterministic_and_allowlisted() -> None:
         *(item.path for item in first_export.generated_file_manifest),
     }
     assert PublicCatalogExport.model_validate_json(first_files[MANIFEST_NAME]) == first_export
-    assert b"Explore prior-art briefs" in first_files["index.md"]
+    assert b"Reviewed build decisions" in first_files["index.md"]
     assert b"briefs/deterministic-python-research-core.md" in first_files["index.md"]
     assert b"screened metadata never becomes contextual fit" in first_files["index.md"]
-    assert b"pallets/click" not in first_files["index.md"]
+    assert b"<strong>Decision:</strong>" in first_files["index.md"]
+    assert (
+        b"Use astral-sh/uv, pytest-dev/pytest, and github/codeql-action." in first_files["index.md"]
+    )
+    assert first_files["index.md"].index(b"reproducible-python-quality-gate") < first_files[
+        "index.md"
+    ].index(b"curated-oss-evidence-publishing")
+    assert b'<article class="catalog-card assessment-card">' not in first_files["index.md"]
     brief = first_files["briefs/deterministic-python-research-core.md"]
     assert b"pallets/click" in brief
     assert b"Owns mature command parsing" in brief
-    assert b"What still appears unresolved" in brief
+    assert b"Recommended path:" in brief
+    assert b"Recommended path:</strong> Use pallets/click, pydantic/pydantic" in brief
+    assert b"jmespath/jmespath.py" in brief
+    assert b"trailofbits/rfc8785.py" in brief
+    assert b"What you still need to decide or build" in brief
+    assert b"Revisit when:" in brief
     assert b"decision_state" not in brief
+    mixed = first_files["briefs/curated-oss-evidence-publishing.md"]
+    assert b'decision-chip--reference">Learn from' in mixed
+    assert b'decision-chip--watch">Watch' in mixed
+    assert b'decision-chip--reject">Skip' in mixed
+    for repository in (b"best-of-lists/best-of", b"ejacobhayes/parsecio"):
+        assert repository in mixed
     evidence = first_files["evidence/pallets--click.md"]
     assert b"Evidence for pallets/click" in evidence
     assert b"Observed repository and provenance details" in evidence
@@ -222,8 +240,9 @@ def test_brief_pages_enforce_reader_information_and_publication_budgets() -> Non
             brief.candidate_repositories
         )
         assert payload.count(b">Evidence</a>") == len(brief.candidate_repositories)
-        assert b"What appears covered" in payload
-        assert b"What still appears unresolved" in payload
+        assert b"What the existing tools already cover" in payload
+        assert b"What you still need to decide or build" in payload
+        assert payload.count(b"Revisit when:") == len(brief.candidate_repositories)
         default_view = payload.split(b"<details>", 1)[0]
         for hidden in (b"Latest commit", b"fingerprint", b"projection", b"receipt ID"):
             assert hidden not in default_view
@@ -295,6 +314,13 @@ def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
             item for item in context["assessments"] if item["repository"] == "pallets/click"
         )
         click["covers"] = ["[steal](javascript:alert(1))\n# injected heading\n1. fake list"]
+        click["reconsider_when"] = ['<img src=x onerror="alert(2)">']
+        brief = next(
+            item
+            for item in context["briefs"]
+            if item["problem_id"] == "deterministic-python-research-core"
+        )
+        brief["what_remains_unresolved"] = ['<script>alert("brief")</script>']
 
     profile_path = _write_profile_tree(
         tmp_path,
@@ -305,6 +331,7 @@ def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
     snapshot = compile_profile(profile_path)
     _, files = render_public_catalog(snapshot, profile)
     entry_path = "evidence/pallets--click.md"
+    brief_path = "briefs/deterministic-python-research-core.md"
 
     assert b"<script>" not in files[entry_path]
     assert b"&lt;script\\&gt;alert\\(&quot;catalog&quot;\\)&lt;/script\\&gt;" in files[entry_path]
@@ -312,6 +339,11 @@ def test_markdown_escapes_untrusted_entry_text(tmp_path: Path) -> None:
     assert b"\n# injected heading" not in files[entry_path]
     assert b"\\[steal\\]\\(javascript:alert\\(1\\)\\)" in files[entry_path]
     assert b"1\\. fake list" in files[entry_path]
+    assert b"<script>" not in files["index.md"]
+    assert b"&lt;script&gt;alert(&quot;brief&quot;)&lt;/script&gt;" in files["index.md"]
+    assert b"<script>" not in files[brief_path]
+    assert b"<img" not in files[brief_path]
+    assert b"&lt;img src=x onerror=&quot;alert(2)&quot;&gt;" in files[brief_path]
 
 
 def test_private_mismatched_invalid_and_leaking_inputs_fail_closed(tmp_path: Path) -> None:

@@ -16,7 +16,8 @@ SEARCH_CASES = {
     "problem": "deterministic local python research core",
     "candidate": "pallets/click",
     "covers": "mature command parsing",
-    "unresolved": "problem-specific research plan",
+    "unresolved": "supported versions",
+    "decision": "compose three mature tools",
     "domain": "python-engineering",
 }
 EVIDENCE_SEARCH_PREFIX = "curation/evidence/"

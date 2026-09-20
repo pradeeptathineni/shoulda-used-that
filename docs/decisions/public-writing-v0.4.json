@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "par_public_writing_v0_4_2026_09_20",
+  "supersedes": "par_public_writing_v0_3_2026_09_17",
+  "need": "Make the first public screen communicate a useful problem-specific reuse decision before asking the reader to understand prior-art terminology or evidence machinery.",
+  "artifact_role": "public_value_and_decision_presentation",
+  "discovery": {
+    "queries": [
+      "rendered production homepage at commit 0c85038f4fc8a2104fc4ffbb26a6ee9929521dd2",
+      "existing public problem-by-repository decision_state values",
+      "current generated brief and decision-card templates",
+      "current product and information-budget contracts"
+    ],
+    "stop_condition": "The authoritative assessments already contained problem-specific actions and reconsideration triggers, so the smallest complete correction was to expose those fields directly and keep the evidence model unchanged."
+  },
+  "contenders": [
+    {
+      "name": "Copy-only homepage rewrite",
+      "disposition": "reject",
+      "evidence": [
+        "could make the promise clearer but would still hide the actual use, watch, reject, and build decisions",
+        "would leave decision cards as repository counts rather than useful answers"
+      ]
+    },
+    {
+      "name": "Surface existing contextual decisions and residual work",
+      "disposition": "adopt",
+      "evidence": [
+        "every assessed candidate already has a problem-specific decision_state",
+        "every assessment already records contribution, caution, evidence, and reconsideration triggers",
+        "every brief already records covered and unresolved scope",
+        "requires no new runtime authority or factual source"
+      ]
+    },
+    {
+      "name": "Restore repository-first catalog pages",
+      "disposition": "reject",
+      "evidence": [
+        "a repository page cannot own contextual fit",
+        "hundreds of rich pages would again make the evidence corpus look like the product"
+      ]
+    },
+    {
+      "name": "Add general natural-language discovery",
+      "disposition": "defer",
+      "evidence": [
+        "would require a new retrieval and trust boundary",
+        "is explicitly outside the current deterministic implementation cycle"
+      ]
+    }
+  ],
+  "hard_gates": [
+    "every public action is derived from an explicit problem-by-repository assessment",
+    "actions remain scoped to the named problem and never become universal rankings",
+    "screened metadata cannot create a public action or rich evidence page",
+    "the complete canonical evidence remains available beneath the smaller human view",
+    "the homepage states the current discovery limitation instead of implying a prompt-driven service",
+    "no model, hosted service, new dependency, or runtime authority is introduced"
+  ],
+  "unknowns": [
+    "The five current decisions are a deliberately small dogfood set rather than broad market coverage.",
+    "Rendered first-look review can establish clarity defects but does not measure sustained reader usefulness.",
+    "Broader reader testing may show that some action labels or example problems need further refinement."
+  ],
+  "decision_effect": "Lead the homepage with reuse, skip, and build outcomes; use a familiar quality-gate decision as the worked example; show contextual action labels and reconsideration triggers on every brief; and make decision cards summarize both the recommended path and the custom scope that remains.",
+  "reconsider_when": [
+    "A first-time reader still cannot state what decision the product changes after viewing the first screen",
+    "A public action cannot be traced to an explicit assessment",
+    "The public decision set grows enough to require a new need-first navigation layer",
+    "General discovery receives a separately reviewed deterministic retrieval contract"
+  ],
+  "observed_at": "2026-09-20T08:50:59Z"
+}

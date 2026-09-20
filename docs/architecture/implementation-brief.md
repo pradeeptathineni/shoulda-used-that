@@ -38,13 +38,13 @@ are explicit first steps; command help and generated catalog pages lead with the
 before showing operator evidence. First Reader and ZeroSlop are review techniques, not runtime
 dependencies or authorities.
 
-## Post-`v0.3.0` brief-first boundary
+## `v0.4.0` decision-first release
 
-The primary reader unit is now a prior-art brief for one concrete build problem. A brief selects
-three to five explicit `problem × repository` assessments, shows candidate-specific `covers` plus
-`watch` or uncertainty, and states what appears covered and what remains unresolved. Screened
-repository evidence remains complete in canonical JSON, but screened-only candidates do not receive
-rich reader pages.
+Version `0.4.0` makes the prior-art brief actionable. A brief selects three to five explicit
+`problem × repository` assessments, translates their existing contextual decision state into a
+plain action—use, try, learn from, study, watch, skip, or build—and names the custom scope that
+remains. The action never escapes its stated problem. Screened repository evidence remains complete in
+canonical JSON, but screened-only candidates do not receive rich reader pages.
 
 The ordinary `shoulda` journey is `check → inspect → remember → recheck`. `check` treats the
 problem text as context and executes only explicit sources and queries, preserves upstream source

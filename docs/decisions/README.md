@@ -22,5 +22,6 @@ These receipts dogfood the product's decision vocabulary before or alongside imp
 | [`membership-apply-scaling.json`](membership-apply-scaling.json) | Use the exact validated membership-mutation result for immediate progress, while retaining operation receipts, final full replay, and independent verification |
 | [`public-writing.json`](public-writing.json) | Establish Vale, context-free first reading, and non-authoritative AI-pattern diagnostics |
 | [`public-writing-v0.3.json`](public-writing-v0.3.json) | Supersede the narrow entrypoint trial with First Reader and local ZeroSlop review routes across every public surface |
+| [`public-writing-v0.4.json`](public-writing-v0.4.json) | Surface existing contextual actions and residual work so the public site shows the decision before the evidence machinery |
 
 Claims are distinct from behavior inspected locally or executed in CI. Dated popularity appears only as discovery evidence and never controls a disposition.

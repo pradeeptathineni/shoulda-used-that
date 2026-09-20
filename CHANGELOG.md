@@ -4,10 +4,21 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-20
+
+### Added
+
+- Exposed each candidate's existing problem-specific action as plain language: use, try, learn
+  from, study, watch, skip, or build.
+- Added reconsideration triggers to decision cards and a public-value review receipt that binds
+  the presentation to the existing assessment evidence.
+
 ### Changed
 
 - Replaced the repository-first catalog experience with five concrete prior-art briefs backed by
   problem-specific assessments, while retaining all safe screened evidence in canonical JSON.
+- Reworked the homepage, decision overview, and brief templates to lead with the reuse decision
+  and justified custom scope instead of prior-art terminology and repository counts.
 - Replaced past-tense and hidden top-level CLI names with imperative research commands
   (`check`, `inspect`, `remember`, and `recheck`) plus discoverable `catalog` and `github` groups.
 - Split research orchestration from maintainer publication/mutation services and stopped fresh
@@ -105,7 +116,8 @@ All notable changes to this project are documented here. The format is based on 
 - Profile-scoped external state, immutable decisions, last-known-good revalidation, and read-only projection plans.
 - Public reuse receipts, schemas, synthetic fixtures, packaging, CI, security checks, SBOM, and release provenance.
 
-[Unreleased]: https://github.com/pradeeptathineni/shoulda-used-that/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/pradeeptathineni/shoulda-used-that/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.4.0
 [0.3.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.3.0
 [0.2.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.2.0
 [0.1.0]: https://github.com/pradeeptathineni/shoulda-used-that/releases/tag/v0.1.0

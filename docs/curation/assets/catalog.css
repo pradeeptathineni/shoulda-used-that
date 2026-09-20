@@ -8,6 +8,8 @@
   --sut-accent: #087f5b;
   --sut-accent-strong: #075c45;
   --sut-warm: #a44a00;
+  --sut-danger: #9f2636;
+  --sut-info: #2457a6;
 }
 
 [data-md-color-scheme="slate"] {
@@ -19,6 +21,8 @@
   --sut-accent: #62d9b0;
   --sut-accent-strong: #8ce8c8;
   --sut-warm: #ffb36f;
+  --sut-danger: #ff8796;
+  --sut-info: #9bc1ff;
 }
 
 .catalog-hero {
@@ -28,6 +32,17 @@
   background: linear-gradient(145deg, color-mix(in srgb, var(--sut-accent) 12%, var(--sut-panel)), var(--sut-panel) 62%);
   box-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--sut-ink) 9%, transparent);
 }
+
+.catalog-hero h1 {
+  color: var(--sut-ink);
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  letter-spacing: -.035em;
+  line-height: 1.02;
+  margin: 0 0 1rem;
+  max-width: 49rem;
+}
+
+.catalog-hero .catalog-lead { margin-bottom: 0; }
 
 .catalog-kicker {
   color: var(--sut-accent-strong);
@@ -81,7 +96,41 @@
 .catalog-card p { color: var(--sut-muted); margin: .35rem 0; }
 .catalog-card__meta, .entry-heading { align-items: center; display: flex; flex-wrap: wrap; gap: .4rem; }
 .assessment-card__problem { color: var(--sut-accent-strong) !important; font-size: .82rem; font-weight: 700; }
+.catalog-card__decision { color: var(--sut-ink) !important; }
 .catalog-card__evidence { border-top: 1px solid var(--sut-line); font-size: .82rem; margin-top: auto !important; padding-top: .65rem; }
+
+.decision-summary {
+  background: var(--sut-surface);
+  border: 1px solid var(--sut-line);
+  border-left: .35rem solid var(--sut-accent);
+  border-radius: .75rem;
+  margin: 1rem 0 2rem;
+  padding: 1rem 1.15rem;
+}
+
+.decision-summary p { color: var(--sut-ink); margin: .35rem 0; }
+
+.decision-chip {
+  align-self: flex-start;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .065em;
+  line-height: 1;
+  margin: 0 0 .3rem !important;
+  padding: .35rem .55rem;
+  text-transform: uppercase;
+}
+
+.decision-chip--adopt { color: var(--sut-accent-strong) !important; }
+.decision-chip--trial, .decision-chip--build { color: var(--sut-info) !important; }
+.decision-chip--reference, .decision-chip--learn, .decision-chip--inbox, .decision-chip--consider { color: var(--sut-muted) !important; }
+.decision-chip--watch { color: var(--sut-warm) !important; }
+.decision-chip--reject { color: var(--sut-danger) !important; }
+
+.home-value-card h2 { margin-top: .25rem; }
+.home-value-card p { color: var(--sut-ink); }
 
 .freshness-chip {
   border: 1px solid currentColor;
