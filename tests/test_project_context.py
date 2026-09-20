@@ -13,6 +13,7 @@ from shoulda_used_that.errors import GitHubError, GitHubNotFoundError, SourceErr
 from shoulda_used_that.github import GhResult, GhSbomResult
 from shoulda_used_that.models import FilterSpec
 from shoulda_used_that.project_context import ProjectSnapshot, inspect_project
+from shoulda_used_that.rendering import OutputFormat, render
 from shoulda_used_that.services import checked, inspected, rechecked
 from shoulda_used_that.state import StateStore
 from tests.support import LATER, NOW, fixture_request
@@ -109,6 +110,8 @@ def test_local_snapshot_is_bounded_portable_deterministic_and_read_only(tmp_path
         "pkg:pypi/fixture-python-project@0.2.0",
     ]
     assert first.ecosystems == ("pypi",)
+    markdown = render(first, OutputFormat.MARKDOWN)
+    assert "| pypi | `pyproject.toml` | manifest |" in markdown
     serialized = json.dumps(first.model_dump(mode="json"), sort_keys=True)
     assert str(tmp_path) not in serialized
     assert "ignored.bin" not in serialized
@@ -147,6 +150,13 @@ def test_github_snapshot_records_metadata_languages_commit_and_native_sbom() -> 
     assert snapshot.sbom is not None
     assert snapshot.sbom.component_count == 2
     assert snapshot.evidence_gaps == ()
+    table = render(snapshot, OutputFormat.TABLE)
+    markdown = render(snapshot, OutputFormat.MARKDOWN)
+    assert "Evidence for github:fixture-labs/project" in table
+    assert "Apache-2.0" in table
+    assert "Use in a check" in table
+    assert f"- Snapshot: `{snapshot.project_snapshot_id}`" in markdown
+    assert "| Ecosystem | Manifest | Kind |" in markdown
     assert github.calls == [
         "repository:fixture-labs/project",
         "languages:fixture-labs/project",
@@ -327,7 +337,7 @@ def test_cli_inspected_then_checked_in_snapshot(tmp_path: Path, fixture_path: Pa
             str(state),
             "--format",
             "json",
-            "inspected",
+            "inspect",
             str(project),
             "--sbom",
             str(SPDX),
@@ -343,7 +353,7 @@ def test_cli_inspected_then_checked_in_snapshot(tmp_path: Path, fixture_path: Pa
             str(state),
             "--format",
             "json",
-            "checked",
+            "check",
             "context-aware fixture check",
             "--source",
             "fixture",
@@ -365,7 +375,7 @@ def test_cli_inspected_then_checked_in_snapshot(tmp_path: Path, fixture_path: Pa
             str(state),
             "--format",
             "table",
-            "checked",
+            "check",
             "context-aware fixture check",
             "--source",
             "fixture",

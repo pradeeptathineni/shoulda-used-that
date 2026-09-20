@@ -30,5 +30,7 @@ upstream project's description to fit this project's voice.
 Changes to a command contract, production dependency, state format, GitHub adapter, workflow, or release tool need a current prior-art receipt under `docs/decisions/`. Keep fixtures public or synthetic. Never add personal state, private repository material, credentials, or another project's files.
 
 Open an issue for behavior changes that alter a hard gate, receipt schema, or mutation boundary.
-Never use a personal PAT in repository workflows or schedule `apply`. Security reports follow
+Keep publication under `shoulda catalog` and GitHub orchestration under `shoulda github`; research
+commands must not import or reach mutation services. Never use a personal PAT in repository
+workflows or schedule `shoulda github apply`. Security reports follow
 [`SECURITY.md`](SECURITY.md).

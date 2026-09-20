@@ -46,16 +46,22 @@ three to five explicit `problem × repository` assessments, shows candidate-spec
 repository evidence remains complete in canonical JSON, but screened-only candidates do not receive
 rich reader pages.
 
-The ordinary CLI journey is `checked → inspected → remembered → rechecked`. `checked` treats the
+The ordinary `shoulda` journey is `check → inspect → remember → recheck`. `check` treats the
 problem text as context and executes only explicit sources and queries, preserves upstream source
 positions separately from local ordering, defaults to five visible results, aggregates exclusions,
 and diagnoses zero-result categories without broadening the plan. JSON and YAML retain the complete
-receipt. Compatibility commands `saved` and `used`, plus catalog and GitHub operator commands,
-remain callable but are hidden from ordinary root help.
+receipt. The `saved` and `used` creation flows are retired. Catalog publication lives under
+`shoulda catalog`; GitHub planning, apply, and verification live under `shoulda github`. Their
+implementation is imported only when one of those operational commands is invoked.
 
 ## State and identity
 
-Runtime state lives under an OS data directory selected by `platformdirs`, or under an explicit `--state-dir`. Profiles do not share latest-check pointers, saved items, or decisions. State is JSON validated by versioned Pydantic models and hashed with RFC 8785 canonical JSON. Receipts are immutable; a later receipt may supersede an earlier one.
+Runtime state lives under an OS data directory selected by `platformdirs`, or under an explicit
+`--state-dir`. Profiles do not share latest-check pointers or decisions. State is JSON validated by
+versioned Pydantic models and hashed with RFC 8785 canonical JSON. Receipts are immutable; a later
+receipt may supersede an earlier one. Retired save, List-preview, and adoption-plan files are never
+rewritten or deleted; `shoulda_used_that.legacy` validates them read-only while immutable release
+tags preserve their original schemas.
 
 Canonical repository identity is lowercase `owner/repo`. Source payload fingerprints, result-set fingerprints, and plan fingerprints use SHA-256 over the canonical JSON bytes. YAML and Markdown are views, never hash inputs.
 
@@ -72,7 +78,7 @@ credentials, raw private payloads, and personal profile data. GitHub transport s
 through an argument vector to the installed `gh` CLI, uses existing keyring authentication, and
 never requests or logs a token.
 
-The mutation adapter is intentionally smaller than the read transport. It can create an
+The maintainer-only mutation adapter is intentionally smaller than the read transport. It can create an
 exact public List, star an exact public repository, and add that repository to the union of its
 current and approved memberships only after an exact sealed-plan fingerprint passes identity,
 capability, expiry, cap, drift, TTY, and CI checks. Independent readback is mandatory. There is no

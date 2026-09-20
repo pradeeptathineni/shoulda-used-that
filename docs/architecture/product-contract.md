@@ -66,7 +66,7 @@ A broad screened corpus is backing evidence and dogfood data; it is not the fini
    problem-by-repository assessments; migrate safely; reduce the public surface.
 2. **Brief product:** publish a small set of evidence-backed briefs and make the reader-facing
    projection brief-first while retaining the full safe corpus underneath.
-3. **CLI and administrative boundary:** align the human workflow with briefs and keep maintenance,
+3. **CLI and operational boundary:** align the human workflow with briefs and keep maintenance,
    projection, and mutation controls in an explicit operator surface.
 
 Detailed safety and compatibility contracts remain available in the

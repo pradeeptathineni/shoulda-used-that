@@ -32,7 +32,7 @@ git clone https://github.com/pradeeptathineni/shoulda-used-that.git
 cd shoulda-used-that
 uv sync --all-groups --frozen
 
-uv run shoulda --state-dir .tmp/try-shoulda checked \
+uv run shoulda --state-dir .tmp/try-shoulda check \
   "canonical JSON for immutable receipts" \
   --source fixture \
   --fixture fixtures/candidates.json \
@@ -45,16 +45,17 @@ Normal output shows at most five candidates, distinguishes filtering from the re
 points to inspection. `--explain` shows candidate-level exclusions; `--format json` preserves the
 complete authoritative receipt.
 
-The public research tasks are:
+The research tasks are:
 
 ```text
-checked → inspected → remembered → rechecked
- find       inspect      decide       revisit
+check → inspect → remember → recheck
+ find    inspect    decide     revisit
 ```
 
-Compatibility commands for saved findings and adoption plans remain callable but are no longer
-part of the core journey. GitHub catalog projection and additive mutation remain maintainer tools,
-not product prerequisites.
+The old `saved` and `used` lifecycle commands are retired: a check is already durable, and adoption
+planning is outside the prior-art job. Existing JSON remains readable through the read-only
+`shoulda_used_that.legacy` module. Catalog publication and additive GitHub curation use the
+discoverable `shoulda catalog` and `shoulda github` groups and are not product prerequisites.
 
 ## How it works
 

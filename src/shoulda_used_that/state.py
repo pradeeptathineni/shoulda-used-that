@@ -8,35 +8,25 @@ import re
 import tempfile
 from contextlib import suppress
 from pathlib import Path
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from platformdirs import user_data_path
 from pydantic import BaseModel, ValidationError
 
 from shoulda_used_that.canonical import canonical_bytes, digest
-from shoulda_used_that.curation import (
-    CurationProfile,
-    CurationSnapshot,
-    validate_curation_profile,
-)
 from shoulda_used_that.errors import StateError
-from shoulda_used_that.github_apply import (
-    ApplyOperationReceipt,
-    ApplyReceipt,
-    VerifyReceipt,
-)
-from shoulda_used_that.github_lists import GitHubCurationState
 from shoulda_used_that.models import (
-    AdoptionPlan,
     CheckReceipt,
     DecisionReceipt,
-    ProjectionPlan,
     RecheckReceipt,
-    SavedItem,
-    SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
-from shoulda_used_that.projection import GitHubProjectionPlan
+
+if TYPE_CHECKING:
+    from shoulda_used_that.curation import CurationProfile, CurationSnapshot
+    from shoulda_used_that.github_apply import ApplyOperationReceipt, ApplyReceipt, VerifyReceipt
+    from shoulda_used_that.github_lists import GitHubCurationState
+    from shoulda_used_that.projection import GitHubProjectionPlan
 
 PROFILE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
 ModelT = TypeVar("ModelT", bound=BaseModel)
@@ -76,21 +66,9 @@ class StateStore:
             self.root,
             self.profile_root,
             self.profile_root / "checks",
-            self.profile_root / "saved" / "items",
-            self.profile_root / "saved" / "receipts",
             self.profile_root / "decisions",
             self.profile_root / "rechecks",
             self.profile_root / "baselines",
-            self.profile_root / "plans" / "projections",
-            self.profile_root / "plans" / "adoptions",
-            self.profile_root / "plans" / "github-curation",
-            self.profile_root / "github-states",
-            self.profile_root / "applies" / "operations",
-            self.profile_root / "applies" / "latest",
-            self.profile_root / "verifications",
-            self.profile_root / "curations",
-            self.profile_root / "curations" / "latest",
-            self.profile_root / "curation-profiles",
             self.profile_root / "projects",
             self.profile_root / "projects" / "latest",
         ):
@@ -109,7 +87,7 @@ class StateStore:
         return created
 
     def write_check_snapshot(self, receipt: CheckReceipt) -> bool:
-        """Store a revalidation snapshot without changing saved --all scope."""
+        """Store a revalidation snapshot without changing the latest-check pointer."""
 
         self.initialize()
         return self._write_immutable(self._path("checks", f"{receipt.check_id}.json"), receipt)
@@ -123,25 +101,9 @@ class StateStore:
         if not isinstance(check_id, str):
             raise StateError(
                 code="latest_check_invalid",
-                message="The latest-check pointer is invalid; run 'shoulda checked' again.",
+                message="The latest-check pointer is invalid; run 'shoulda check' again.",
             )
         return self.read_check(check_id)
-
-    def write_saved_item(self, item: SavedItem) -> bool:
-        self.initialize()
-        item_name = digest(item.repository, prefix="repo")
-        return self._write_immutable(self._path("saved", "items", f"{item_name}.json"), item)
-
-    def saved_item(self, repository: str) -> SavedItem | None:
-        item_name = digest(repository.lower(), prefix="repo")
-        path = self._path("saved", "items", f"{item_name}.json")
-        return None if not path.exists() else self._read_model(path, SavedItem)
-
-    def write_save_receipt(self, receipt: SaveReceipt) -> bool:
-        self.initialize()
-        return self._write_immutable(
-            self._path("saved", "receipts", f"{receipt.save_id}.json"), receipt
-        )
 
     def write_decision(self, receipt: DecisionReceipt) -> bool:
         self.initialize()
@@ -160,27 +122,6 @@ class StateStore:
         self.initialize()
         return self._write_immutable(self._path("rechecks", f"{receipt.recheck_id}.json"), receipt)
 
-    def write_projection(self, plan: ProjectionPlan) -> bool:
-        self.initialize()
-        return self._write_immutable(
-            self._path("plans", "projections", f"{plan.plan_id}.json"), plan
-        )
-
-    def read_projection(self, plan_id: str) -> ProjectionPlan:
-        return self._read_model(
-            self._path("plans", "projections", f"{_safe_id(plan_id)}.json"),
-            ProjectionPlan,
-        )
-
-    def write_adoption(self, plan: AdoptionPlan) -> bool:
-        self.initialize()
-        return self._write_immutable(self._path("plans", "adoptions", f"{plan.plan_id}.json"), plan)
-
-    def read_adoption(self, plan_id: str) -> AdoptionPlan:
-        return self._read_model(
-            self._path("plans", "adoptions", f"{_safe_id(plan_id)}.json"), AdoptionPlan
-        )
-
     def write_github_projection(self, plan: GitHubProjectionPlan) -> bool:
         self.initialize()
         return self._write_immutable(
@@ -188,12 +129,16 @@ class StateStore:
         )
 
     def read_github_projection(self, plan_id: str) -> GitHubProjectionPlan:
+        from shoulda_used_that.projection import GitHubProjectionPlan
+
         return self._read_model(
             self._path("plans", "github-curation", f"{_safe_id(plan_id)}.json"),
             GitHubProjectionPlan,
         )
 
     def write_github_state(self, state: GitHubCurationState) -> bool:
+        from shoulda_used_that.github_lists import GitHubCurationState
+
         self.initialize()
         path = self._path("github-states", f"{state.state_fingerprint}.json")
         if path.exists():
@@ -205,6 +150,8 @@ class StateStore:
         return self._write_immutable(path, state)
 
     def read_github_state(self, state_fingerprint: str) -> GitHubCurationState:
+        from shoulda_used_that.github_lists import GitHubCurationState
+
         return self._read_model(
             self._path("github-states", f"{_safe_id(state_fingerprint)}.json"),
             GitHubCurationState,
@@ -233,6 +180,8 @@ class StateStore:
         return created
 
     def read_apply(self, apply_receipt_id: str) -> ApplyReceipt:
+        from shoulda_used_that.github_apply import ApplyReceipt
+
         return self._read_model(
             self._path("applies", f"{_safe_id(apply_receipt_id)}.json"),
             ApplyReceipt,
@@ -267,6 +216,8 @@ class StateStore:
         )
 
     def read_verify(self, verify_receipt_id: str) -> VerifyReceipt:
+        from shoulda_used_that.github_apply import VerifyReceipt
+
         return self._read_model(
             self._path("verifications", f"{_safe_id(verify_receipt_id)}.json"),
             VerifyReceipt,
@@ -296,6 +247,8 @@ class StateStore:
         return created
 
     def write_curation_profile(self, profile: CurationProfile) -> bool:
+        from shoulda_used_that.curation import validate_curation_profile
+
         validate_curation_profile(profile)
         self.initialize()
         return self._write_immutable(
@@ -307,6 +260,8 @@ class StateStore:
         )
 
     def read_curation_profile(self, profile_fingerprint: str) -> CurationProfile:
+        from shoulda_used_that.curation import CurationProfile, validate_curation_profile
+
         profile = self._read_model(
             self._path(
                 "curation-profiles",
@@ -323,6 +278,8 @@ class StateStore:
         return profile
 
     def read_curation(self, snapshot_id: str) -> CurationSnapshot:
+        from shoulda_used_that.curation import CurationSnapshot
+
         return self._read_model(
             self._path("curations", f"{_safe_id(snapshot_id)}.json"), CurationSnapshot
         )
@@ -345,7 +302,9 @@ class StateStore:
         if not isinstance(snapshot_id, str):
             raise StateError(
                 code="latest_curation_invalid",
-                message="The latest-curation pointer is invalid; run 'shoulda curated' again.",
+                message=(
+                    "The latest-curation pointer is invalid; run 'shoulda catalog build' again."
+                ),
             )
         return self.read_curation(snapshot_id)
 
@@ -391,7 +350,7 @@ class StateStore:
         if not isinstance(snapshot_id, str):
             raise StateError(
                 code="latest_project_invalid",
-                message="The latest-project pointer is invalid; run 'shoulda inspected' again.",
+                message="The latest-project pointer is invalid; run 'shoulda inspect' again.",
             )
         return self.read_project(snapshot_id)
 

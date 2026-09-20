@@ -12,6 +12,7 @@ import pytest
 from click.testing import CliRunner
 from pydantic import ValidationError
 
+from shoulda_used_that.admin_services import curated, exported
 from shoulda_used_that.cli import cli
 from shoulda_used_that.curation import compile_profile, load_profile, profile_fingerprint
 from shoulda_used_that.errors import StateError
@@ -25,7 +26,6 @@ from shoulda_used_that.public_export import (
     write_public_catalog,
 )
 from shoulda_used_that.rendering import OutputFormat, render
-from shoulda_used_that.services import curated, exported
 from shoulda_used_that.state import StateStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -480,18 +480,9 @@ def test_service_state_and_cli_preserve_the_explicit_public_boundary(tmp_path: P
     snapshot = curated(store, profile_path=PUBLIC_PROFILE)
     assert store.read_curation_profile(snapshot.profile_fingerprint) == load_profile(PUBLIC_PROFILE)
 
-    with pytest.raises(StateError) as flag:
-        exported(
-            store,
-            curation_snapshot_id=snapshot.curation_snapshot_id,
-            public=False,
-            output=tmp_path / "refused",
-        )
-    assert flag.value.code == "public_export_flag_required"
     receipt = exported(
         store,
         curation_snapshot_id=snapshot.curation_snapshot_id,
-        public=True,
         output=tmp_path / "service-catalog",
     )
     assert receipt.source_curation_snapshot_id == snapshot.curation_snapshot_id
@@ -515,27 +506,13 @@ def test_service_state_and_cli_preserve_the_explicit_public_boundary(tmp_path: P
             str(cli_state),
             "--format",
             "json",
-            "curated",
+            "catalog",
+            "build",
             str(PUBLIC_PROFILE),
         ],
     )
     assert curate_result.exit_code == 0, curate_result.output
     curation_id = json.loads(curate_result.stdout)["curation_snapshot_id"]
-    refused_result = runner.invoke(
-        cli,
-        [
-            "--state-dir",
-            str(cli_state),
-            "--format",
-            "json",
-            "exported",
-            curation_id,
-            "--output",
-            str(tmp_path / "cli-refused"),
-        ],
-    )
-    assert refused_result.exit_code == 2
-    assert json.loads(refused_result.stderr)["error"]["code"] == "public_export_flag_required"
     export_result = runner.invoke(
         cli,
         [
@@ -543,9 +520,9 @@ def test_service_state_and_cli_preserve_the_explicit_public_boundary(tmp_path: P
             str(cli_state),
             "--format",
             "json",
-            "exported",
+            "catalog",
+            "export",
             curation_id,
-            "--public",
             "--output",
             str(tmp_path / "cli-catalog"),
         ],

@@ -354,53 +354,6 @@ class CheckReceipt(FrozenModel):
         return self
 
 
-class SavedItem(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    repository: str
-    candidate: Candidate
-    saved_at: datetime
-    disposition: Disposition | None = None
-    source_check_id: str | None = None
-    source_result_fingerprint: str | None = None
-
-    _normalize_repository = field_validator("repository")(normalize_repository)
-
-
-class SaveReceipt(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    save_id: str
-    created_at: datetime
-    profile: str
-    repositories: tuple[str, ...]
-    created: tuple[str, ...]
-    already_saved: tuple[str, ...]
-    disposition: Disposition | None = None
-    source_check_id: str | None = None
-    source_result_fingerprint: str | None = None
-    projection_plan_id: str | None = None
-
-
-class ProjectionOperation(FrozenModel):
-    repository: str
-    classification: Literal["already_starred", "requires_star"]
-    status: Literal["planned", "blocked"]
-    operations: tuple[str, ...]
-
-
-class ProjectionPlan(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    plan_id: str
-    plan_fingerprint: str
-    created_at: datetime
-    profile: str
-    list_name: str = Field(min_length=1, max_length=100)
-    source_check_id: str
-    source_result_fingerprint: str
-    source_state_fingerprint: str
-    operations: tuple[ProjectionOperation, ...]
-    mutation_state: Literal["sealed-unapplied"] = "sealed-unapplied"
-
-
 class DecisionReceipt(FrozenModel):
     schema_version: Literal["1.0"] = SCHEMA_VERSION
     decision_id: str
@@ -444,23 +397,3 @@ class RecheckReceipt(FrozenModel):
     source_observations: tuple[SourceObservation, ...]
     diffs: tuple[FieldDiff, ...]
     source_errors: tuple[str, ...] = ()
-
-
-class AdoptionPlan(FrozenModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
-    plan_id: str
-    plan_fingerprint: str
-    created_at: datetime
-    profile: str
-    repository: str
-    need: str = Field(min_length=1)
-    target: str = Field(min_length=1)
-    proposed_files: tuple[str, ...] = ()
-    native_tools: tuple[str, ...] = ()
-    tests: tuple[str, ...] = ()
-    expected_postconditions: tuple[str, ...]
-    rollback: tuple[str, ...]
-    remaining_evidence: tuple[str, ...] = ()
-    mutation_state: Literal["planning-only"] = "planning-only"
-
-    _normalize_repository = field_validator("repository")(normalize_repository)

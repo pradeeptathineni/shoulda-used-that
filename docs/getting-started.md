@@ -15,7 +15,7 @@ directory you choose:
 
 ```console
 uv sync --all-groups --frozen
-uv run shoulda --state-dir .tmp/try-shoulda checked \
+uv run shoulda --state-dir .tmp/try-shoulda check \
   "canonical JSON for immutable receipts" \
   --source fixture \
   --fixture fixtures/candidates.json \
@@ -37,7 +37,7 @@ filtered, or required hard-gate evidence unavailable.
 Live GitHub inspection uses the official `gh` authentication already present on the machine:
 
 ```console
-uv run shoulda inspected github:trailofbits/rfc8785.py
+uv run shoulda inspect github:trailofbits/rfc8785.py
 ```
 
 Inspection is read-only. Normal output prioritizes the target's available evidence and typed gaps;
@@ -48,7 +48,7 @@ the complete source and SBOM record remains available through `--format json`.
 Use the `chk_` identifier from the check:
 
 ```console
-uv run shoulda --state-dir .tmp/try-shoulda remembered trailofbits/rfc8785.py \
+uv run shoulda --state-dir .tmp/try-shoulda remember trailofbits/rfc8785.py \
   --as adopt \
   --for "RFC 8785 canonical bytes" \
   --because "small standards-focused adapter" \
@@ -62,27 +62,30 @@ than rewriting history.
 ## 4. Recheck the evidence policy
 
 ```console
-uv run shoulda --state-dir .tmp/try-shoulda rechecked chk_REPLACE_WITH_ID
+uv run shoulda --state-dir .tmp/try-shoulda recheck chk_REPLACE_WITH_ID
 ```
 
-`rechecked` repeats the stored source policy and classifies material changes. A source error is
+`recheck` repeats the stored source policy and classifies material changes. A source error is
 recorded without replacing last-known-good evidence.
 
 ## Use live discovery when you choose
 
 ```console
-uv run shoulda checked "canonical JSON identity" \
+uv run shoulda check "canonical JSON identity" \
   --source github-search \
   --query 'canonical json language:Python archived:false' \
   --not-archived
 ```
 
 The query is exact and its upstream order is preserved separately from local filtering and sorting.
-Run `shoulda checked --help` for the filter vocabulary.
+Run `shoulda check --help` for the filter vocabulary.
 
-## Compatibility and maintainer commands
+## Maintainer and historical boundaries
 
-`saved` and `used` remain callable for existing local workflows but are not part of the core
-research journey. Catalog compilation, public export, GitHub projection, `apply`, and `verify` are
-maintainer commands documented in the [GitHub curation runbook](operations/github-curation.md).
-They are hidden from ordinary root help and retain their existing safety boundaries.
+The four research tasks stay at the top level. Catalog compilation and export live under
+`shoulda catalog`; GitHub planning, `apply`, and `verify` live under `shoulda github`, as documented
+in the [GitHub curation runbook](operations/github-curation.md).
+
+The old `saved` and `used` commands are retired. Existing version 1.0 save, List-preview, and
+adoption-plan JSON can still be validated with `shoulda_used_that.legacy`; current state and schema
+generation do not create those record kinds.

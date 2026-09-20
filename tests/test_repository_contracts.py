@@ -16,7 +16,7 @@ def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None
     first = rendered_schemas()
     second = rendered_schemas()
     assert first == second
-    assert len(first) == len(SCHEMAS) == 16
+    assert len(first) == len(SCHEMAS) == 13
     write_schemas(tmp_path)
     assert check_schemas(tmp_path) == []
     changed = tmp_path / sorted(first)[0]
@@ -26,6 +26,20 @@ def test_generated_schemas_are_deterministic_and_current(tmp_path: Path) -> None
 
 def test_repository_contract_validator_passes() -> None:
     assert validate() == []
+
+
+def test_retired_workflows_stay_out_of_the_current_surface() -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    assert project["scripts"] == {"shoulda": "shoulda_used_that.cli:main"}
+    for retired in (
+        "schemas/adoption-plan.schema.json",
+        "schemas/projection-plan.schema.json",
+        "schemas/save-receipt.schema.json",
+        "scripts/benchmark_catalog.py",
+        "src/shoulda_used_that/admin_cli.py",
+        "src/shoulda_used_that/export.py",
+    ):
+        assert not (ROOT / retired).exists()
 
 
 def test_catalog_workflow_excludes_personal_mutation_authority() -> None:

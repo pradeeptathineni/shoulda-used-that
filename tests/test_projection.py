@@ -10,6 +10,7 @@ import pytest
 from click.testing import CliRunner
 from pydantic import ValidationError
 
+from shoulda_used_that.admin_services import projected
 from shoulda_used_that.canonical import digest, short_id
 from shoulda_used_that.cli import cli
 from shoulda_used_that.curation import (
@@ -48,7 +49,6 @@ from shoulda_used_that.projection import (
     desired_projection_repositories,
 )
 from shoulda_used_that.rendering import OutputFormat, render
-from shoulda_used_that.services import projected
 from shoulda_used_that.state import StateStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -758,7 +758,7 @@ def test_projected_cli_emits_the_sealed_machine_record(
     snapshot = _projection_snapshot()
     store.write_curation(snapshot)
     client = ReadOnlyProjectionClient()
-    monkeypatch.setattr("shoulda_used_that.services.GhClient", lambda: client)
+    monkeypatch.setattr("shoulda_used_that.admin_services.GhClient", lambda: client)
 
     result = CliRunner().invoke(
         cli,
@@ -767,10 +767,9 @@ def test_projected_cli_emits_the_sealed_machine_record(
             str(state_root),
             "--format",
             "json",
-            "projected",
+            "github",
+            "plan",
             snapshot.curation_snapshot_id,
-            "--to",
-            "github-lists",
             "--account",
             "pradeeptathineni",
         ],

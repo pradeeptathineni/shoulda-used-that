@@ -21,7 +21,7 @@ The command uses the existing environment without synchronizing it, verifies com
 generation, performs a clean strict static build, checks local links and fragments, confirms all
 five search probes, rejects third-party runtime resources, and proves that `docs/curation` did not
 change. It reads only committed public inputs. Its only generated tree is ignored `site/` output;
-it never invokes `gh`, `shoulda apply`, a model, or a network fetch.
+it never invokes `gh`, `shoulda github apply`, a model, or a network fetch.
 
 Two immediate successful runs are semantic no-ops. The public-export tests additionally prove that
 one fixture change produces only the expected material files and that a failed staged write leaves
@@ -131,9 +131,10 @@ GitHub schedules are not a real-time guarantee: runs may be delayed during load,
 latest default-branch commit, and can be disabled after repository inactivity. No schedule should
 be treated as proof that evidence is current; the dated catalog receipt remains authoritative.
 
-## Personal curation remains manual in `v0.3.0`
+## Personal curation remains manual
 
 Authenticated Stars/Lists reads and projection planning use the existing keyring-backed `gh`
 session and can be run manually from the [GitHub curation runbook](github-curation.md). They are not
-part of the scheduled script. `apply` and `verify` are never scheduler targets, and no personal PAT
-belongs in launchd, systemd, cron, or repository Actions configuration.
+part of the scheduled script. `shoulda github apply` and `shoulda github verify` are never
+scheduler targets, and no personal PAT belongs in launchd, systemd, cron, or repository Actions
+configuration.

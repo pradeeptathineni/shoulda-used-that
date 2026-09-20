@@ -12,24 +12,13 @@ from pydantic import BaseModel
 from rich.console import Console
 from rich.table import Table
 
-from shoulda_used_that.curation import (
-    CurationSnapshot,
-    curation_projection_entries,
-    repository_evidence_records,
-)
-from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
 from shoulda_used_that.models import (
-    AdoptionPlan,
     CandidateEvaluation,
     CheckReceipt,
     DecisionReceipt,
-    ProjectionPlan,
     RecheckReceipt,
-    SaveReceipt,
 )
 from shoulda_used_that.project_context import ProjectSnapshot
-from shoulda_used_that.projection import GitHubProjectionPlan
-from shoulda_used_that.public_export import PublicCatalogExport
 
 
 class OutputFormat(StrEnum):
@@ -40,12 +29,8 @@ class OutputFormat(StrEnum):
 
 
 LOCAL_WORKFLOW_TYPES = (
-    SaveReceipt,
-    ProjectionPlan,
     DecisionReceipt,
     RecheckReceipt,
-    AdoptionPlan,
-    PublicCatalogExport,
 )
 
 
@@ -74,7 +59,54 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         _check_table(value, console, explain=explain)
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         _local_workflow_table(value, console)
-    elif isinstance(value, CurationSnapshot):
+    elif isinstance(value, ProjectSnapshot):
+        table = Table(title=f"Evidence for {value.target_identity}", min_width=80)
+        table.add_column("Evidence")
+        table.add_column("Observed value")
+        if value.repository_metadata is not None:
+            table.add_row("license", value.repository_metadata.license or "unknown")
+            table.add_row("archived", str(value.repository_metadata.archived).lower())
+            table.add_row("default branch", value.repository_metadata.default_branch)
+        table.add_row("languages", ", ".join(item.name for item in value.languages) or "unknown")
+        table.add_row("ecosystems", ", ".join(value.ecosystems) or "unknown")
+        table.add_row(
+            "typed evidence gaps",
+            "; ".join(item.subject for item in value.evidence_gaps) or "none",
+        )
+        console.print(table)
+        console.print(
+            f"Use in a check: --in {value.project_snapshot_id} · "
+            "Full source, manifest, and SBOM evidence: --format json"
+        )
+    elif _admin_table(value, console):
+        pass
+    else:
+        table = Table(title=value.__class__.__name__)
+        table.add_column("Field")
+        table.add_column("Value")
+        for key, item in payload.items():
+            if isinstance(item, (dict, list)):
+                rendered = json.dumps(item, sort_keys=True, ensure_ascii=False)
+            else:
+                rendered = str(item)
+            table.add_row(key, rendered)
+        console.print(table)
+    return console.export_text(styles=False)
+
+
+def _admin_table(value: BaseModel, console: Console) -> bool:
+    """Render maintainer records without importing their modules on the public path."""
+
+    from shoulda_used_that.curation import (
+        CurationSnapshot,
+        curation_projection_entries,
+        repository_evidence_records,
+    )
+    from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
+    from shoulda_used_that.projection import GitHubProjectionPlan
+    from shoulda_used_that.public_export import PublicCatalogExport
+
+    if isinstance(value, CurationSnapshot):
         table = Table(title=f"{value.curation_snapshot_id} · {value.profile_id}")
         table.add_column("Repository")
         table.add_column("Disposition")
@@ -97,25 +129,6 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
             f"Inbox: {value.counts.inbox} · Stale: {value.counts.stale}"
         )
         console.print(f"Snapshot fingerprint: {value.canonical_fingerprint}")
-    elif isinstance(value, ProjectSnapshot):
-        table = Table(title=f"Evidence for {value.target_identity}", min_width=80)
-        table.add_column("Evidence")
-        table.add_column("Observed value")
-        if value.repository_metadata is not None:
-            table.add_row("license", value.repository_metadata.license or "unknown")
-            table.add_row("archived", str(value.repository_metadata.archived).lower())
-            table.add_row("default branch", value.repository_metadata.default_branch)
-        table.add_row("languages", ", ".join(item.name for item in value.languages) or "unknown")
-        table.add_row("ecosystems", ", ".join(value.ecosystems) or "unknown")
-        table.add_row(
-            "typed evidence gaps",
-            "; ".join(item.subject for item in value.evidence_gaps) or "none",
-        )
-        console.print(table)
-        console.print(
-            f"Use in a check: --in {value.project_snapshot_id} · "
-            "Full source, manifest, and SBOM evidence: --format json"
-        )
     elif isinstance(value, GitHubProjectionPlan):
         table = Table(title=f"{value.plan_id} · {value.target_account}")
         table.add_column("#", justify="right")
@@ -203,18 +216,26 @@ def _table(value: BaseModel, payload: dict[str, Any], *, explain: bool) -> str:
         console.print(table)
         console.print(f"Observed login: {value.observed_login or 'unavailable'}")
         console.print(f"Receipt fingerprint: {value.canonical_fingerprint}")
-    else:
-        table = Table(title=value.__class__.__name__)
-        table.add_column("Field")
-        table.add_column("Value")
-        for key, item in payload.items():
-            if isinstance(item, (dict, list)):
-                rendered = json.dumps(item, sort_keys=True, ensure_ascii=False)
-            else:
-                rendered = str(item)
-            table.add_row(key, rendered)
+    elif isinstance(value, PublicCatalogExport):
+        table = Table(title=f"{value.export_id} · public catalog ready")
+        table.add_column("Public result")
+        table.add_column("Count or state")
+        table.add_row("Prior-art briefs", str(len(value.briefs)))
+        table.add_row("Assessed relations", str(len(value.assessments)))
+        table.add_row("Safe corpus records", str(len(value.exported_records)))
+        table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
+        table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
+        table.add_row("Reproducibility", value.reproducibility_status)
+        table.add_row("Renderer", value.renderer_version)
         console.print(table)
-    return console.export_text(styles=False)
+        console.print(
+            "Private field classes omitted: "
+            f"{sum(value.omitted_private_field_counts.values())} · "
+            f"Catalog fingerprint: {value.canonical_fingerprint}"
+        )
+    else:
+        return False
+    return True
 
 
 def _check_table(value: CheckReceipt, console: Console, *, explain: bool) -> None:
@@ -282,7 +303,7 @@ def _check_table(value: CheckReceipt, console: Console, *, explain: bool) -> Non
     if not visible_evaluations:
         console.print(_zero_result_diagnosis(value, predicate_excluded))
     elif value.result_repositories:
-        console.print(f"Inspect: shoulda inspected github:{value.result_repositories[0]}")
+        console.print(f"Inspect: shoulda inspect github:{value.result_repositories[0]}")
     if explain and (predicate_excluded or limit_excluded):
         _excluded_table((*predicate_excluded, *limit_excluded), console)
 
@@ -339,42 +360,7 @@ def _zero_result_diagnosis(
 def _local_workflow_table(value: BaseModel, console: Console) -> None:
     """Render the smaller local workflow records without exposing model field dumps."""
 
-    if isinstance(value, SaveReceipt):
-        table = Table(title=f"{value.save_id} · findings kept locally")
-        table.add_column("Repository")
-        table.add_column("Save result")
-        table.add_column("Decision status")
-        created = set(value.created)
-        for repository in value.repositories:
-            table.add_row(
-                repository,
-                "saved" if repository in created else "already saved",
-                value.disposition.value if value.disposition else "not set",
-            )
-        if not value.repositories:
-            table.add_row("none", "nothing requested", "not set")
-        console.print(table)
-        console.print(
-            f"Source check: {value.source_check_id or 'not supplied'} · "
-            f"GitHub changed: no · List plan: {value.projection_plan_id or 'none'}"
-        )
-    elif isinstance(value, ProjectionPlan):
-        table = Table(title=f"{value.plan_id} · sealed List preview")
-        table.add_column("Repository")
-        table.add_column("Current state")
-        table.add_column("Planned additive action")
-        for operation in value.operations:
-            table.add_row(
-                operation.repository,
-                operation.classification.replace("_", " "),
-                ", ".join(operation.operations) or "none",
-            )
-        console.print(table)
-        console.print(
-            f"List: {value.list_name} · GitHub changed: no · State: {value.mutation_state}"
-        )
-        console.print(f"Plan fingerprint: {value.plan_fingerprint}")
-    elif isinstance(value, DecisionReceipt):
+    if isinstance(value, DecisionReceipt):
         table = Table(title=f"{value.decision_id} · {value.repository}")
         table.add_column("Decision detail")
         table.add_column("Recorded value")
@@ -407,40 +393,6 @@ def _local_workflow_table(value: BaseModel, console: Console) -> None:
         console.print(
             f"Last-known-good preserved: {'yes' if value.last_known_good_preserved else 'no'} · "
             f"Source errors: {'; '.join(value.source_errors) or 'none'}"
-        )
-    elif isinstance(value, AdoptionPlan):
-        table = Table(title=f"{value.plan_id} · planning only")
-        table.add_column("Plan detail")
-        table.add_column("Recorded value")
-        table.add_row("Repository", value.repository)
-        table.add_row("Need", value.need)
-        table.add_row("Target", value.target)
-        table.add_row("Proposed files", "; ".join(value.proposed_files) or "none recorded")
-        table.add_row("Existing tools", "; ".join(value.native_tools) or "none recorded")
-        table.add_row("Validation", "; ".join(value.tests) or "none recorded")
-        table.add_row("Success means", "; ".join(value.expected_postconditions))
-        table.add_row("Rollback", "; ".join(value.rollback))
-        table.add_row(
-            "Evidence still needed", "; ".join(value.remaining_evidence) or "none recorded"
-        )
-        console.print(table)
-        console.print("Target changed: no · This record is a plan, not an installer.")
-    elif isinstance(value, PublicCatalogExport):
-        table = Table(title=f"{value.export_id} · public catalog ready")
-        table.add_column("Public result")
-        table.add_column("Count or state")
-        table.add_row("Prior-art briefs", str(len(value.briefs)))
-        table.add_row("Assessed relations", str(len(value.assessments)))
-        table.add_row("Safe corpus records", str(len(value.exported_records)))
-        table.add_row("Excluded candidates", str(len(value.excluded_candidates)))
-        table.add_row("Generated files", str(len(value.generated_file_manifest) + 1))
-        table.add_row("Reproducibility", value.reproducibility_status)
-        table.add_row("Renderer", value.renderer_version)
-        console.print(table)
-        console.print(
-            "Private field classes omitted: "
-            f"{sum(value.omitted_private_field_counts.values())} · "
-            f"Catalog fingerprint: {value.canonical_fingerprint}"
         )
     else:  # pragma: no cover - guarded by LOCAL_WORKFLOW_TYPES
         raise TypeError(f"unsupported local workflow record: {type(value).__name__}")
@@ -498,12 +450,56 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
             lines.extend(["| none | No candidate survived the explicit plan. | - | - |", ""])
             lines.append(_zero_result_diagnosis(value, predicate_excluded))
         elif value.result_repositories:
-            lines.extend(
-                ["", f"Inspect: `shoulda inspected github:{value.result_repositories[0]}`"]
-            )
+            lines.extend(["", f"Inspect: `shoulda inspect github:{value.result_repositories[0]}`"])
     elif isinstance(value, LOCAL_WORKFLOW_TYPES):
         lines.extend(_local_workflow_markdown(value))
-    elif isinstance(value, CurationSnapshot):
+    elif isinstance(value, ProjectSnapshot):
+        lines.extend(
+            [
+                f"- Snapshot: `{value.project_snapshot_id}`",
+                f"- Target: `{value.target_identity}`",
+                f"- Canonical fingerprint: `{value.canonical_fingerprint}`",
+                f"- Manifests: {len(value.manifest_facts)}",
+                f"- Dependency components: {len(value.dependency_components)}",
+                f"- Evidence gaps: {len(value.evidence_gaps)}",
+                "",
+                "| Ecosystem | Manifest | Kind |",
+                "|---|---|---|",
+            ]
+        )
+        for manifest in value.manifest_facts:
+            lines.append(
+                f"| {manifest.ecosystem} | `{manifest.relative_path}` | {manifest.manifest_kind} |"
+            )
+    else:
+        admin_lines = _admin_markdown(value)
+        if admin_lines is not None:
+            lines.extend(admin_lines)
+        else:
+            for key, item in payload.items():
+                rendered = (
+                    f"`{json.dumps(item, sort_keys=True, ensure_ascii=False)}`"
+                    if isinstance(item, (dict, list))
+                    else f"`{item}`"
+                )
+                lines.append(f"- **{key}:** {rendered}")
+    return "\n".join(lines) + "\n"
+
+
+def _admin_markdown(value: BaseModel) -> list[str] | None:
+    """Return maintainer Markdown without loading admin modules for public records."""
+
+    from shoulda_used_that.curation import (
+        CurationSnapshot,
+        curation_projection_entries,
+        repository_evidence_records,
+    )
+    from shoulda_used_that.github_apply import ApplyReceipt, VerifyReceipt
+    from shoulda_used_that.projection import GitHubProjectionPlan
+    from shoulda_used_that.public_export import PublicCatalogExport
+
+    lines: list[str] = []
+    if isinstance(value, CurationSnapshot):
         lines.extend(
             [
                 f"- Snapshot: `{value.curation_snapshot_id}`",
@@ -525,24 +521,6 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
                 f"| `{entry.repository}` | {entry.primary_disposition.value} | "
                 f"{', '.join(entry.collection_memberships)} | "
                 f"{freshness_by_repository[entry.repository]} |"
-            )
-    elif isinstance(value, ProjectSnapshot):
-        lines.extend(
-            [
-                f"- Snapshot: `{value.project_snapshot_id}`",
-                f"- Target: `{value.target_identity}`",
-                f"- Canonical fingerprint: `{value.canonical_fingerprint}`",
-                f"- Manifests: {len(value.manifest_facts)}",
-                f"- Dependency components: {len(value.dependency_components)}",
-                f"- Evidence gaps: {len(value.evidence_gaps)}",
-                "",
-                "| Ecosystem | Manifest | Kind |",
-                "|---|---|---|",
-            ]
-        )
-        for manifest in value.manifest_facts:
-            lines.append(
-                f"| {manifest.ecosystem} | `{manifest.relative_path}` | {manifest.manifest_kind} |"
             )
     elif isinstance(value, GitHubProjectionPlan):
         lines.extend(
@@ -616,55 +594,27 @@ def _markdown(value: BaseModel, payload: dict[str, Any]) -> str:
         )
         for condition in value.postconditions:
             lines.append(f"| {condition.kind} | `{condition.subject}` | {condition.state.value} |")
+    elif isinstance(value, PublicCatalogExport):
+        return [
+            f"- Public export: `{value.export_id}`",
+            f"- Prior-art briefs: {len(value.briefs)}",
+            f"- Assessed relations: {len(value.assessments)}",
+            f"- Safe corpus records: {len(value.exported_records)}",
+            f"- Excluded candidates: {len(value.excluded_candidates)}",
+            f"- Generated files: {len(value.generated_file_manifest) + 1}",
+            f"- Reproducibility: {value.reproducibility_status}",
+            f"- Renderer: `{value.renderer_version}`",
+            f"- Private field classes omitted: {sum(value.omitted_private_field_counts.values())}",
+            f"- Catalog fingerprint: `{value.canonical_fingerprint}`",
+        ]
     else:
-        for key, item in payload.items():
-            rendered = (
-                f"`{json.dumps(item, sort_keys=True, ensure_ascii=False)}`"
-                if isinstance(item, (dict, list))
-                else f"`{item}`"
-            )
-            lines.append(f"- **{key}:** {rendered}")
-    return "\n".join(lines) + "\n"
+        return None
+    return lines
 
 
 def _local_workflow_markdown(value: BaseModel) -> list[str]:
     """Return reader-facing Markdown for local workflow records."""
 
-    if isinstance(value, SaveReceipt):
-        lines = [
-            f"- Save receipt: `{value.save_id}`",
-            f"- Source check: `{value.source_check_id or 'not supplied'}`",
-            "- GitHub changed: no",
-            "",
-            "| Repository | Save result | Decision status |",
-            "|---|---|---|",
-        ]
-        created = set(value.created)
-        for repository in value.repositories:
-            lines.append(
-                f"| `{repository}` | "
-                f"{'saved' if repository in created else 'already saved'} | "
-                f"{value.disposition.value if value.disposition else 'not set'} |"
-            )
-        if not value.repositories:
-            lines.append("| none | nothing requested | not set |")
-        return lines
-    if isinstance(value, ProjectionPlan):
-        lines = [
-            f"- Sealed List preview: `{value.plan_id}`",
-            f"- List: {value.list_name}",
-            "- GitHub changed: no",
-            f"- Plan fingerprint: `{value.plan_fingerprint}`",
-            "",
-            "| Repository | Current state | Planned additive action |",
-            "|---|---|---|",
-        ]
-        lines.extend(
-            f"| `{operation.repository}` | {operation.classification.replace('_', ' ')} | "
-            f"{', '.join(operation.operations) or 'none'} |"
-            for operation in value.operations
-        )
-        return lines
     if isinstance(value, DecisionReceipt):
         return [
             f"- Decision: `{value.decision_id}`",
@@ -698,33 +648,4 @@ def _local_workflow_markdown(value: BaseModel) -> list[str]:
         if not value.diffs:
             lines.append("| none | none | no difference | No typed differences found. |")
         return lines
-    if isinstance(value, AdoptionPlan):
-        return [
-            f"- Adoption plan: `{value.plan_id}`",
-            f"- Repository: `{value.repository}`",
-            f"- Need: {value.need}",
-            f"- Target: `{value.target}`",
-            "- Target changed: no",
-            f"- Proposed files: {'; '.join(value.proposed_files) or 'none recorded'}",
-            f"- Existing tools: {'; '.join(value.native_tools) or 'none recorded'}",
-            f"- Validation: {'; '.join(value.tests) or 'none recorded'}",
-            f"- Success means: {'; '.join(value.expected_postconditions)}",
-            f"- Rollback: {'; '.join(value.rollback)}",
-            f"- Evidence still needed: {'; '.join(value.remaining_evidence) or 'none recorded'}",
-            "",
-            "This record is a plan, not an installer.",
-        ]
-    if isinstance(value, PublicCatalogExport):
-        return [
-            f"- Public export: `{value.export_id}`",
-            f"- Prior-art briefs: {len(value.briefs)}",
-            f"- Assessed relations: {len(value.assessments)}",
-            f"- Safe corpus records: {len(value.exported_records)}",
-            f"- Excluded candidates: {len(value.excluded_candidates)}",
-            f"- Generated files: {len(value.generated_file_manifest) + 1}",
-            f"- Reproducibility: {value.reproducibility_status}",
-            f"- Renderer: `{value.renderer_version}`",
-            f"- Private field classes omitted: {sum(value.omitted_private_field_counts.values())}",
-            f"- Catalog fingerprint: `{value.canonical_fingerprint}`",
-        ]
     raise TypeError(f"unsupported local workflow record: {type(value).__name__}")

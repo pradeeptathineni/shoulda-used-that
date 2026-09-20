@@ -1,11 +1,13 @@
 # Curated OSS coordinator contract for `v0.2.0`
 
+This document preserves the `v0.2.0` safety contract. Current operational commands are grouped by
+what they affect under `shoulda catalog` and `shoulda github`.
+
 ShouldaUsedThat coordinates four related jobs without conflating their truth:
 
 1. inspect an explicit project or supplied SBOM without writing to the target;
 2. compile reviewed OSS decisions and unresolved discoveries into a deterministic curation;
-3. publish an allowlisted catalog that shows what is used, trialed, referenced, watched,
-   rejected, or still in the inbox; and
+3. publish an allowlisted evidence corpus plus a small brief-first reader projection; and
 4. propose a small, lossy public projection into native GitHub Stars and Lists.
 
 Canonical JSON receipts are authoritative. GitHub stars are bookmarks and the prerequisite for
@@ -14,27 +16,28 @@ derived views. None may silently become the decision ledger.
 
 ## Commands and records
 
-- `inspected TARGET [--sbom PATH]` creates a versioned read-only `ProjectSnapshot` from an explicit
+- `shoulda inspect TARGET [--sbom PATH]` creates a versioned read-only `ProjectSnapshot` from an explicit
   GitHub repository, local root, SPDX document, or CycloneDX document.
-- `checked NEED --in SNAPSHOT_OR_PROJECT` exposes the exact project facts that affect applicability.
-- `curated PROFILE_PATH` validates a versioned profile and compiles a deterministic
+- `shoulda check NEED --in SNAPSHOT_OR_PROJECT` exposes the exact project facts that affect applicability.
+- `shoulda catalog build PROFILE_PATH` validates a versioned profile and compiles a deterministic
   `CurationSnapshot`, preserving exclusions, inbox items, stale evidence, and conflicts.
-- `projected CURATION_ID --to github-lists --account LOGIN` reads current GitHub state and writes a
+- `shoulda github plan CURATION_ID --account LOGIN` reads current GitHub state and writes a
   sealed `GitHubProjectionPlan`; it performs no mutation.
-- `apply PLAN_ID --fingerprint FINGERPRINT` accepts only `plan_kind: github-curation`, refuses CI
+- `shoulda github apply PLAN_ID --fingerprint FINGERPRINT` accepts only `plan_kind: github-curation`, refuses CI
   and non-TTY execution, rechecks identity/capabilities/drift/caps, and records every attempted
   additive operation.
-- `verify APPLY_RECEIPT_ID` independently reads every claimed star, List, description, and
+- `shoulda github verify APPLY_RECEIPT_ID` independently reads every claimed star, List, description, and
   membership postcondition.
-- `exported CURATION_ID --public --output DIRECTORY` constructs a staged allowlisted package,
+- `shoulda catalog export CURATION_ID --output DIRECTORY` constructs a staged allowlisted package,
   validates it, and atomically replaces the destination.
-- `rechecked TARGET --material-only` replays the original policy and emits no semantic change for
+- `shoulda recheck TARGET` replays the original policy and emits no semantic change for
   unchanged inputs.
 
-New canonical records are `ProjectSnapshot`, `CurationProfile`, `CollectionDefinition`,
-`CurationEntry`, `CurationSnapshot`, `GitHubProjectionPlan`, `ApplyReceipt`, `VerifyReceipt`, and
-`PublicCatalogExport`. Unknown schema versions fail closed; existing `v0.1.0` records remain
-readable and immutable.
+Current canonical records separate `RepositoryEvidence`, `CandidateScreening`,
+`CurationProjectionEntry`, `Problem`, `Assessment`, and `Brief`, alongside `ProjectSnapshot`,
+`CurationSnapshot`, `GitHubProjectionPlan`, `ApplyReceipt`, `VerifyReceipt`, and
+`PublicCatalogExport`. Unknown schema versions fail closed. Retired `v0.1.0` save and adoption
+records remain immutable and readable through explicit legacy validators.
 
 ## Mutation boundary
 
@@ -59,9 +62,10 @@ only allowlisted facts and reviewed decisions. It excludes local paths, private 
 metadata, raw API responses, credentials/scope dumps, private notes, hidden source membership, and
 unreviewed model output.
 
-The catalog must remain complete with GitHub List projection disabled. It exposes evidence-bound
-roles and needs, dated popularity metadata, alternatives, freshness, source attribution, and
-reconsideration triggers—never a magic score or timeless “best” claim.
+The complete safe corpus must remain publishable with GitHub List projection disabled. Rich reader
+pages require a concrete problem-by-repository assessment; screened metadata alone never becomes
+fit copy. Machine output retains dated observations and provenance without a magic score or
+timeless “best” claim.
 
 ## Presentation and upkeep
 

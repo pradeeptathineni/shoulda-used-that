@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
 
 import pytest
 import yaml
@@ -16,7 +20,7 @@ def _checked_args(state: Path, fixture: Path, output_format: str = "json") -> li
         str(state),
         "--format",
         output_format,
-        "checked",
+        "check",
         "find reusable receipt machinery",
         "--source",
         "fixture",
@@ -44,22 +48,6 @@ def test_checked_json_and_followup_chain(tmp_path: Path, fixture_path: Path) -> 
     assert check["result_repositories"] == ["fixture-labs/canonical-kit"]
     check_id = check["check_id"]
 
-    save_result = runner.invoke(
-        cli,
-        [
-            "--state-dir",
-            str(state),
-            "--format",
-            "json",
-            "saved",
-            "--all",
-            "--from",
-            check_id,
-        ],
-    )
-    assert save_result.exit_code == 0, save_result.output
-    assert json.loads(save_result.stdout)["created"] == ["fixture-labs/canonical-kit"]
-
     decision_result = runner.invoke(
         cli,
         [
@@ -67,7 +55,7 @@ def test_checked_json_and_followup_chain(tmp_path: Path, fixture_path: Path) -> 
             str(state),
             "--format",
             "json",
-            "remembered",
+            "remember",
             "fixture-labs/canonical-kit",
             "--as",
             "adopt",
@@ -87,7 +75,7 @@ def test_checked_json_and_followup_chain(tmp_path: Path, fixture_path: Path) -> 
 
     recheck_result = runner.invoke(
         cli,
-        ["--state-dir", str(state), "--format", "json", "rechecked", check_id],
+        ["--state-dir", str(state), "--format", "json", "recheck", check_id],
     )
     assert recheck_result.exit_code == 0, recheck_result.output
     assert json.loads(recheck_result.stdout)["outcome"] == "semantic-no-op"
@@ -117,7 +105,7 @@ def test_default_check_output_is_bounded_answer_first_and_diagnostic(
     base = [
         "--state-dir",
         str(tmp_path / "state"),
-        "checked",
+        "check",
         "canonical identity",
         "--source",
         "fixture",
@@ -144,60 +132,131 @@ def test_default_check_output_is_bounded_answer_first_and_diagnostic(
     assert "nothing was broadened" in empty.stdout
 
 
-def test_used_then_apply_and_verify_fail_closed(tmp_path: Path) -> None:
+def test_retired_and_replaced_commands_are_absent() -> None:
     runner = CliRunner()
-    state = tmp_path / "state"
-    used_result = runner.invoke(
+    for command in (
+        "saved",
+        "used",
+        "checked",
+        "inspected",
+        "remembered",
+        "rechecked",
+        "curated",
+        "exported",
+        "projected",
+        "apply",
+        "verify",
+    ):
+        result = runner.invoke(cli, [command])
+        assert result.exit_code == 2
+        assert f"No such command '{command}'" in result.output
+
+
+def test_catalog_and_github_commands_are_discoverable_groups(tmp_path: Path) -> None:
+    runner = CliRunner()
+    help_result = runner.invoke(cli, ["--help"])
+    catalog_help = runner.invoke(cli, ["catalog", "--help"])
+    github_help = runner.invoke(cli, ["github", "--help"])
+    version = runner.invoke(cli, ["--version"])
+    assert help_result.exit_code == 0, help_result.output
+    assert version.stdout == "shoulda, version 0.3.0\n"
+    for command in ("catalog", "check", "github", "inspect", "recheck", "remember"):
+        assert command in help_result.stdout
+    for command in ("build", "export"):
+        assert command in catalog_help.stdout
+    for command in ("plan", "apply", "verify"):
+        assert command in github_help.stdout
+    for retired_command in ("saved", "used", "--admin"):
+        assert retired_command not in help_result.stdout
+
+    invalid = runner.invoke(
         cli,
         [
             "--state-dir",
-            str(state),
+            str(tmp_path / "state"),
             "--format",
             "json",
-            "used",
-            "fixture-labs/canonical-kit",
-            "--for",
-            "canonical bytes",
-            "--in",
-            "synthetic-target",
-            "--file",
-            "adapter.py",
-            "--tool",
-            "pytest",
-            "--test",
-            "published vectors",
-            "--postcondition",
-            "vectors pass",
-            "--rollback",
-            "remove adapter",
+            "github",
+            "verify",
+            "app_example",
         ],
     )
-    assert used_result.exit_code == 0, used_result.output
-    plan = json.loads(used_result.stdout)
-    assert plan["mutation_state"] == "planning-only"
+    assert invalid.exit_code == 2
+    assert json.loads(invalid.stderr)["error"]["code"] == "invalid_identifier"
 
-    apply_result = runner.invoke(
-        cli,
-        [
-            "--state-dir",
-            str(state),
-            "--format",
-            "json",
-            "apply",
-            plan["plan_id"],
-            "--fingerprint",
-            plan["plan_fingerprint"],
-        ],
-    )
-    assert apply_result.exit_code == 2
-    assert json.loads(apply_result.stderr)["error"]["code"] == "unsupported_plan_kind"
 
-    verify_result = runner.invoke(
-        cli,
-        ["--state-dir", str(state), "--format", "json", "verify", "app_example"],
+def test_importing_cli_does_not_eagerly_load_operational_modules() -> None:
+    command = """
+import json
+import sys
+import shoulda_used_that.cli
+
+blocked = {
+    'shoulda_used_that.admin_services',
+    'shoulda_used_that.curation',
+    'shoulda_used_that.github_apply',
+    'shoulda_used_that.github_mutations',
+    'shoulda_used_that.projection',
+    'shoulda_used_that.public_export',
+}
+print(json.dumps(sorted(blocked.intersection(sys.modules))))
+"""
+    completed = subprocess.run(  # noqa: S603 - fixed interpreter and static script
+        [sys.executable, "-c", command],
+        check=False,
+        capture_output=True,
+        text=True,
     )
-    assert verify_result.exit_code == 2
-    assert json.loads(verify_result.stderr)["error"]["code"] == "invalid_identifier"
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout) == []
+
+
+def test_github_action_commands_report_complete_and_incomplete_results(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from shoulda_used_that import admin_services
+
+    applied_calls: list[dict[str, Any]] = []
+
+    def fake_applied(_store: Any, **kwargs: Any) -> SimpleNamespace:
+        applied_calls.append(kwargs)
+        status = "complete" if kwargs["plan_id"] == "gcp_complete" else "partial"
+        return SimpleNamespace(kind="apply", status=SimpleNamespace(value=status))
+
+    def fake_verified(_store: Any, *, apply_receipt_id: str) -> SimpleNamespace:
+        status = "verified" if apply_receipt_id == "app_verified" else "mismatch"
+        return SimpleNamespace(kind="verify", status=SimpleNamespace(value=status))
+
+    monkeypatch.setattr(admin_services, "applied", fake_applied)
+    monkeypatch.setattr(admin_services, "verified", fake_verified)
+    monkeypatch.setattr(
+        "shoulda_used_that.cli.render",
+        lambda value, _output_format: f"{value.kind}:{value.status.value}\n",
+    )
+    base = ["--state-dir", str(tmp_path / "state"), "github"]
+    runner = CliRunner()
+
+    complete = runner.invoke(
+        cli,
+        [*base, "apply", "gcp_complete", "--fingerprint", "plan_complete"],
+    )
+    partial = runner.invoke(
+        cli,
+        [*base, "apply", "gcp_partial", "--fingerprint", "plan_partial"],
+    )
+    verified = runner.invoke(cli, [*base, "verify", "app_verified"])
+    mismatch = runner.invoke(cli, [*base, "verify", "app_mismatch"])
+
+    assert (complete.exit_code, complete.stdout) == (0, "apply:complete\n")
+    assert (partial.exit_code, partial.stdout) == (2, "apply:partial\n")
+    assert (verified.exit_code, verified.stdout) == (0, "verify:verified\n")
+    assert (mismatch.exit_code, mismatch.stdout) == (2, "verify:mismatch\n")
+    assert [call["fingerprint"] for call in applied_calls] == [
+        "plan_complete",
+        "plan_partial",
+    ]
+    assert all(call["environment"] is not None for call in applied_calls)
+    assert all(call["stdin_isatty"] is False for call in applied_calls)
 
 
 @pytest.mark.parametrize(
@@ -218,7 +277,7 @@ def test_unused_source_arguments_are_typed_errors(
             str(tmp_path / "state"),
             "--format",
             "json",
-            "checked",
+            "check",
             "test",
             "--source",
             "stars",
@@ -245,7 +304,7 @@ def test_selected_sources_require_locators(tmp_path: Path, source: str, code: st
             str(tmp_path / "state"),
             "--format",
             "json",
-            "checked",
+            "check",
             "test",
             "--source",
             source,
@@ -271,16 +330,18 @@ def test_version_and_help_expose_stable_surface() -> None:
     runner = CliRunner()
     version = runner.invoke(cli, ["--version"])
     help_result = runner.invoke(cli, ["--help"])
-    checked_help = runner.invoke(cli, ["checked", "--help"])
+    checked_help = runner.invoke(cli, ["check", "--help"])
     assert version.exit_code == 0
     assert version.stdout == "shoulda, version 0.3.0\n"
     assert help_result.exit_code == 0
-    assert "Start here: checked finds options" in help_result.stdout
+    assert "Start here: check finds options" in help_result.stdout
     assert "Find candidates from an explicit source/query plan" in help_result.stdout
-    for command in ("checked", "inspected", "remembered", "rechecked"):
+    for command in ("check", "inspect", "remember", "recheck"):
         assert command in help_result.stdout
-    for hidden in ("curated", "exported", "projected", "saved", "used", "apply", "verify"):
+    for hidden in ("curated", "exported", "projected", "saved", "used"):
         assert hidden not in help_result.stdout
+    for nested in ("apply", "verify"):
+        assert f"\n  {nested} " not in help_result.stdout
     assert checked_help.exit_code == 0
     assert "Explicit discovery source" in checked_help.stdout
     assert "NEED never expands or rewrites it" in " ".join(checked_help.stdout.split())

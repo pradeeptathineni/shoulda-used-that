@@ -635,14 +635,14 @@ def test_cli_emits_machine_record_and_readable_summary(tmp_path: Path) -> None:
     base = ["--state-dir", str(tmp_path / "state")]
     machine = runner.invoke(
         cli,
-        [*base, "--format", "json", "curated", str(PUBLIC_PROFILE)],
+        [*base, "--format", "json", "catalog", "build", str(PUBLIC_PROFILE)],
     )
     assert machine.exit_code == 0, machine.output
     assert json.loads(machine.stdout)["counts"]["entries"] == 222
 
     human = runner.invoke(
         cli,
-        [*base, "--format", "table", "curated", str(PUBLIC_PROFILE)],
+        [*base, "--format", "table", "catalog", "build", str(PUBLIC_PROFILE)],
     )
     assert human.exit_code == 0, human.output
     assert "pradeeptathineni/shoulda-used-that" in human.stdout

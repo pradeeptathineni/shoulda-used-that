@@ -18,3 +18,7 @@ Current curation sources deliberately use two schemas: `curation-corpus-input` h
 repository evidence plus screening and operator projection intent, while `curation-context-input`
 holds concrete problems and problem-by-repository assessments. A screened corpus record is not an
 assessment.
+
+Schemas for the retired `SaveReceipt`, legacy List-preview `ProjectionPlan`, and `AdoptionPlan`
+remain available from the immutable `v0.1.0`/`v0.3.0` tags. Current generation omits them; existing
+local JSON remains inspectable through the read-only `shoulda_used_that.legacy` validators.

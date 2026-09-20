@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the repository-first catalog experience with five concrete prior-art briefs backed by
+  problem-specific assessments, while retaining all safe screened evidence in canonical JSON.
+- Replaced past-tense and hidden top-level CLI names with imperative research commands
+  (`check`, `inspect`, `remember`, and `recheck`) plus discoverable `catalog` and `github` groups.
+- Split research orchestration from maintainer publication/mutation services and stopped fresh
+  research state from creating administrative or retired lifecycle directories.
+
+### Removed
+
+- Retired `saved`, legacy List-preview projection, and `used` adoption-plan creation along with
+  their current schemas, renderers, services, and state writers. Existing JSON remains readable
+  through explicit read-only legacy validators and immutable release tags.
+- Removed repository/collection/status page generation and the obsolete catalog scale benchmark;
+  only assessed candidates receive rich evidence pages.
+
 ## [0.3.0] - 2026-09-17
 
 ### Added

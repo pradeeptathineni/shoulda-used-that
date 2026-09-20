@@ -60,6 +60,7 @@ CATALOG_WORKFLOW_FORBIDDEN = (
     "GH_TOKEN",
     "gh auth",
     "shoulda apply",
+    "shoulda github apply",
     "updateUserList",
     "updateUserListsForItem",
     "PUT /user/starred",
@@ -78,6 +79,7 @@ CATALOG_UPKEEP_FORBIDDEN = (
     "GITHUB_TOKEN",
     "gh ",
     "shoulda apply",
+    "shoulda github apply",
     "curl ",
     "wget ",
 )
