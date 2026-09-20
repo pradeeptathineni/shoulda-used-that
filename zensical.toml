@@ -1,9 +1,9 @@
 [project]
 site_name = "ShouldaUsedThat"
 site_url = "https://pradeeptathineni.github.io/shoulda-used-that/"
-site_description = "Build an evidence-backed prior-art brief for a concrete software problem before writing another implementation."
+site_description = "See what to reuse, what to skip, and what is genuinely left to build."
 site_author = "Pradeep Tathineni"
-copyright = "ShouldaUsedThat · Apache-2.0 · Evidence before enthusiasm"
+copyright = "ShouldaUsedThat · Apache-2.0 · Reuse what fits; build what remains"
 docs_dir = "docs"
 site_dir = "site"
 repo_url = "https://github.com/pradeeptathineni/shoulda-used-that"
@@ -12,7 +12,7 @@ edit_uri = "edit/main/docs"
 extra_css = ["curation/assets/catalog.css"]
 nav = [
   { "Home" = "index.md" },
-  { "Explore" = "curation/index.md" },
+  { "Decisions" = "curation/index.md" },
   { "CLI" = "getting-started.md" },
   { "How it works" = "architecture/product-contract.md" },
 ]

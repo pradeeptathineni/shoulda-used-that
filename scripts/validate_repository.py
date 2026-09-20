@@ -12,11 +12,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_DESCRIPTION = (
-    "Build an evidence-backed prior-art brief for a concrete software problem before writing "
-    "another implementation."
-)
-EXPECTED_TAGLINE = "Before you build, get an evidence-backed brief on the open-source landscape."
+EXPECTED_DESCRIPTION = "See what to reuse, what to skip, and what is genuinely left to build."
+EXPECTED_TAGLINE = "Know what to reuse, what to skip, and what is genuinely left to build."
 RECEIPT_FIELDS = {
     "schema_version",
     "receipt_id",
@@ -136,8 +133,8 @@ def validate() -> list[str]:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     if project["name"] != "shoulda-used-that":
         problems.append("project distribution name is not shoulda-used-that")
-    if project["version"] != "0.3.0":
-        problems.append("project version is not 0.3.0")
+    if project["version"] != "0.4.0":
+        problems.append("project version is not 0.4.0")
     if project["description"] != EXPECTED_DESCRIPTION:
         problems.append("project description differs from the public contract")
 

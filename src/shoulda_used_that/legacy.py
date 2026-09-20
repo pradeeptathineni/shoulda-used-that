@@ -1,4 +1,4 @@
-"""Read-only validators for receipt kinds retired after v0.3.0.
+"""Read-only validators for receipt kinds retired in v0.4.0.
 
 Released tags retain the original schemas. This module lets existing local JSON be
 validated and inspected without preserving commands that create more of it.

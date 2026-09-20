@@ -7,9 +7,9 @@ description: The durable boundary for an evidence-backed prior-art brief before 
 
 ## Product definition
 
-ShouldaUsedThat produces an evidence-backed prior-art brief for a concrete software build problem.
-The brief helps a builder see the credible existing landscape before deciding whether to adopt,
-adapt, combine, or build.
+ShouldaUsedThat produces an evidence-backed build decision for a concrete software problem. The
+underlying artifact is a prior-art brief, but the reader-facing answer says what to use, try, learn
+from, study, watch, skip, or build before the reader commits implementation time.
 
 The target user is a software builder about to commit design or implementation time. Their primary
 job is: **understand what already covers this problem, what deserves caution, and what remains
@@ -25,9 +25,9 @@ state a concrete problem
   → choose, record, and revisit when material evidence changes
 ```
 
-The primary human unit is the **brief**, not a repository page. A useful brief normally contains
-three to five options or established approaches, what each covers, important watch items, explicit
-unknowns, the landscape already covered, and the residual question.
+The primary human unit is the **decision brief**, not a repository page. A useful brief normally
+contains three to five options, a problem-specific action for each, what each covers, important
+watch items, explicit unknowns, the landscape already covered, and the justified custom scope.
 
 ## Evidence and model boundaries
 
@@ -46,8 +46,10 @@ inputs; it must not invent facts, decisions, evidence, gates, or identity.
 
 ## Information budget
 
-- Keep primary navigation to at most four reader concepts: Home, Explore, CLI, and How it works.
+- Keep primary navigation to at most four reader concepts: Home, Decisions, CLI, and How it works.
 - Lead with the problem and decision effect; reveal implementation and operational evidence later.
+- Translate contextual decision state into direct action words: use, try, learn from, study, watch,
+  skip, or build. Never present that action outside its named problem.
 - Show routine trust evidence compactly as `Checked <date> · Evidence`.
 - Do not repeat default state, aliases, fingerprints, full hashes, projection terminology, or receipt
   identifiers unless the reader explicitly opens evidence or operator detail.

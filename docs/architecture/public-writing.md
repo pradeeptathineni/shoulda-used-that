@@ -6,8 +6,8 @@ description: How every reader-facing surface is reviewed without giving prose to
 # Public writing quality loop
 
 Public writing should make the reader's job obvious before it explains the machinery. Here, that
-job is: **find existing open source before building from scratch, see what fits a named need, and
-keep enough evidence to revisit the choice**.
+job is: **see what to reuse, what to skip, and what remains worth building for a named need, with
+enough evidence to revisit the choice**.
 
 ## The boundary never moves
 
@@ -28,7 +28,7 @@ keep enough evidence to revisit the choice**.
 | --- | --- | --- |
 | GitHub description, README, homepage | Decide whether this is relevant and choose a first action | First Reader plus ZeroSlop and Vale |
 | Getting started and CLI help | Complete one task without learning the internal architecture | ZeroSlop, command tests, and a clean-environment smoke test |
-| Catalog overview, collections, cards, entries | Find by need, understand why an option is present, and judge freshness | First Reader on landing pages; ZeroSlop on owned templates; deterministic generation and sample review |
+| Decision overview, cards, and evidence | Find by need, see the action and remaining custom scope, and judge freshness | First Reader on landing pages; ZeroSlop on owned templates; deterministic generation and sample review |
 | Changelog and release notes | Understand what changed, why it matters, and what remains bounded | ZeroSlop, version checks, and release verification |
 | Architecture, operations, security, schemas, contribution docs | Find exact contracts without mistaking detail for the opening pitch | ZeroSlop, Vale, link checks, and the relevant technical tests |
 | 404 page and site chrome | Recover quickly | Human read-through and site build |
@@ -84,11 +84,10 @@ from top to bottom. This pass owns the final wording.
 
 ## Evidence and maintenance
 
-The [v0.3.0 public-surface review](../development/public-surface-review-v0.3.0.md) records the
-executed First Reader and ZeroSlop passes, changes they caused, and remaining caveats. The immutable
-[v0.3 public-writing decision receipt](../decisions/public-writing-v0.3.json) supersedes the
-original receipt and records why these tools are editorial aids rather than dependencies or
-authorities.
+The [v0.4.0 public-value review](../development/public-value-review-v0.4.0.md) records the
+decision-first correction and rendered checks. The immutable [v0.4 public-writing decision
+receipt](../decisions/public-writing-v0.4.json) supersedes the v0.3 receipt and records why direct
+problem-specific actions are shown while editorial tools remain aids rather than authorities.
 
 Rerun the review when a first-contact page changes purpose, a new public surface appears, or a
 generated template changes how readers interpret a status. Do not rerun it merely to optimize a

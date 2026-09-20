@@ -46,8 +46,15 @@ from shoulda_used_that.models import FrozenModel
 
 PUBLIC_EXPORT_SCHEMA_VERSION: Literal["4.0"] = "4.0"
 PUBLIC_ALLOWLIST_SCHEMA_VERSION: Literal["1.0"] = "1.0"
-PUBLIC_RENDERER_VERSION = "shoulda-public-briefs/4.0"
+PUBLIC_RENDERER_VERSION = "shoulda-public-decisions/4.1"
 MANIFEST_NAME = "manifest.json"
+BRIEF_DISPLAY_ORDER = (
+    "reproducible-python-quality-gate",
+    "static-technical-docs-review",
+    "deterministic-python-research-core",
+    "curated-oss-evidence-publishing",
+    "local-first-prior-art-coordination",
+)
 
 PRIVATE_FIELD_CLASSES = (
     "credentials",
@@ -660,7 +667,9 @@ def _render_files(
     assessment_by_relation = {(item.problem_id, item.repository): item for item in assessments}
     files: dict[str, bytes] = {
         "catalog.json": canonical_bytes(catalog_payload) + b"\n",
-        "index.md": _briefs_index_markdown(profile, snapshot, problems, briefs).encode(),
+        "index.md": _briefs_index_markdown(
+            profile, snapshot, problems, assessments, briefs
+        ).encode(),
         "sources.md": _sources_markdown(profile, snapshot, attributions).encode(),
         "tags.md": _tags_markdown().encode(),
         "assets/catalog.css": _catalog_css().encode(),
@@ -726,28 +735,37 @@ def _briefs_index_markdown(
     profile: CurationProfile,
     snapshot: CurationSnapshot,
     problems: tuple[PublicProblem, ...],
+    assessments: tuple[PublicAssessment, ...],
     briefs: tuple[PublicBrief, ...],
 ) -> str:
     problem_by_id = {item.problem_id: item for item in problems}
+    assessment_by_relation = {(item.problem_id, item.repository): item for item in assessments}
+    display_priority = {problem_id: index for index, problem_id in enumerate(BRIEF_DISPLAY_ORDER)}
+    ordered_briefs = sorted(
+        briefs,
+        key=lambda item: (display_priority.get(item.problem_id, len(display_priority)), item.title),
+    )
     cards = "\n".join(
         f"""<article class="catalog-card brief-card">
   <h2><a href="briefs/{html.escape(brief.problem_id, quote=True)}.md">{html.escape(brief.title)}</a></h2>
   <p>{html.escape(problem_by_id[brief.problem_id].question)}</p>
-  <p><strong>{len(brief.candidate_repositories)} approaches worth knowing</strong></p>
-  <p class="catalog-card__evidence">Checked {html.escape(_checked_date(brief.checked_at))} · <a href="briefs/{html.escape(brief.problem_id, quote=True)}.md">Open brief</a></p>
+  <p class="catalog-card__decision"><strong>Decision:</strong> {html.escape(_decision_summary(brief, assessment_by_relation))}</p>
+  <p><strong>Still yours:</strong> {html.escape(brief.what_remains_unresolved[0])}</p>
+  <p class="catalog-card__evidence">{len(brief.candidate_repositories)} assessed options · Checked {html.escape(_checked_date(brief.checked_at))} · <a href="briefs/{html.escape(brief.problem_id, quote=True)}.md">Open decision</a></p>
 </article>"""
-        for brief in briefs
+        for brief in ordered_briefs
     )
     return (
         _frontmatter(
-            "Explore prior-art briefs",
-            "Concrete software build problems with assessed options, tradeoffs, and residual gaps.",
+            "Reviewed build decisions",
+            "Concrete software problems with what to use, try, learn from, study, watch, skip, and still build.",
             ("prior art", "software architecture"),
         )
-        + f"""# Explore prior-art briefs
+        + f"""# Reviewed build decisions
 
-Start with a build problem. Each brief shows the few existing approaches worth knowing, what they
-cover, where they stop, and what still appears unresolved. No brief chooses a universal winner.
+Choose the problem closest to yours. Each decision says what to use, try, learn from, study, watch,
+skip, or build—then shows why and names the custom work that remains. Every action is specific to
+the stated problem; none is a universal ranking.
 
 <div class="catalog-grid">
 {cards}
@@ -755,7 +773,7 @@ cover, where they stop, and what still appears unresolved. No brief chooses a un
 
 ## Evidence boundary
 
-These {len(briefs)} briefs use explicit problem-by-repository assessments. The complete safe corpus
+These {len(briefs)} decisions use explicit problem-by-repository assessments. The complete safe corpus
 of {snapshot.counts.entries} screened repositories remains available in [machine-readable JSON](catalog.json),
 but screened metadata never becomes contextual fit copy or a rich reader page.
 
@@ -782,12 +800,18 @@ def _brief_markdown(
         caution = watch or unknowns
         if watch and unknowns:
             caution = f"{watch} Unknown: {unknowns}"
+        decision_state = assessment.decision_state
+        decision_label = _decision_label(decision_state)
+        decision_class = decision_state.value if decision_state is not None else "consider"
+        reconsider = "; ".join(assessment.reconsider_when) or "Material evidence changes."
         cards.append(
             f"""<article class="catalog-card assessment-card">
+  <p class="decision-chip decision-chip--{html.escape(decision_class, quote=True)}">{html.escape(decision_label)}</p>
   <h2>{html.escape(repository)}</h2>
   <p>{html.escape(record.description)}</p>
-  <p><strong>Covers:</strong> {html.escape(covers)}</p>
+  <p><strong>What it contributes:</strong> {html.escape(covers)}</p>
   <p><strong>{caution_label}:</strong> {html.escape(caution)}</p>
+  <p><strong>Revisit when:</strong> {html.escape(reconsider)}</p>
   <p class="catalog-card__evidence">Checked {html.escape(_checked_date(record.last_checked_at))} · <a href="{html.escape(record.url, quote=True)}">Repository</a> · <a href="../evidence/{_repository_slug(repository)}.md#{html.escape(brief.problem_id, quote=True)}">Evidence</a></p>
 </article>"""
         )
@@ -800,28 +824,34 @@ def _brief_markdown(
         _frontmatter(brief.title, problem.question, problem.domains)
         + f"""# {_markdown_text(brief.title)}
 
-## Problem
+## The build problem
 
 {_markdown_text(problem.question)}
 
-## Approaches worth knowing
+<div class="decision-summary">
+  <p class="catalog-kicker">Reviewed answer</p>
+  <p><strong>Recommended path:</strong> {html.escape(_decision_summary(brief, assessments))}</p>
+  <p><strong>You still own:</strong> {html.escape(" ".join(brief.what_remains_unresolved))}</p>
+</div>
+
+## Option-by-option decision
 
 <div class="catalog-grid">
 {chr(10).join(cards)}
 </div>
 
-## What appears covered
+## What the existing tools already cover
 
 {covered}
 
-## What still appears unresolved
+## What you still need to decide or build
 
 {unresolved}
 
-Based on the reviewed evidence, that residual work may still justify a focused build. This brief
-does not rank the candidates or imply certainty beyond the cited evidence.
+That remaining work is the justified custom scope in this decision. The actions above apply only
+to the stated problem; they are not universal rankings or guarantees beyond the cited evidence.
 
-Checked {_markdown_text(_checked_date(brief.checked_at))} · [Explore all briefs](../index.md)
+Checked {_markdown_text(_checked_date(brief.checked_at))} · [See all decisions](../index.md)
 
 <details>
 <summary>Brief research evidence</summary>
@@ -831,6 +861,50 @@ Checked {_markdown_text(_checked_date(brief.checked_at))} · [Explore all briefs
 </details>
 """
     )
+
+
+DECISION_ACTIONS = {
+    CurationDisposition.ADOPT: "Use",
+    CurationDisposition.TRIAL: "Try",
+    CurationDisposition.REFERENCE: "Learn from",
+    CurationDisposition.LEARN: "Study",
+    CurationDisposition.WATCH: "Watch",
+    CurationDisposition.REJECT: "Skip",
+    CurationDisposition.BUILD: "Build",
+    CurationDisposition.INBOX: "Review",
+}
+
+
+def _decision_label(value: CurationDisposition | None) -> str:
+    if value is None:
+        return "Consider"
+    return DECISION_ACTIONS[value]
+
+
+def _decision_summary(
+    brief: PublicBrief,
+    assessments: dict[tuple[str, str], PublicAssessment],
+) -> str:
+    grouped: dict[CurationDisposition | None, list[str]] = {}
+    for repository in brief.candidate_repositories:
+        state = assessments[(brief.problem_id, repository)].decision_state
+        grouped.setdefault(state, []).append(repository)
+    actions: list[str] = []
+    for disposition, action in DECISION_ACTIONS.items():
+        repositories = grouped.get(disposition)
+        if repositories:
+            actions.append(f"{action} {_human_join(repositories)}")
+    if grouped.get(None):
+        actions.append(f"Consider {_human_join(grouped[None])}")
+    return "; ".join(actions) + "."
+
+
+def _human_join(values: list[str]) -> str:
+    if len(values) == 1:
+        return values[0]
+    if len(values) == 2:
+        return f"{values[0]} and {values[1]}"
+    return f"{', '.join(values[:-1])}, and {values[-1]}"
 
 
 def _evidence_markdown(
@@ -1014,6 +1088,8 @@ def _catalog_css() -> str:
   --sut-accent: #087f5b;
   --sut-accent-strong: #075c45;
   --sut-warm: #a44a00;
+  --sut-danger: #9f2636;
+  --sut-info: #2457a6;
 }
 
 [data-md-color-scheme="slate"] {
@@ -1025,6 +1101,8 @@ def _catalog_css() -> str:
   --sut-accent: #62d9b0;
   --sut-accent-strong: #8ce8c8;
   --sut-warm: #ffb36f;
+  --sut-danger: #ff8796;
+  --sut-info: #9bc1ff;
 }
 
 .catalog-hero {
@@ -1034,6 +1112,17 @@ def _catalog_css() -> str:
   background: linear-gradient(145deg, color-mix(in srgb, var(--sut-accent) 12%, var(--sut-panel)), var(--sut-panel) 62%);
   box-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--sut-ink) 9%, transparent);
 }
+
+.catalog-hero h1 {
+  color: var(--sut-ink);
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  letter-spacing: -.035em;
+  line-height: 1.02;
+  margin: 0 0 1rem;
+  max-width: 49rem;
+}
+
+.catalog-hero .catalog-lead { margin-bottom: 0; }
 
 .catalog-kicker {
   color: var(--sut-accent-strong);
@@ -1087,7 +1176,41 @@ def _catalog_css() -> str:
 .catalog-card p { color: var(--sut-muted); margin: .35rem 0; }
 .catalog-card__meta, .entry-heading { align-items: center; display: flex; flex-wrap: wrap; gap: .4rem; }
 .assessment-card__problem { color: var(--sut-accent-strong) !important; font-size: .82rem; font-weight: 700; }
+.catalog-card__decision { color: var(--sut-ink) !important; }
 .catalog-card__evidence { border-top: 1px solid var(--sut-line); font-size: .82rem; margin-top: auto !important; padding-top: .65rem; }
+
+.decision-summary {
+  background: var(--sut-surface);
+  border: 1px solid var(--sut-line);
+  border-left: .35rem solid var(--sut-accent);
+  border-radius: .75rem;
+  margin: 1rem 0 2rem;
+  padding: 1rem 1.15rem;
+}
+
+.decision-summary p { color: var(--sut-ink); margin: .35rem 0; }
+
+.decision-chip {
+  align-self: flex-start;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .065em;
+  line-height: 1;
+  margin: 0 0 .3rem !important;
+  padding: .35rem .55rem;
+  text-transform: uppercase;
+}
+
+.decision-chip--adopt { color: var(--sut-accent-strong) !important; }
+.decision-chip--trial, .decision-chip--build { color: var(--sut-info) !important; }
+.decision-chip--reference, .decision-chip--learn, .decision-chip--inbox, .decision-chip--consider { color: var(--sut-muted) !important; }
+.decision-chip--watch { color: var(--sut-warm) !important; }
+.decision-chip--reject { color: var(--sut-danger) !important; }
+
+.home-value-card h2 { margin-top: .25rem; }
+.home-value-card p { color: var(--sut-ink); }
 
 .freshness-chip {
   border: 1px solid currentColor;

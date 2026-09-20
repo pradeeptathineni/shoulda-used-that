@@ -31,8 +31,8 @@ search:
 
 ### Assessment evidence
 
-- <a href="../../decisions/public-writing-v0.3.json">docs/decisions/public-writing-v0.3.json</a>
-- <a href="../../development/public-surface-review-v0.3.0.md">docs/development/public-surface-review-v0.3.0.md</a>
+- <a href="../../decisions/public-writing-v0.4.json">docs/decisions/public-writing-v0.4.json</a>
+- <a href="../../development/public-value-review-v0.4.0.md">docs/development/public-value-review-v0.4.0.md</a>
 
 Assessed 2026\-09\-17 ·
 [Return to brief](../briefs/static-technical-docs-review.md)

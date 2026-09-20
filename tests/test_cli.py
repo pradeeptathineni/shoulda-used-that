@@ -160,7 +160,7 @@ def test_catalog_and_github_commands_are_discoverable_groups(tmp_path: Path) -> 
     github_help = runner.invoke(cli, ["github", "--help"])
     version = runner.invoke(cli, ["--version"])
     assert help_result.exit_code == 0, help_result.output
-    assert version.stdout == "shoulda, version 0.3.0\n"
+    assert version.stdout == "shoulda, version 0.4.0\n"
     for command in ("catalog", "check", "github", "inspect", "recheck", "remember"):
         assert command in help_result.stdout
     for command in ("build", "export"):
@@ -333,7 +333,7 @@ def test_version_and_help_expose_stable_surface() -> None:
     help_result = runner.invoke(cli, ["--help"])
     checked_help = runner.invoke(cli, ["check", "--help"])
     assert version.exit_code == 0
-    assert version.stdout == "shoulda, version 0.3.0\n"
+    assert version.stdout == "shoulda, version 0.4.0\n"
     assert help_result.exit_code == 0
     assert "Start here: check finds options" in help_result.stdout
     assert "Find candidates from an explicit source/query plan" in help_result.stdout

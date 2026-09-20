@@ -14,7 +14,7 @@ an issue. General security posture and published advisories are available on the
 
 ## Safety boundary
 
-`v0.3.0` has no target-write or destructive GitHub path. Its only live GitHub mutations are the
+`v0.4.0` has no target-write or destructive GitHub path. Its only live GitHub mutations are the
 interactive, exact-fingerprint-bound additive operations documented in the
 [operator runbook](docs/operations/github-curation.md): create a public List, star a public
 repository, and add the repository to the union of current and approved memberships. A route that

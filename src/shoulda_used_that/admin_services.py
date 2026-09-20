@@ -366,7 +366,7 @@ def _validated_apply_plan(
     if not plan_id.startswith("gcp_"):
         raise StateError(
             code="unsupported_plan_kind",
-            message="v0.3.0 apply supports only a github-curation plan ID.",
+            message="apply supports only a github-curation plan ID.",
         )
     plan = store.read_github_projection(plan_id)
     if fingerprint != plan.canonical_plan_fingerprint:

@@ -87,17 +87,22 @@ def test_primary_navigation_and_homepage_obey_the_reader_information_budget() ->
     config = tomllib.loads((ROOT / "zensical.toml").read_text(encoding="utf-8"))
     navigation = config["project"]["nav"]
     labels = tuple(next(iter(item)) for item in navigation)
-    assert labels == ("Home", "Explore", "CLI", "How it works")
+    assert labels == ("Home", "Decisions", "CLI", "How it works")
     assert len(navigation) <= 4
     assert all(isinstance(next(iter(item.values())), str) for item in navigation)
 
     homepage = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
-    first_screen = homepage.split("## Example:", maxsplit=1)[0]
-    assert len(first_screen.split()) <= 150
+    first_screen = homepage.split("## A real answer", maxsplit=1)[0]
+    assert len(first_screen.split()) <= 190
     assert not {"fingerprint", "projection", "receipt"}.intersection(
         first_screen.casefold().split()
     )
-    assert "## Example: build a deterministic Python research core" in homepage
-    assert homepage.index("## Example:") < homepage.index("## How trust stays out of the way")
-    assert "**What appears covered:**" in homepage
-    assert "**What remains:**" in homepage
+    assert "# Reuse what fits. Build only what is missing." in first_screen
+    assert "See 5 reviewed decisions" in first_screen
+    assert "Use" in first_screen
+    assert "Skip or watch" in first_screen
+    assert "Build" in first_screen
+    assert "## A real answer, not a repository list" in homepage
+    assert "<strong>You still own:</strong>" in homepage
+    assert "## What you can do today" in homepage
+    assert "This is not a prompt box" in homepage
